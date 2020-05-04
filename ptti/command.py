@@ -45,7 +45,7 @@ def command():
 
     if args.yaml is not None:
         with open(args.yaml) as fp:
-            ycfg = yaml.load(fp.read(), loader=yaml.FullLoader)
+            ycfg = yaml.load(fp.read(), yaml.FullLoader)
             for section in ["initial", "parameters"]:
                 cfg.update(ycfg.get(section, {}))
             cfg["interventions"] = ycfg.get("interventions", [])
@@ -60,7 +60,7 @@ def command():
         t, traj = runModel(model, 0, args.tmax, args.steps, **cfg)
 
         tseries = np.vstack([t, traj.T]).T
-        
+
         np.savetxt("{}-{}.tsv".format(args.output, i), tseries, delimiter="\t")
 
 if __name__ == '__main__':

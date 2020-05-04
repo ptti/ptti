@@ -37,6 +37,7 @@ yaml_obs = """
 """
 
 class SEIRCTODEMem(Model):
+    name = "SEIR-CT ODE"
     observables = yaml.load(yaml_obs, yaml.FullLoader)
 
     def initial_conditions(self, N, **o):

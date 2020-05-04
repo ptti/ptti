@@ -37,6 +37,7 @@ yaml_obs = """
 """
 
 class SEIRCTKappa(Model):
+    name = "SEIR-CT Kappa"
     observables = yaml.load(yaml_obs, yaml.FullLoader)
 
     def _vars(self):

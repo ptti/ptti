@@ -219,6 +219,7 @@ def seirxud_abm_gill(tmax=10,
 
 
 class SEIRCTABM(Model):
+    name = "SEIR-CT ABM"
     observables = yaml.load(yaml_obs, yaml.FullLoader)
 
     def initial_conditions(self, N, IU=None):

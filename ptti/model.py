@@ -2,6 +2,8 @@ __all__ = ['Model', 'Unimplemented']
 
 import yaml
 import logging
+from math import floor
+import numpy as np
 
 log = logging.getLogger(__name__)
 
@@ -112,8 +114,65 @@ class Model(object):
         raise Unimplemented("[{}] run".format(self.name))
 
 def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[]):
+    """
+    Run the provided model with the given parameters, initial conditions and
+    interventions. The latter are a list 2-tuples of the form (time, parameters).
+    The model is run up to the given time, the parameters are updated, and it
+    then continues, for each intervention up until tmax.
+    """
     m = model()
     m.set_parameters(**parameters)
     state = m.initial_conditions(**initial)
-    t, traj, state = m.run(t0, tmax, tsteps, state)
+
+    log.info("Running model: {}".format(m.name))
+    log.info("Parameters: {}".format(parameters))
+    log.info("Initial conditions: {}".format(initial))
+    log.info("Interventions: {}".format(len(interventions)))
+
+    ## piece-wise simulation segments
+    times = []
+    trajs = []
+
+    ts = t0
+    for iv in interventions:
+        ti, pi = iv["time"], iv["parameters"]
+
+        ## end time for this segment
+        te = min(tmax, ti)
+
+        ## how many time-steps in this segment?
+        steps = floor((te - ts) * tsteps / (tmax - t0))
+
+        ## end time in integral number of steps
+        te = ts + (steps * (tmax - t0) / tsteps)
+
+        ## run the simulation
+        log.info("Running from {} to {} in {} steps".format(ts, te, steps))
+        t, traj, state = m.run(ts, te, steps, state)
+
+        ## update the parameters
+        log.info("Intervention: {}".format(pi))
+        m.set_parameters(**pi)
+
+        times.append(t)
+        trajs.append(traj)
+
+        ts = ti
+
+        ## stop running if we are past the 
+        if te >= tmax:
+            break
+
+    ## if we have more time to run, run for the required
+    ## number of steps
+    if ts < tmax:
+        steps = int((tmax - ts) * tsteps / (tmax - t0))
+        log.info("Running from {} to {} in {} steps".format(ts, tmax, steps))
+        t, traj, state = m.run(ts, tmax, steps, state)
+        times.append(t)
+        trajs.append(traj)
+
+    t = np.hstack(times)
+    traj = np.vstack(trajs)
+
     return t, traj
