@@ -4,7 +4,6 @@ import yaml
 import logging
 from math import floor
 import numpy as np
-from ptti.rseries import rseries
 
 log = logging.getLogger(__name__)
 
@@ -125,6 +124,13 @@ class Model(object):
         raise Unimplemented("[{}] run".format(self.name))
 
     @property
+    def pcols(self):
+        """
+        Method supporting computation of R(t): return column indexes
+        representing individuals. These should sum to N.
+        """
+        return tuple(self.colindex(c) for c in ("SU", "SD", "EU", "ED", "IU", "ID", "RU", "RD"))
+    @property
     def sucols(self):
         """
         Method supporting computation of R(t): return column indexes
@@ -148,7 +154,9 @@ class Model(object):
 
     def R(self, t, traj, beta=None, c=None):
         """
-        Return a time-series of R(t) to augment the given trajectory.
+        Compute the function R(t) for the reproduction number according to the
+        provided time-series for the susceptible population. Taken from S9.3 of
+        https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6002118/
 
         Support passing in beta and c which may be arrays to support
         calculating R(t) under interventions. If they are not given,
@@ -158,18 +166,31 @@ class Model(object):
         to know the susceptible population and the fraction of the
         infectious population that may infect them.
         """
-        SU = np.sum(traj[:,i] for i in self.sucols)
-        IU = np.sum(traj[:,i] for i in self.iucols)
-        I  = np.sum(traj[:,i] for i in self.icols)
-        X = np.zeros(len(I))
-        np.true_divide(SU*IU, I, out=X, where=I != 0)
-
         if beta is None:
             beta = self.beta
         if c is None:
             c = self.c
-        return rseries(t, X, beta, c, self.gamma, sum(traj[0]))
 
+        n = len(t)
+
+        ## could alternatively require that subclasses just populate self.N
+        N  = np.sum(traj[0,i] for i in self.pcols)
+        ## but these are model-specific anyways
+        SU = np.sum(traj[:,i] for i in self.sucols)
+        IU = np.sum(traj[:,i] for i in self.iucols)
+        I  = np.sum(traj[:,i] for i in self.icols)
+
+        X = np.zeros(len(I))
+        np.true_divide(SU*IU, I, out=X, where=I != 0)
+
+        ker = np.exp(-self.gamma*t)
+
+        bcs = beta*c*SU
+        Rs = []
+        for i, tau in enumerate(t):
+            s = np.pad(bcs, (n-i-1, 0), mode="edge")
+            Rs.append(np.trapz(s[:n]*ker[::-1]/N, t))
+        return np.array(Rs)
 
 def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[], rseries=False):
     """
