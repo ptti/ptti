@@ -198,6 +198,38 @@ def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[
     interventions. The latter are a list 2-tuples of the form (time, parameters).
     The model is run up to the given time, the parameters are updated, and it
     then continues, for each intervention up until tmax.
+
+    Arguments:
+
+      - `model` is a model class (not an instance). It will be initialised by
+         this function.
+      - `t0` the start time of the simulation. This will usually be 0.
+      - `tmax` the end time of the simulation.
+      - `tsteps` the number of time-steps to report, evenly spaced from `t0`
+         to `tmax`.
+      - `parameters` model parameters. This is a dictionary of the form,
+
+           { "beta": 0.033, "c": 13, "theta": 0.1 }
+
+      - `initial` initial conditions. For example,
+
+           { "N": 10000, "IU": 10, "EU": 5 }
+
+        it is required to provide N, and it doesn't make much sense to not
+        provide any I.
+      - `interventions` are a list of interventions that may change any parameter.
+        For example, the following would set c to a small value representing
+        lockdown at 60 days, and then raise it to normal at 120 days,
+
+          [
+           { "time": 60, parameters: { "c": 5 }},
+           { "time": 120, parameters: { "c": 13}}
+          ]
+      - `rseries` compute R(t) and concatenate it to the trajectory. It will
+         be the last column.
+
+    Returns a tuple `(t, traj)` where `t` is the sequence of times, and `traj`
+    is the sequence of observables produced by the model.
     """
     m = model()
     m.set_parameters(**parameters)
