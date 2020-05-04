@@ -6,33 +6,6 @@ import logging
 import yaml
 from ptti.model import Model
 
-yaml_params = """
-c:
-  descr:   contact rate
-  default: 13.0
-beta:
-  descr:   transmission probability
-  default: 0.033
-alpha:
-  descr:   incubation rate
-  default: 0.2
-gamma:
-  descr:   recovery rate
-  default: 0.1429
-theta:
-  descr:   testing rate
-  default: 0.0714
-kappa:
-  descr:   isolation exit rate
-  default: 0.0714
-eta:
-  descr:   tracing success probability
-  default: 0.5
-chi:
-  descr:   tracing rate
-  default: 0.25
-"""
-
 yaml_obs = """
 - name:  SU
   descr: susceptible and unconfined
@@ -64,7 +37,6 @@ yaml_obs = """
 """
 
 class SEIRCTKappa(Model):
-    parameters = yaml.load(yaml_params, yaml.FullLoader)
     observables = yaml.load(yaml_obs, yaml.FullLoader)
 
     def _vars(self):

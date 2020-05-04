@@ -8,33 +8,6 @@ import yaml
 import logging as log
 from ptti.model import Model
 
-yaml_params = """
-c:
-  descr:   contact rate
-  default: 13.0
-beta:
-  descr:   transmission probability
-  default: 0.033
-alpha:
-  descr:   incubation rate
-  default: 0.2
-gamma:
-  descr:   recovery rate
-  default: 0.1429
-theta:
-  descr:   testing rate
-  default: 0.0714
-kappa:
-  descr:   isolation exit rate
-  default: 0.0714
-eta:
-  descr:   tracing success probability
-  default: 0.5
-chi:
-  descr:   tracing rate
-  default: 0.25
-"""
-
 yaml_obs = """
 - name:  SU
   descr: susceptible and unconfined
@@ -246,13 +219,12 @@ def seirxud_abm_gill(tmax=10,
 
 
 class SEIRCTABM(Model):
-    parameters = yaml.load(yaml_params, yaml.FullLoader)
     observables = yaml.load(yaml_obs, yaml.FullLoader)
 
-    def initial_conditions(self, N, I0=None):
-        if I0 is None:
-            I0 = int(0.01 * N)
-        return (N, I0)
+    def initial_conditions(self, N, IU=None):
+        if IU is None:
+            IU = int(0.01 * N)
+        return (N, IU)
 
     def run(self, t0, tmax, tsteps, state, return_pcis=False):
         N, I0 = state

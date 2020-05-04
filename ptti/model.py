@@ -1,8 +1,37 @@
 __all__ = ['Model', 'Unimplemented']
 
+import yaml
 import logging
 
 log = logging.getLogger(__name__)
+
+## default parameters
+yaml_params = """
+c:
+  descr:   contact rate
+  default: 13.0
+beta:
+  descr:   transmission probability
+  default: 0.033
+alpha:
+  descr:   incubation rate
+  default: 0.2
+gamma:
+  descr:   recovery rate
+  default: 0.1429
+theta:
+  descr:   testing rate
+  default: 0.0714
+kappa:
+  descr:   isolation exit rate
+  default: 0.0714
+eta:
+  descr:   tracing success probability
+  default: 0.5
+chi:
+  descr:   tracing rate
+  default: 0.25
+"""
 
 class Unimplemented(Exception):
     """
@@ -19,7 +48,7 @@ class Model(object):
     >>> m = Model()
     >>> m.set_parameters(alpha=1, beta=2, ...)
     >>> state = m.initial_conditions(N=1000, I=10, ...)
-    >>> t, obs, state = m.run(state)
+    >>> t, obs, state = m.run(t0, tmax, tsteps, state)
     """
     ## name of this model
     name = "ChangeMe: set model.name"
@@ -28,7 +57,7 @@ class Model(object):
     ## values, e.g.
     ##
     ## parameters = { 'a': { 'descr': 'a parameter', 'default': 1 } }
-    parameters = {}
+    parameters = yaml.load(yaml_params, yaml.FullLoader)
 
     ## list of observable metadata (dictionary of names, and descriptions
     ## etc in the order that they appear in model output
@@ -82,3 +111,9 @@ class Model(object):
         """
         raise Unimplemented("[{}] run".format(self.name))
 
+def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[]):
+    m = model()
+    m.set_parameters(**parameters)
+    state = m.initial_conditions(**initial)
+    t, traj, state = m.run(t0, tmax, tsteps, state)
+    return t, traj
