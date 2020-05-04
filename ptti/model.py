@@ -24,12 +24,22 @@ class Model(object):
     ## name of this model
     name = "ChangeMe: set model.name"
 
-    ## list of parameters known to this model
-    parameters = []
+    ## dictionary of parameter names to descriptions and default
+    ## values, e.g.
+    ##
+    ## parameters = { 'a': { 'descr': 'a parameter', 'default': 1 } }
+    parameters = {}
 
-    ## list of observable names in the order that they appear
-    ## in model output
+    ## list of observable metadata (dictionary of names, and descriptions
+    ## etc in the order that they appear in model output
+    ##
+    ##
+    ## observables = [{ 'name': 'I', 'descr': 'infectious }]
     observables = []
+
+    def __init__(self):
+        self.set_parameters(**dict((k, self.parameters[k]["default"])
+                                   for k in self.parameters.keys()))
 
     def set_parameters(self, **params):
         """
@@ -49,13 +59,19 @@ class Model(object):
         """
         Return a model state object, given initial conditions.
         The model state is opaque, and encodes the initial
-        conditions of the model.
+        conditions of the model. The convention is that the
+        initial conditions include,
+
+          - `N` the total population
+          - one entry for each non-zero observable, e.g. I=10
+          - any other initial state required by the model
         """
         raise Unimplemented("[{}] initial_conditions".format(self.name))
 
-    def run(self, state):
+    def run(self, t0, tmax, tsteps, state):
         """
-        Run the model, provided initial model state. This
+        Run the model from time t0 to time tmax reporting in
+        tsteps number of steps, provided initial model state. This
         returns a triple of `(t, obs, state)` where:
 
           - `t` is a sequence of times

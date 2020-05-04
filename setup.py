@@ -52,7 +52,8 @@ setup(name='ptti',
     install_requires=[
         'compyrtment',
         'kappy',
-        'matplotlib'
+        'matplotlib',
+        'numpy',
     ],
     python_requires='>=3.1.*'
 )
