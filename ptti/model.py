@@ -184,8 +184,8 @@ class Model(object):
         np.true_divide(SU*IU, I, out=X, where=I != 0)
 
         ker = np.exp(-self.gamma*t)
-
-        bcs = beta*c*SU
+        bcs = beta*c*X
+        
         Rs = []
         for i, tau in enumerate(t):
             s = np.pad(bcs, (n-i-1, 0), mode="edge")
