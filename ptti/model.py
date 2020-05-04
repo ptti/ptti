@@ -99,6 +99,16 @@ class Model(object):
         """
         raise Unimplemented("[{}] initial_conditions".format(self.name))
 
+    def colindex(self, c):
+        """
+        Return the index in the columns of the trajectory for
+        the named observable.
+        """
+        for i, o in enumerate(self.observables):
+            if o["name"] == c:
+                return i
+        raise ValueError("no such column: {}".format(c))
+
     def run(self, t0, tmax, tsteps, state):
         """
         Run the model from time t0 to time tmax reporting in
@@ -112,6 +122,14 @@ class Model(object):
             the final state of the model
         """
         raise Unimplemented("[{}] run".format(self.name))
+
+    def R(self, t, traj):
+        """
+        Return a time-series of R(t) to augment the given trajectory.
+        This is not done by default because it is an expensive
+        operation.
+        """
+        raise Unimplemented("[{}] R".format(self.name))
 
 def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[]):
     """

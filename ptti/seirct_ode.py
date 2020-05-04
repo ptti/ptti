@@ -3,6 +3,8 @@ __all__ = ['SEIRCTODEMem']
 import numpy as np
 import yaml
 from ptti.model import Model
+from ptti.rseries import rseries
+
 from scipy.interpolate import interp1d
 from cpyment import CModel
 import logging
@@ -119,3 +121,12 @@ class SEIRCTODEMem(Model):
         traj = cm.integrate(t, y0)
 
         return (t, traj["y"], (traj["y"][-1, :], N))
+
+    def R(self, t, traj):
+
+        SU = traj[:,self.colindex("SU")]
+        IU = traj[:,self.colindex("IU")]
+        ID = traj[:,self.colindex("ID")]
+        X = SU*IU/(IU+ID)
+
+        return rseries(t, X, self.beta, self.c, self.gamma, sum(traj[0]))
