@@ -67,4 +67,8 @@ setup(name='ptti',
               'SEIRCTKappa  = ptti.seirct_kappa:SEIRCTKappa',
           ]
       },
+      package_data={
+          "ptti": ["*.ka"],
+          "examples": ["*.yaml", "*.ka"],
+      }
 )

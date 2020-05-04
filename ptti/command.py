@@ -15,9 +15,11 @@ def command():
         models.update({ep.name: ep.load()})
 
     parser = argparse.ArgumentParser("Population-wide Testing, Tracing and Isolation Models")
+    parser.add_argument("-m", "--model", default="SEIRCTODEMem",
+                        help="Select model: {}".format(", ".join(models.keys())))
     parser.add_argument("-N", type=int, default=1000,
                         help="Population size")
-    parser.add_argument("-I", type=int, default=10,
+    parser.add_argument("-I", type=int, default=None,
                         help="Initial infected population")
     parser.add_argument("--tmax", type=float, default=100.0,
                         help="Simulation end time")
@@ -25,18 +27,18 @@ def command():
                         help="Simulation reporting time-steps")
     parser.add_argument("--samples", type=int, default=1,
                         help="Number of samples")
-    parser.add_argument("-m", "--model", default="SEIRCTODEMem",
-                        help="Select model: {}".format(", ".join(models.keys())))
     parser.add_argument("-y", "--yaml", default=None,
                         help="YAML file describing parameters and interventions")
     parser.add_argument("-o", "--output", type=str,
                         default="simdata", help="Output filename")
+    parser.add_argument("--dump-state", action="store_true",
+                        help="Dump model state and exit")
 
     args = parser.parse_args()
 
     cfg = {
         "initial": {
-            "N":  9900,
+            "N":  1000,
             "IU":  100,
         },
         "parameters": {},
@@ -50,11 +52,21 @@ def command():
                 cfg.update(ycfg.get(section, {}))
             cfg["interventions"] = ycfg.get("interventions", [])
 
+    if args.I is not None:
+        cfg["initial"]["IU"] = args.I
+
     if args.model not in models:
         log.error("Unknown model: {}".format(args.model))
         sys.exit(255)
 
     model = models[args.model]
+
+    if args.dump_state:
+        m = model()
+        m.set_parameters(**cfg["parameters"])
+        state = m.initial_conditions(**cfg["initial"])
+        print(state)
+        sys.exit(0)
 
     for i in range(args.samples):
         t, traj = runModel(model, 0, args.tmax, args.steps, **cfg)

@@ -4,7 +4,10 @@ import numpy as np
 import kappy
 import logging
 import yaml
+import pkg_resources
 from ptti.model import Model
+
+log = logging.getLogger(__name__)
 
 yaml_obs = """
 - name:  SU
@@ -37,27 +40,41 @@ yaml_obs = """
 """
 
 class SEIRCTKappa(Model):
+    """
+    /////////////////////////////////////////////
+    /// SEIR with Contact Tracing Kappa Model ///
+    /////////////////////////////////////////////
+    """
     name = "SEIR-CT Kappa"
     observables = yaml.load(yaml_obs, yaml.FullLoader)
 
-    def _vars(self):
+    def _vars(self, N):
         params = ["%var: {}\t{}\t// {}".format(k, getattr(self, k), self.parameters[k]["descr"])
                   for k in self.parameters.keys()]
+        params.append("%var: N\t{}\t// Total population".format(N))
         return "\n".join(params)
-    def _rules(self):
-        return ""
-        with open("seir-ct.ka") as fp:
-            kappa_text += "\n" + fp.read()
 
-    def _init(self):
-        return ""
+    def _rules(self):
+        return pkg_resources.resource_string(__name__, "seir-ct.ka").decode("utf-8")
+
+    def _init(self, N, **ivs):
+        obs = dict((o["name"], o) for o in self.observables)
+        inits = ["%init: {}\t{}\t// {}".format(n, obs[k]["kappa"].strip("|"), obs[k]["descr"])
+                 for k, n in ivs.items()]
+        SU = "%init: {}\t{}\t// {}".format(N - sum(ivs.values()),
+                                           obs["SU"]["kappa"].strip("|"), obs["SU"]["descr"])
+        inits.append(SU)
+        return "\n".join(inits)
+
     def _obs(self):
-        obs = ["obs: {}\t{}\t// {}".format(o["name"], o["kappa"], o["descr"])
+        obs = ["%obs: {}\t{}\t// {}".format(o["name"], o["kappa"], o["descr"])
                for o in self.observables]
         return "\n".join(obs)
 
-    def initial_conditions(self, **inits):
-        return "\n\n".join((self._vars(), self._rules(), self._init(), self._obs()))
+    def initial_conditions(self, N, **inits):
+        kappa_text = "\n\n".join((self.__doc__, self._vars(N), self._rules(), self._obs(), self._init(N, **inits)))
+        log.debug(kappa_text)
+        return kappa_text
 
     def run(self, t0, tmax, steps, kappa_text):
         """
@@ -73,15 +90,18 @@ class SEIRCTKappa(Model):
         client.wait_for_simulation_stop()
 
         plot = client.simulation_plot()
-        series = np.array(plot["series"])
+        series = np.array(plot["series"])[::-1, :]
 
-        t = series[:-1:-1, 0]
-        traj = series[:-1:-1, 1:].T
+        t = series[:, 0]
+        traj = series[:, 1:]
 
-        if traj.shape[1] > self.t.shape[0]:
-            traj = traj[:,:self.t.shape[0]]
-        else:
-            ## pad because Kappa will stop if no more transitions
-            traj = np.pad(traj, ((0,0), (0, self.t.shape[0] - traj.shape[1])), "edge")
+        ## Kappa will stop running when no more events are possible,
+        ## so pad to the end
+        skipped = steps - traj.shape[0]
+        if skipped > 0:
+            maxt = max(t)
+            stepsize = (tmax - t0) / steps
+            t = np.hstack([t, np.linspace(t[-1] + stepsize, tmax, skipped)])
+            traj = np.pad(traj, ((0,skipped), (0, 0)), "edge")
 
         return t, traj, None

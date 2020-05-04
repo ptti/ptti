@@ -1,0 +1,62 @@
+///////////////////////////////////////////////
+//// Agents, or entities in the simulation ////
+///////////////////////////////////////////////
+
+// The internal states of the individual person agents:
+//  - s{s e i r}           : infection state
+//  - d{u d}               : diagnostic state - undiagnosed or diagnosed
+%agent: P(s{s e i r}, d{u d})
+
+// Tracing agent, virtual particles that assist the simulation with
+// parallel internal state
+%agent: C(s{s e i r})
+
+///////////////
+//// RULES ////
+///////////////
+
+//////////////////////////////////////////////
+// Interactions with infectious individuals //
+//////////////////////////////////////////////
+
+'lucky'    P(s{s}, d{u}), P(s{i}, d{u}), . -> P(s{s}, d{u}), P(s{i}, d{u}), C(s{s}) @ (1-beta)*c/N
+'exposure' P(s{s}, d{u}), P(s{i}, d{u}), . -> P(s{e}, d{u}), P(s{i}, d{u}), C(s{e}) @ beta*c/N
+'exposed'  P(s{e}, d{u}), P(s{i}, d{u}), . -> P(s{e}, d{u}), P(s{i}, d{u}), C(s{e}) @ c/N
+'infected' P(s{i}, d{u}), P(s{i}, d{u}), . -> P(s{i}, d{u}), P(s{i}, d{u}), C(s{i}) @ c/N
+'immune'   P(s{r}, d{u}), P(s{i}, d{u}), . -> P(s{r}, d{u}), P(s{i}, d{u}), C(s{r}) @ c/N
+
+////////////////////////////////////////
+// Disease progression, post-exposure //
+////////////////////////////////////////
+'progression'   P(s{e/i}) @ alpha
+'c_progression' C(s{e/i}) @ alpha
+
+'recovery'      P(s{i/r}) @ gamma
+'c_recovery'    C(s{i/r}) @ gamma
+
+///////////////////////////////
+// Diagnosis through testing //
+///////////////////////////////
+'testing'       P(s{i}, d{u/d}) @ theta
+
+//////////////////////////////////////////////////////////////////////////////
+// Tracing happens when (1) there is an available tracing particle, and (2) //
+// in proportion to the number of diagnosed infectious individuals. The     //
+// effect of tracing is diagnosis. Tracing consumes the particle.           //
+//////////////////////////////////////////////////////////////////////////////
+
+'tracing_S'     P(s{s}, d{u}), P(s{i}, d{d}), C(s{s}) -> P(s{s}, d{d}), P(s{i}, d{d}), . @ theta*chi*eta/N
+'tracing_E'     P(s{e}, d{u}), P(s{i}, d{d}), C(s{e}) -> P(s{e}, d{d}), P(s{i}, d{d}), . @ theta*chi*eta/N
+'tracing_I'     P(s{i}, d{u}), P(s{i}, d{d}), C(s{i}) -> P(s{i}, d{d}), P(s{i}, d{d}), . @ theta*chi*eta/N
+'tracing_R'     P(s{r}, d{u}), P(s{i}, d{d}), C(s{r}) -> P(s{r}, d{d}), P(s{i}, d{d}), . @ theta*chi*eta/N
+
+///////////////////////
+// Leaving isolation //
+///////////////////////
+'exit_S'        P(s{s}, d{d/u}) @ kappa
+'exit_R'        P(s{r}, d{d/u}) @ kappa
+
+//////////////////////////////////////
+// Degradation of tracing particles //
+//////////////////////////////////////
+'degradation'   C() -> . @ gamma 
