@@ -48,12 +48,12 @@ interventions:
   - time: 90
     parameters:
       c: 3.9
-  ## after six months, relax to 50% and introduce testing and tracing
+  ## after five months, relax to 50% and introduce testing and tracing
   - time: 150
     parameters:
       c: 6.5
       theta: 0.1429
-  ## after nine months, relax more, some distancing
+  ## after seven months, relax more, some distancing
   - time: 210
     parameters:
       c: 10
