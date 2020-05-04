@@ -82,6 +82,7 @@ class SEIRCTKappa(Model):
         """
         stepsize = (tmax - t0) / steps
 
+        log.info("Running from {} to {} in steps of size {}".format(t0, tmax, stepsize))
         client = kappy.KappaStd()
         client.add_model_string(kappa_text)
         client.project_parse()
@@ -101,7 +102,7 @@ class SEIRCTKappa(Model):
         if skipped > 0:
             maxt = max(t)
             stepsize = (tmax - t0) / steps
-            t = np.hstack([t, np.linspace(t[-1] + stepsize, tmax, skipped)])
+            t = np.hstack([t, np.linspace(t[-1] + stepsize, tmax-t0, skipped)])
             traj = np.pad(traj, ((0,skipped), (0, 0)), "edge")
 
         ## correct time-series because Kappa always starts at 0
