@@ -82,7 +82,6 @@ class SEIRCTKappa(Model):
         """
         stepsize = (tmax - t0) / steps
 
-        log.info("Running from {} to {} in steps of size {}".format(t0, tmax, stepsize))
         client = kappy.KappaStd()
         client.add_model_string(kappa_text)
         client.project_parse()
