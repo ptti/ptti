@@ -31,8 +31,10 @@ def command():
                         help="YAML file describing parameters and interventions")
     parser.add_argument("-o", "--output", type=str,
                         default="simdata", help="Output filename")
+    parser.add_argument("-R", "--rseries", action="store_true",
+                        default=False, help="Compute R along the time-series")
     parser.add_argument("--dump-state", action="store_true",
-                        help="Dump model state and exit")
+                        default=False, help="Dump model state and exit")
 
     args = parser.parse_args()
 
@@ -69,7 +71,7 @@ def command():
         sys.exit(0)
 
     for i in range(args.samples):
-        t, traj = runModel(model, 0, args.tmax, args.steps, **cfg)
+        t, traj = runModel(model, 0, args.tmax, args.steps, rseries=args.rseries, **cfg)
 
         tseries = np.vstack([t, traj.T]).T
 

@@ -4,6 +4,7 @@ import yaml
 import logging
 from math import floor
 import numpy as np
+from ptti.rseries import rseries
 
 log = logging.getLogger(__name__)
 
@@ -126,12 +127,23 @@ class Model(object):
     def R(self, t, traj):
         """
         Return a time-series of R(t) to augment the given trajectory.
-        This is not done by default because it is an expensive
-        operation.
-        """
-        raise Unimplemented("[{}] R".format(self.name))
+        This is done in a slightly model-specific way because we need
+        to know the susceptible population and the fraction of the
+        infectious population that may infect them.
 
-def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[]):
+        TODO: generalise this method.
+        """
+        SU = traj[:,self.colindex("SU")]
+        IU = traj[:,self.colindex("IU")]
+        ID = traj[:,self.colindex("ID")]
+        I = IU + ID
+        X = np.zeros(len(I))
+        np.true_divide(SU*IU, I, out=X, where=I != 0)
+
+        return rseries(t, X, self.beta, self.c, self.gamma, sum(traj[0]))
+
+
+def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[], rseries=False):
     """
     Run the provided model with the given parameters, initial conditions and
     interventions. The latter are a list 2-tuples of the form (time, parameters).
@@ -192,5 +204,11 @@ def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[
 
     t = np.hstack(times)
     traj = np.vstack(trajs)
+
+    if rseries:
+        if interventions != []:
+            raise Unimplemented("Computing R(t) with interventions is unsupported")
+        rs = m.R(t, traj)
+        traj = np.vstack((traj.T, rs)).T
 
     return t, traj
