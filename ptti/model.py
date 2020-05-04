@@ -124,23 +124,51 @@ class Model(object):
         """
         raise Unimplemented("[{}] run".format(self.name))
 
-    def R(self, t, traj):
+    @property
+    def sucols(self):
+        """
+        Method supporting computation of R(t): return column indexes
+        for susceptibles subject to infection (e.g. not quarantined)
+        """
+        return (self.colindex("SU"),)
+    @property
+    def iucols(self):
+        """
+        Method supporting computation of R(t): return column indexes
+        for active infectious individuals (e.g. not quarantined)
+        """
+        return (self.colindex("IU"),)
+    @property
+    def icols(self):
+        """
+        Method supporting computation of R(t): return column indexes
+        for all infectious individuals
+        """
+        return (self.colindex("IU"), self.colindex("ID"))
+
+    def R(self, t, traj, beta=None, c=None):
         """
         Return a time-series of R(t) to augment the given trajectory.
+
+        Support passing in beta and c which may be arrays to support
+        calculating R(t) under interventions. If they are not given,
+        the corresponding model parameter is used.
+
         This is done in a slightly model-specific way because we need
         to know the susceptible population and the fraction of the
         infectious population that may infect them.
-
-        TODO: generalise this method.
         """
-        SU = traj[:,self.colindex("SU")]
-        IU = traj[:,self.colindex("IU")]
-        ID = traj[:,self.colindex("ID")]
-        I = IU + ID
+        SU = np.sum(traj[:,i] for i in self.sucols)
+        IU = np.sum(traj[:,i] for i in self.iucols)
+        I  = np.sum(traj[:,i] for i in self.icols)
         X = np.zeros(len(I))
         np.true_divide(SU*IU, I, out=X, where=I != 0)
 
-        return rseries(t, X, self.beta, self.c, self.gamma, sum(traj[0]))
+        if beta is None:
+            beta = self.beta
+        if c is None:
+            c = self.c
+        return rseries(t, X, beta, c, self.gamma, sum(traj[0]))
 
 
 def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[], rseries=False):
@@ -163,6 +191,12 @@ def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[
     times = []
     trajs = []
 
+    ## also record a time-series of betas and cs for
+    ## piece-wise computation of R(t)
+    if rseries:
+        betas = []
+        cs    = []
+
     ts = t0
     for iv in interventions:
         ti, pi = iv["time"], iv["parameters"]
@@ -180,12 +214,18 @@ def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[
         log.info("Running from {} to {} in {} steps".format(ts, te, steps))
         t, traj, state = m.run(ts, te, steps, state)
 
+        ## save the trajectory
+        times.append(t)
+        trajs.append(traj)
+
+        ## save the beta and c being used
+        if rseries:
+            betas.append(m.beta * np.ones(len(t)))
+            cs.append(m.c * np.ones(len(t)))
+
         ## update the parameters
         log.info("Intervention: {}".format(pi))
         m.set_parameters(**pi)
-
-        times.append(t)
-        trajs.append(traj)
 
         ts = ti
 
@@ -199,16 +239,23 @@ def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[
         steps = int((tmax - ts) * tsteps / (tmax - t0))
         log.info("Running from {} to {} in {} steps".format(ts, tmax, steps))
         t, traj, state = m.run(ts, tmax, steps, state)
+
+        ## save the trajectory
         times.append(t)
         trajs.append(traj)
 
-    t = np.hstack(times)
+        ## save the beta and c being used
+        if rseries:
+            betas.append(m.beta * np.ones(len(t)))
+            cs.append(m.c * np.ones(len(t)))
+
+    t    = np.hstack(times)
     traj = np.vstack(trajs)
 
     if rseries:
-        if interventions != []:
-            raise Unimplemented("Computing R(t) with interventions is unsupported")
-        rs = m.R(t, traj)
-        traj = np.vstack((traj.T, rs)).T
+        betas = np.hstack(betas)
+        cs    = np.hstack(cs)
+        rs    = m.R(t, traj, betas, cs)
+        traj  = np.vstack((traj.T, rs)).T
 
     return t, traj

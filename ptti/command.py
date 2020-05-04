@@ -41,7 +41,7 @@ def command():
     cfg = {
         "initial": {
             "N":  1000,
-            "IU":  100,
+            "IU":   10,
         },
         "parameters": {},
         "interventions": [],

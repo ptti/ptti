@@ -11,8 +11,9 @@ def rseries(t, S, beta, c, gamma, N):
     n = len(t)
     ker = np.exp(-gamma*t)
 
+    bcs = beta*c*S
     Rs = []
     for i, tau in enumerate(t):
-        s = np.pad(S, (n-i-1, 0), mode="edge")
-        Rs.append(np.trapz(beta*c*s[:n]*ker[::-1]/N, t))
+        s = np.pad(bcs, (n-i-1, 0), mode="edge")
+        Rs.append(np.trapz(s[:n]*ker[::-1]/N, t))
     return np.array(Rs)
