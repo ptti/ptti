@@ -195,9 +195,8 @@ class Model(object):
 def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[], rseries=False):
     """
     Run the provided model with the given parameters, initial conditions and
-    interventions. The latter are a list 2-tuples of the form (time, parameters).
-    The model is run up to the given time, the parameters are updated, and it
-    then continues, for each intervention up until tmax.
+    interventions. The model is run up to the given time, the parameters are
+    updated, and it then continues, for each intervention up until tmax.
 
     Arguments:
 
