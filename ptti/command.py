@@ -6,9 +6,6 @@ import logging as log
 import sys
 import numpy as np
 
-log.basicConfig(stream=sys.stdout, level=log.INFO,
-                format='%(asctime)s - %(levelname)s - %(message)s')
-
 def command():
     models = {}
     for ep in pkg_resources.iter_entry_points(group='models'):
@@ -33,10 +30,15 @@ def command():
                         default="simdata", help="Output filename")
     parser.add_argument("-R", "--rseries", action="store_true",
                         default=False, help="Compute R along the time-series")
+    parser.add_argument("--loglevel", default="INFO",
+                        help="Set logging level")
     parser.add_argument("--dump-state", action="store_true",
                         default=False, help="Dump model state and exit")
 
     args = parser.parse_args()
+
+    log.basicConfig(stream=sys.stdout, level=getattr(log, args.loglevel),
+                    format='%(asctime)s - %(levelname)s - %(message)s')
 
     cfg = {
         "initial": {

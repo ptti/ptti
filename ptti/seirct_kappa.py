@@ -86,7 +86,7 @@ class SEIRCTKappa(Model):
         client.add_model_string(kappa_text)
         client.project_parse()
 
-        client.simulation_start(kappy.SimulationParameter(stepsize, "[T] > {0}".format(tmax)))
+        client.simulation_start(kappy.SimulationParameter(stepsize, "[T] > {0}".format(tmax - t0)))
         client.wait_for_simulation_stop()
 
         plot = client.simulation_plot()
@@ -104,4 +104,14 @@ class SEIRCTKappa(Model):
             t = np.hstack([t, np.linspace(t[-1] + stepsize, tmax, skipped)])
             traj = np.pad(traj, ((0,skipped), (0, 0)), "edge")
 
-        return t, traj, None
+        ## correct time-series because Kappa always starts at 0
+        t = t + t0
+
+        ## construct a new Kappa program to support exogeneous interventions
+        last   = traj[-1]
+        onames = [o["name"] for o in self.observables]
+        init   = dict((o, self.colindex(o)) for o in onames)
+        N      = np.sum(last[i] for i in self.pcols)
+        kappa_text = self.initial_conditions(N, **init)
+
+        return t, traj, kappa_text
