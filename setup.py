@@ -53,6 +53,7 @@ setup(name='ptti',
         'compyrtment',
         'kappy',
         'matplotlib',
+        'numba',
         'numpy',
     ],
     python_requires='>=3.1.*'
