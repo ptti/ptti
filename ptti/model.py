@@ -220,10 +220,11 @@ def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[
         For example, the following would set c to a small value representing
         lockdown at 60 days, and then raise it to normal at 120 days,
 
-          [
-           { "time": 60, parameters: { "c": 5 }},
-           { "time": 120, parameters: { "c": 13}}
-          ]
+           [
+             { "time": 60, parameters: { "c": 5 }},
+             { "time": 120, parameters: { "c": 13}}
+           ]
+
       - `rseries` compute R(t) and concatenate it to the trajectory. It will
          be the last column.
 
