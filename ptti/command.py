@@ -1,6 +1,6 @@
 import argparse
 import pkg_resources
-import yaml
+from ptti.config import config_load
 from ptti.model import runModel
 import logging as log
 import sys
@@ -50,11 +50,10 @@ def command():
     }
 
     if args.yaml is not None:
-        with open(args.yaml) as fp:
-            ycfg = yaml.load(fp.read(), yaml.FullLoader)
-            for section in ["initial", "parameters"]:
-                cfg.update(ycfg.get(section, {}))
-            cfg["interventions"] = ycfg.get("interventions", [])
+        ycfg = config_load(args.yaml)
+        for section in ["initial", "parameters"]:
+            cfg[section].update(ycfg.get(section, {}))
+        cfg["interventions"] = ycfg.get("interventions", [])
 
     if args.I is not None:
         cfg["initial"]["IU"] = args.I
