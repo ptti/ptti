@@ -1,0 +1,65 @@
+##
+## This is an example scenario for discussion.
+## Do not take it too literally.
+##
+
+## Initial values for the simulation
+initial:
+  ## N is the total population
+  N:    67000000
+  ## IU is the number of unconfined, infected individuals
+  IU:   2
+
+## Parameters of the simulation.
+## All rates are per individual per day.
+parameters:
+  ## beta is the infectiousness of the disease, the
+  ## probability of infecting a contact.
+  beta:  0.033
+
+  ## c is the contact rate per day. 13 is an accepted
+  ## value on average under normal circumstances.
+  c:     13.0
+
+  ## alpha is the rate at which exposed individuals
+  ## (infected but not infectious) become infectious.
+  alpha: 0.2
+
+  ## gamma is the rate at which individuals either 
+  ## recover, or are taken into hospital and assumed
+  ## to be isolated. One week.
+  gamma: 0.1429
+
+  ## kappa is the rate at which individuals leave
+  ## isolation. This is one week according to UK policy.
+  ## The WHO thinks it should be 0.0714.
+  kappa: 0.1429
+
+  ## theta governs testing, and we start with none
+  theta: 0.0
+
+  ## chi is the rate at which contacts are traced.
+  ## Tracing is triggered by testing.
+  chi:   0.5
+
+  ## eta is the success rate of tracing.
+  eta:   0.25
+
+## Exogenous interventions. The time is given in
+## simulation days.
+interventions:
+  ## After three months, lockdown. Reduce contact by 70%.
+  - time: 90
+    parameters:
+      c: 3.9
+  ## After five months, relax to 50% and introduce testing
+  ## and tracing for all infectious individuals once per
+  ## week.
+  - time: 150
+    parameters:
+      c: 6.5
+      theta: 0.1429
+  ## After seven months, relax more, still some distancing.
+  - time: 210
+    parameters:
+      c: 10
