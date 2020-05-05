@@ -31,7 +31,7 @@ parameters:
   gamma: 0.1429
 
   ## kappa is the rate at which individuals leave
-  ## isolation this is one week according to UK policy.
+  ## isolation. This is one week according to UK policy.
   ## The WHO thinks it should be 0.0714.
   kappa: 0.1429
 
@@ -39,7 +39,7 @@ parameters:
   theta: 0.0
 
   ## chi is the rate at which contacts are traced.
-  ## tracing is triggered by testing.
+  ## Tracing is triggered by testing.
   chi:   0.5
 
   ## eta is the success rate of tracing.
