@@ -4,6 +4,10 @@
 ##  With Phased Lockdown as per scenario 1 while testing, tracing and isolation scaled up
 ##
 
+meta:
+  title: PTTI Scenario 2b
+  output: ptti-scenario-2b
+
 ## Initial values for the simulation
 initial:
   ## N is the total population

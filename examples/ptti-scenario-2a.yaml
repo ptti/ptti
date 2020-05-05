@@ -4,6 +4,10 @@
 ##  lockdown from 23rd March) while testing, tracing and isolation scaled up
 ##
 
+meta:
+  title: PTTI Scenario 2a
+  output: ptti-scenario-2a
+
 ## Initial values for the simulation
 initial:
   ## N is the total population

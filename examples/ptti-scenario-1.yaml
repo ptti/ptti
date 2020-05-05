@@ -6,6 +6,10 @@
 ## everything open 27th July 
 ##
 
+meta:
+  title: PTTI Scenario 1
+  output: ptti-scenario-1
+
 ## Initial values for the simulation
 initial:
   ## N is the total population

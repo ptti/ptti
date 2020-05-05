@@ -3,6 +3,10 @@
 ## (reduce Beta -transmission per contact- by 30%). Otherwise as per scenario 2b
 ##
 
+meta:
+  title: PTTI Scenario 3b
+  output: ptti-scenario-3b
+
 ## Initial values for the simulation
 initial:
   ## N is the total population

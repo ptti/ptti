@@ -3,6 +3,10 @@
 ## Do not take it too literally.
 ##
 
+meta:
+  title: PTTI Interventions for Discussion
+  output: ptti-discussion
+
 ## Initial values for the simulation
 initial:
   ## N is the total population

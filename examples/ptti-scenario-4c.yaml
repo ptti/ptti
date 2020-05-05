@@ -3,6 +3,10 @@
 ## Do not take it too literally.
 ##
 
+meta:
+  title: PTTI Scenario 4c
+  output: ptti-scenario-4c
+
 ## Initial values for the simulation
 initial:
   ## N is the total population

@@ -1,10 +1,23 @@
 __all__ = ["config_load"]
 
+from ptti.plotting import plot_defaults
+
 import yaml
 
 def config_load(filename=None):
     """
-    Load a YAML configuration file, supporting evaluation of some expressions
+    Load a YAML configuration file, supporting evaluation of some expressions and
+    sensible defaults. The defaults are:
+
+    {'initial': {'IU': 10, 'N': 1000},
+     'interventions': {},
+     'meta': {'model': 'SEIRCTODEMem',
+              'output': 'simdata',
+              'samples': 1,
+              'steps': 3600,
+              't0': 0,
+              'tmax': 360},
+     'parameters': {}}
     """
     if filename is not None:
         with open(filename) as fp:
@@ -32,9 +45,21 @@ def config_load(filename=None):
                         iv.update(_eval_params(iv, gvars))
 
     ## set some defaults
+    cfg.setdefault("meta", {})
+    cfg["meta"].setdefault("model", "SEIRCTODEMem")
+    cfg["meta"].setdefault("t0", 0)
+    cfg["meta"].setdefault("tmax", 360)
+    cfg["meta"].setdefault("steps", 3600)
+    cfg["meta"].setdefault("samples", 1)
+    cfg["meta"].setdefault("output", "simdata")
+    cfg["meta"].setdefault("rseries", False)
+    cfg["meta"].setdefault("plots", plot_defaults)
+    cfg["meta"].setdefault("title", "PTTI Simulation")
+    
     cfg.setdefault("initial", {})
     cfg["initial"].setdefault("N", 1000)
     cfg["initial"].setdefault("IU", 10)
+
     cfg.setdefault("parameters", {})
     cfg.setdefault("interventions", {})
 

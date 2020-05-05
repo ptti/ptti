@@ -99,12 +99,13 @@ class Model(object):
         """
         raise Unimplemented("[{}] initial_conditions".format(self.name))
 
-    def colindex(self, c):
+    @classmethod
+    def colindex(cls, c):
         """
         Return the index in the columns of the trajectory for
         the named observable.
         """
-        for i, o in enumerate(self.observables):
+        for i, o in enumerate(cls.observables):
             if o["name"] == c:
                 return i
         raise ValueError("no such column: {}".format(c))
@@ -185,14 +186,14 @@ class Model(object):
 
         ker = np.exp(-self.gamma*t)
         bcs = beta*c*X
-        
+
         Rs = []
         for i, tau in enumerate(t):
             s = np.pad(bcs, (n-i-1, 0), mode="edge")
             Rs.append(np.trapz(s[:n]*ker[::-1]/N, t))
         return np.array(Rs)
 
-def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[], rseries=False):
+def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[], rseries=False, **unused):
     """
     Run the provided model with the given parameters, initial conditions and
     interventions. The model is run up to the given time, the parameters are
@@ -204,7 +205,7 @@ def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[
          this function.
       - `t0` the start time of the simulation. This will usually be 0.
       - `tmax` the end time of the simulation.
-      - `tsteps` the number of time-steps to report, evenly spaced from `t0`
+      - `steps` the number of time-steps to report, evenly spaced from `t0`
          to `tmax`.
       - `parameters` model parameters. This is a dictionary of the form,
 
@@ -257,15 +258,15 @@ def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[
         ## end time for this segment
         te = min(tmax, ti)
 
-        ## how many time-steps in this segment?
-        steps = floor((te - ts) * tsteps / (tmax - t0))
+        ## how many time-tsteps in this segment?
+        tsteps = floor((te - ts) * steps / (tmax - t0))
 
-        ## end time in integral number of steps
-        te = ts + (steps * (tmax - t0) / tsteps)
+        ## end time in integral number of tsteps
+        te = ts + (tsteps * (tmax - t0) / steps)
 
         ## run the simulation
-        log.info("Running from {} to {} in {} steps".format(ts, te, steps))
-        t, traj, state = m.run(ts, te, steps, state)
+        log.info("Running from {} to {} in {} tsteps".format(ts, te, tsteps))
+        t, traj, state = m.run(ts, te, tsteps, state)
 
         ## save the trajectory
         times.append(t)
@@ -287,11 +288,11 @@ def runModel(model, t0, tmax, tsteps, parameters={}, initial={}, interventions=[
             break
 
     ## if we have more time to run, run for the required
-    ## number of steps
+    ## number of tsteps
     if ts < tmax:
-        steps = int((tmax - ts) * tsteps / (tmax - t0))
-        log.info("Running from {} to {} in {} steps".format(ts, tmax, steps))
-        t, traj, state = m.run(ts, tmax, steps, state)
+        tsteps = int((tmax - ts) * steps / (tmax - t0))
+        log.info("Running from {} to {} in {} tsteps".format(ts, tmax, tsteps))
+        t, traj, state = m.run(ts, tmax, tsteps, state)
 
         ## save the trajectory
         times.append(t)

@@ -2,6 +2,7 @@ import argparse
 import pkg_resources
 from ptti.config import config_load
 from ptti.model import runModel
+from ptti.plotting import plot
 import logging as log
 import sys
 import numpy as np
@@ -12,24 +13,26 @@ def command():
         models.update({ep.name: ep.load()})
 
     parser = argparse.ArgumentParser("Population-wide Testing, Tracing and Isolation Models")
-    parser.add_argument("-m", "--model", default="SEIRCTODEMem",
+    parser.add_argument("-m", "--model", default=None,
                         help="Select model: {}".format(", ".join(models.keys())))
-    parser.add_argument("-N", type=int, default=1000,
+    parser.add_argument("-N", type=int, default=None,
                         help="Population size")
-    parser.add_argument("-I", type=int, default=None,
+    parser.add_argument("-IU", type=int, default=None,
                         help="Initial infected population")
-    parser.add_argument("--tmax", type=float, default=100.0,
+    parser.add_argument("--tmax", type=float, default=None,
                         help="Simulation end time")
-    parser.add_argument("--steps", type=int, default=1000,
+    parser.add_argument("--steps", type=int, default=None,
                         help="Simulation reporting time-steps")
-    parser.add_argument("--samples", type=int, default=1,
+    parser.add_argument("--samples", type=int, default=None,
                         help="Number of samples")
     parser.add_argument("-y", "--yaml", default=None,
                         help="YAML file describing parameters and interventions")
     parser.add_argument("-o", "--output", type=str,
-                        default="simdata", help="Output filename")
+                        default=None, help="Output filename")
     parser.add_argument("-R", "--rseries", action="store_true",
                         default=False, help="Compute R along the time-series")
+    parser.add_argument("--plot", action="store_true",
+                        default=False, help="Plot trajectories")
     parser.add_argument("--loglevel", default="INFO",
                         help="Set logging level")
     parser.add_argument("--dump-state", action="store_true",
@@ -41,15 +44,22 @@ def command():
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
     cfg = config_load(args.yaml)
+    log.debug("Config: {}".format(cfg))
 
-    if args.I is not None:
-        cfg["initial"]["IU"] = args.I
+    for meta in ("model", "tmax", "steps", "samples", "rseries", "output"):
+        arg = getattr(args, meta)
+        if arg is not None:
+            cfg["meta"][meta] = arg
+    for init in ("N", "IU"):
+        arg = getattr(args, init)
+        if arg is not None:
+            cfg["initial"][init] = arg
 
-    if args.model not in models:
-        log.error("Unknown model: {}".format(args.model))
+    model = models.get(cfg["meta"]["model"])
+    if model is None:
+        log.error("Unknown model: {}".format(cfg["meta"]["model"]))
         sys.exit(255)
-
-    model = models[args.model]
+    cfg["meta"]["model"] = model
 
     if args.dump_state:
         m = model()
@@ -58,12 +68,18 @@ def command():
         print(state)
         sys.exit(0)
 
-    for i in range(args.samples):
-        t, traj = runModel(model, 0, args.tmax, args.steps, rseries=args.rseries, **cfg)
+    trajectories = []
+    for i in range(cfg["meta"]["samples"]):
+        t, traj = runModel(**cfg["meta"], **cfg)
 
         tseries = np.vstack([t, traj.T]).T
 
-        np.savetxt("{}-{}.tsv".format(args.output, i), tseries, delimiter="\t")
+        outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
+        np.savetxt(outfile, tseries, delimiter="\t")
+        trajectories.append(outfile)
+
+    if args.plot:
+        plot(**cfg["meta"], **cfg)
 
 if __name__ == '__main__':
     command()
