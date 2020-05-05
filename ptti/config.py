@@ -2,12 +2,15 @@ __all__ = ["config_load"]
 
 import yaml
 
-def config_load(filename):
+def config_load(filename=None):
     """
     Load a YAML configuration file, supporting evaluation of some expressions
     """
-    with open(filename) as fp:
-        cfg = yaml.load(fp.read(), yaml.FullLoader)
+    if filename is not None:
+        with open(filename) as fp:
+            cfg = yaml.load(fp.read(), yaml.FullLoader)
+    else:
+        cfg = {}
 
     gvars = {}
     for k, v in cfg.items():
@@ -27,6 +30,14 @@ def config_load(filename):
                 for ik, iv in intv.items():
                     if ik == "parameters":
                         iv.update(_eval_params(iv, gvars))
+
+    ## set some defaults
+    cfg.setdefault("initial", {})
+    cfg["initial"].setdefault("N", 1000)
+    cfg["initial"].setdefault("IU", 10)
+    cfg.setdefault("parameters", {})
+    cfg.setdefault("interventions", {})
+
     return cfg
 
 def _eval_params(d, gvars):

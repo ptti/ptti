@@ -40,20 +40,7 @@ def command():
     log.basicConfig(stream=sys.stdout, level=getattr(log, args.loglevel),
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
-    cfg = {
-        "initial": {
-            "N":  1000,
-            "IU":   10,
-        },
-        "parameters": {},
-        "interventions": [],
-    }
-
-    if args.yaml is not None:
-        ycfg = config_load(args.yaml)
-        for section in ["initial", "parameters"]:
-            cfg[section].update(ycfg.get(section, {}))
-        cfg["interventions"] = ycfg.get("interventions", [])
+    cfg = config_load(args.yaml)
 
     if args.I is not None:
         cfg["initial"]["IU"] = args.I
