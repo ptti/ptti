@@ -9,7 +9,7 @@ import logging
 
 log = logging.getLogger(__name__)
 
-yaml_obs = """
+yaml_seirct_obs = """
 - name:  SU
   descr: susceptible and unconfined
 - name:  SD
@@ -38,7 +38,7 @@ yaml_obs = """
 
 class SEIRCTODEMem(Model):
     name = "SEIR-CT ODE"
-    observables = yaml.load(yaml_obs, yaml.FullLoader)
+    observables = yaml.load(yaml_seirct_obs, yaml.FullLoader)
 
     def initial_conditions(self, N, **o):
         """
@@ -59,12 +59,7 @@ class SEIRCTODEMem(Model):
         return (y0, N)
 
 
-    def run(self, t0, tmax, tsteps, state):
-        """
-        Run the model from t0 to tmax in tsteps steps, given the
-        starting model state.
-        """
-        y0, N = state
+    def _cmodel(self, N):
         beta  = self.beta
         c     = self.c
         chi   = self.chi
@@ -114,8 +109,98 @@ class SEIRCTODEMem(Model):
         cm.set_coupling_rate('CIR:RU=>RD', chi*eta*theta)
         cm.set_coupling_rate('CIR*CIR:RU=>RD', chi*(1-(1-eta)**2)*theta/N)
 
+        return cm
+
+    def run(self, t0, tmax, tsteps, state):
+        """
+        Run the model from t0 to tmax in tsteps steps, given the
+        starting model state.
+        """
+        y0, N = state
+        cm = self._cmodel(N)
         t = np.linspace(t0, tmax, tsteps)
 
         traj = cm.integrate(t, y0)
 
         return (t, traj["y"], (traj["y"][-1, :], N))
+
+
+
+yaml_seir_obs = """
+- name:  SU
+  descr: susceptible and unconfined
+- name:  EU
+  descr: exposed and unconfined
+- name:  IU
+  descr: infectious and unconfined
+- name:  RU
+  descr: removed and unconfined
+"""
+
+class SEIRODE(Model):
+    name = "SEIR ODE"
+    observables = yaml.load(yaml_seir_obs, yaml.FullLoader)
+
+    def initial_conditions(self, N, **o):
+        """
+        Populate the initial condition vector from the given data.
+        SU will be populated with N less the sum of the data. For
+        example,
+
+        >>> m = SEIRODE()
+        >>> m.initial_conditions(N=10000, IU=100)
+        (array([9900.,    0.,    100.,    0.]), 10000)
+
+        This model is mainly used for fitting basic parameters like
+        beta.
+        """
+        y0 = np.zeros(len(self.observables))
+        columns = list(o["name"] for o in self.observables)
+        for k, v in o.items():
+            y0[columns.index(k)] = v
+        y0[columns.index("SU")] = N - sum(o.values())
+        return (y0, N)
+
+
+    def _cmodel(self, N):
+        beta  = self.beta
+        c     = self.c
+        alpha = self.alpha
+        gamma = self.gamma
+
+        states = list(o["name"] for o in self.observables)
+        cm = CModel(states)
+
+        cm.set_coupling_rate('SU*IU:SU=>EU', beta*c/N)
+        cm.set_coupling_rate('EU:EU=>IU', alpha)
+        cm.set_coupling_rate('IU:IU=>RU', gamma)
+
+        return cm
+
+    def run(self, t0, tmax, tsteps, state):
+        """
+        Run the model from t0 to tmax in tsteps steps, given the
+        starting model state.
+        """
+        y0, N = state
+        cm = self._cmodel(N)
+        t = np.linspace(t0, tmax, tsteps)
+
+        traj = cm.integrate(t, y0)
+
+        return (t, traj["y"], (traj["y"][-1, :], N))
+
+
+    def fit_beta(self, N, data):
+        """
+        Estimate beta based on mortality data
+        """
+        cm = self._cmodel(N)
+        constraints = dict(v for k,v in cm.couplings.items() if k not in ("SU*IU:SU=>EU",))
+        print(constraints)
+
+        fit = cm.fit(data, constraints=constraints)
+
+        beta = fit.C["SU*IU:SU=>EU"] * N / self.c
+
+        return (beta, fit)

@@ -62,6 +62,7 @@ setup(name='ptti',
               'ptti = ptti.command:command',
           ],
           'models': [
+              'SEIRODE      = ptti.seirct_ode:SEIRODE',
               'SEIRCTABM    = ptti.seirct_abm:SEIRCTABM',
               'SEIRCTODEMem = ptti.seirct_ode:SEIRCTODEMem',
               'SEIRCTKappa  = ptti.seirct_kappa:SEIRCTKappa',
@@ -69,6 +70,7 @@ setup(name='ptti',
       },
       package_data={
           "ptti": ["*.ka"],
+          "ptti/data": ["*.csv"],
           "examples": ["*.yaml", "*.ka"],
       }
 )
