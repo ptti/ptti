@@ -7,6 +7,7 @@ meta:
   title: PTTI Interventions for Discussion
   output: ptti-discussion
   envelope: false
+  start: 2019/12/24
 
 ## Initial values for the simulation
 initial:
