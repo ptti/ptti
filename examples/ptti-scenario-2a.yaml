@@ -1,7 +1,7 @@
 ##
 ## This is Scenario 2a: Weekly Testing of 80% of people, Contact Tracing of 80% of positives, 
 ##  with 80% of contacts traced per case (all on one day). Remain in Lockdown (i.e. continue 
-##  lockdown from 23rd March) while testing, tracing and isolation scaled up
+##  lockdown from 23rd March) while testing, tracing and isolation scaled up. Then relax lockdown
 ##
 
 meta:
@@ -107,6 +107,7 @@ interventions:
                 #   with support from mobile phone apps
                 
   ## On 31st August, scale up testing, and contact tracing to maximum
+  ##  start to relax lockdown, phase one
   - time: 257
     parameters:
       theta: 9000000/N   # 9,000,000 people tested per day in the UK (
@@ -115,3 +116,16 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
+      c: 7      # Contacts per day increse from 4 to 7
+
+  ## On 28th September, relax lockdown more, phase two
+  ## Contacts per day increse from 7 to 9
+  - time: 285
+    parameters:
+      c: 9  
+      
+  ## On 26th October, relax lockdown more, phase three
+  ## Contacts per day increse from 9 to 11
+  - time: 313
+    parameters:
+      c: 11   # assume contacts per day won't go back up to pre-pandemic level of 13
