@@ -43,23 +43,25 @@ def command():
     log.basicConfig(stream=sys.stdout, level=getattr(log, args.loglevel),
                     format='%(asctime)s - %(levelname)s - %(message)s')
 
-    cfg = config_load(args.yaml)
-    log.debug("Config: {}".format(cfg))
+    def mkcfg(sample):
+        cfg = config_load(args.yaml, sample)
+        log.debug("Config: {}".format(cfg))
 
-    for meta in ("model", "tmax", "steps", "samples", "rseries", "output"):
-        arg = getattr(args, meta)
-        if arg is not None:
-            cfg["meta"][meta] = arg
-    for init in ("N", "IU"):
-        arg = getattr(args, init)
-        if arg is not None:
-            cfg["initial"][init] = arg
+        for meta in ("model", "tmax", "steps", "samples", "rseries", "output"):
+            arg = getattr(args, meta)
+            if arg is not None:
+                cfg["meta"][meta] = arg
+        for init in ("N", "IU"):
+            arg = getattr(args, init)
+            if arg is not None:
+                cfg["initial"][init] = arg
 
-    model = models.get(cfg["meta"]["model"])
-    if model is None:
-        log.error("Unknown model: {}".format(cfg["meta"]["model"]))
-        sys.exit(255)
-    cfg["meta"]["model"] = model
+        model = models.get(cfg["meta"]["model"])
+        if model is None:
+            log.error("Unknown model: {}".format(cfg["meta"]["model"]))
+            sys.exit(255)
+        cfg["meta"]["model"] = model
+        return cfg
 
     if args.dump_state:
         m = model()
@@ -68,8 +70,11 @@ def command():
         print(state)
         sys.exit(0)
 
+    cfg = mkcfg(0)
     trajectories = []
     for i in range(cfg["meta"]["samples"]):
+        cfg = mkcfg(i)
+
         t, traj = runModel(**cfg["meta"], **cfg)
 
         tseries = np.vstack([t, traj.T]).T
@@ -77,6 +82,7 @@ def command():
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
         np.savetxt(outfile, tseries, delimiter="\t")
         trajectories.append(outfile)
+
 
     if args.plot:
         plot(**cfg["meta"], **cfg)

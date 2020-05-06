@@ -19,8 +19,12 @@ def uk_mortality():
 def fit_beta():
     m = SEIRODE()
 
-    N = 67000000
-    data = [ {"t": t, "RU": r} for t,_,r in uk_mortality() ]
-    data.append({"t": 0, "SU": N-1, "EU": 0, "IU": 1, "RU": 0 })
+    data = uk_mortality()
 
-    return m.fit_beta(N, data)
+    N = 67000000
+    I0 = 1.0/N
+    points = [ {"t": t, "RU": r*1.5/(0.008*N)} for t,_,r in data ]
+    init = {"SU0": 1-I0, "EU0": 0, "IU0": I0, "RU0": 0 }
+    print(init)
+
+    return m.fit_beta(N, init, points)

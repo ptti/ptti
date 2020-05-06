@@ -191,12 +191,13 @@ class SEIRODE(Model):
         return (t, traj["y"], (traj["y"][-1, :], N))
 
 
-    def fit_beta(self, N, data):
+    def fit_beta(self, N, init, data):
         """
         Estimate beta based on mortality data
         """
         cm = self._cmodel(N)
         constraints = dict(v for k,v in cm.couplings.items() if k not in ("SU*IU:SU=>EU",))
+        constraints.update(init)
         print(constraints)
 
         fit = cm.fit(data, constraints=constraints)

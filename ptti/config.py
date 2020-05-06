@@ -1,10 +1,20 @@
 __all__ = ["config_load"]
 
 from ptti.plotting import plot_defaults
-
+import numpy as np
 import yaml
 
-def config_load(filename=None):
+def numpy_funcs():
+    funcs = ['beta', 'binomial', 'chisquare', 'choice', 'dirichlet', 'exponential', 'gamma',
+             'geometric', 'gumbel', 'hypergeometric', 'laplace', 'logistic', 'lognormal',
+             'logseries', 'multinomial', 'multivariate_normal', 'negative_binomial',
+             'noncentral_chisquare', 'noncentral_f', 'normal', 'pareto', 'poisson', 'power',
+             'rand', 'randint', 'randn', 'random_integers', 'random_sample', 'rayleigh',
+             'standard_cauchy', 'standard_exponential', 'standard_gamma', 'standard_normal',
+             'standard_t', 'triangular', 'uniform', 'vonmises', 'wald', 'weibull', 'zipf']
+    return { f: getattr(np.random, f) for f in funcs }
+
+def config_load(filename=None, sample=0):
     """
     Load a YAML configuration file, supporting evaluation of some expressions and
     sensible defaults. The defaults are:
@@ -25,7 +35,9 @@ def config_load(filename=None):
     else:
         cfg = {}
 
-    gvars = {}
+    gvars = { "sample": sample }
+    gvars.update(numpy_funcs())
+
     for k, v in cfg.items():
         ## collect global variables from initialisation
         if k == "initial":
@@ -55,7 +67,7 @@ def config_load(filename=None):
     cfg["meta"].setdefault("rseries", False)
     cfg["meta"].setdefault("plots", plot_defaults)
     cfg["meta"].setdefault("title", "PTTI Simulation")
-    
+
     cfg.setdefault("initial", {})
     cfg["initial"].setdefault("N", 1000)
     cfg["initial"].setdefault("IU", 10)
