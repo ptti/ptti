@@ -108,6 +108,7 @@ interventions:
   ##  relax lockdown more, phase two
   ##  Targetted Testing - scale up tested further (proportion of symptomatics tested)
   - time: 194
+    parameters:
             ## Targetted Testing
       coldflu: 0.01     # prevalence of symptomatic cold & flu in July
       symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
