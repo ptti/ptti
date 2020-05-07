@@ -214,7 +214,7 @@ interventions:
   
   ## 1st March 2021 - decrease in cold&flu prevalence
   ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
-  - time: 349
+  - time: 439
     parameters:
                  ## Targetted Testing
       coldflu: 0.03     # prevalence of symptomatic cold & flu in March-April
@@ -230,7 +230,7 @@ interventions:
                         
   ## 1st May 2021 - decrease in cold&flu prevalence
   ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
-  - time: 349
+  - time: 500
     parameters:
                  ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
