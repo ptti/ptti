@@ -73,6 +73,7 @@ def config_load(filename=None, sample=0):
     cfg["meta"].setdefault("tmax", 365)
     cfg["meta"].setdefault("steps", 365)
     cfg["meta"].setdefault("samples", 1)
+    cfg["meta"].setdefault("seed", 0)
     cfg["meta"].setdefault("output", "simdata")
     cfg["meta"].setdefault("rseries", False)
     cfg["meta"].setdefault("plots", plot_defaults)

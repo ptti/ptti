@@ -193,7 +193,7 @@ class Model(object):
             Rs.append(np.trapz(s[:n]*ker[::-1]/N, t))
         return np.array(Rs)
 
-def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[], rseries=False, **unused):
+def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[], rseries=False, seed=0, **unused):
     """
     Run the provided model with the given parameters, initial conditions and
     interventions. The model is run up to the given time, the parameters are
@@ -228,15 +228,19 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
 
       - `rseries` compute R(t) and concatenate it to the trajectory. It will
          be the last column.
+      - `seed` the random seed to set at the beginning of the simulation.
 
     Returns a tuple `(t, traj)` where `t` is the sequence of times, and `traj`
     is the sequence of observables produced by the model.
     """
+    np.random.seed(seed)
+
     m = model()
     m.set_parameters(**parameters)
     state = m.initial_conditions(**initial)
 
     log.info("Running model: {}".format(m.name))
+    log.info("Random seed: {}".format(seed))
     log.info("Parameters: {}".format(parameters))
     log.info("Initial conditions: {}".format(initial))
     log.info("Interventions: {}".format(len(interventions)))

@@ -83,6 +83,8 @@ def command():
         np.savetxt(outfile, tseries, delimiter="\t")
         trajectories.append(outfile)
 
+        ## increment random seed for the benefit of stochastic simulations
+        cfg["meta"]["seed"] += 1
 
     if args.plot:
         plot(**cfg["meta"], **cfg)
