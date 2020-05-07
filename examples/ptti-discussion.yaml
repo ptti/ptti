@@ -69,3 +69,9 @@ interventions:
   - time: 210
     parameters:
       c: 10
+  ## example of degrading theta's effectiveness because of flu
+  - time: 500
+    parameters:
+      flu: 0.03
+      theta: (1.0 - flu)*theta
+
