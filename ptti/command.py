@@ -1,6 +1,6 @@
 import argparse
 import pkg_resources
-from ptti.config import config_load
+from ptti.config import config_load, config_save
 from ptti.model import runModel
 from ptti.plotting import plot
 import logging as log
@@ -56,11 +56,13 @@ def command():
             if arg is not None:
                 cfg["initial"][init] = arg
 
-        model = models.get(cfg["meta"]["model"])
-        if model is None:
-            log.error("Unknown model: {}".format(cfg["meta"]["model"]))
-            sys.exit(255)
-        cfg["meta"]["model"] = model
+        if isinstance(cfg["meta"]["model"], str):
+            model = models.get(cfg["meta"]["model"])
+            if model is None:
+                log.error("Unknown model: {}".format(cfg["meta"]["model"]))
+                sys.exit(255)
+            cfg["meta"]["model"] = model
+
         return cfg
 
     if args.dump_state:
@@ -82,6 +84,9 @@ def command():
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
         np.savetxt(outfile, tseries, delimiter="\t")
         trajectories.append(outfile)
+
+        cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
+        config_save(cfg, cfgout)
 
         ## increment random seed for the benefit of stochastic simulations
         cfg["meta"]["seed"] += 1

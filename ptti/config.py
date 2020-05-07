@@ -1,17 +1,17 @@
-__all__ = ["config_load"]
+__all__ = ["config_load", "config_save"]
 
 from ptti.plotting import plot_defaults
 from ptti.version import platform, python, software, revision
 
 import pkg_resources
-from collections import OrderedDict
+import collections
 import logging
 import numpy as np
 import yaml
 
 log = logging.getLogger(__name__)
 
-def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
+def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=collections.OrderedDict):
     class OrderedLoader(Loader):
         pass
     def construct_mapping(loader, node):
@@ -116,3 +116,7 @@ def _eval_params(d, gvars):
         gvars[k] = params[k]
         #print("setting {} to {} = {}".format(k, v, params[k]))
     return params
+
+def config_save(cfg, filename):
+    with open(filename, "w") as fp:
+        fp.write(yaml.dump(cfg))
