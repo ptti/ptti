@@ -90,9 +90,12 @@ class SEIRCTODEMem(Model):
         cm.set_coupling_rate('IU*SU:=>CIS', c*(1-beta)/N)
         cm.set_coupling_rate('IU*CIS:CIS=>CIE', c*beta/N)
         cm.set_coupling_rate('CIS:CIS=>', gamma+theta*eta*chi)
-        cm.set_coupling_rate('CIS*CIS:CIS=>', chi*(1-(1-eta)**2)*theta/N)
+        # Quadratic terms currently removed. It's a bit hard to justify them
+        # theoretically even though heuristically they make sense
+        # cm.set_coupling_rate('CIS*CIS:CIS=>', chi*(1-(1-eta)**2)*theta/N)
 
         cm.set_coupling_rate('IU*SU:=>CIE', c*beta/N)
+        cm.set_coupling_rate('IU*EU:=>CIE', c/N)
         cm.set_coupling_rate('CIE:CIE=>CII', alpha)
         cm.set_coupling_rate('CIE:CIE=>', gamma+theta*eta*chi)
 
@@ -102,12 +105,12 @@ class SEIRCTODEMem(Model):
 
         cm.set_coupling_rate('IU*RU:=>CIR', c/N)
         cm.set_coupling_rate('CIR:CIR=>', gamma+theta*eta*chi)
-        cm.set_coupling_rate('CIR*CIR:CIR=>', chi*(1-(1-eta)**2)*theta/N)
+        # cm.set_coupling_rate('CIR*CIR:CIR=>', chi*(1-(1-eta)**2)*theta/N)
 
         cm.set_coupling_rate('CIS:SU=>SD', chi*eta*theta)
-        cm.set_coupling_rate('CIS*CIS:SU=>SD', chi*(1-(1-eta)**2)*theta/N)
+        # cm.set_coupling_rate('CIS*CIS:SU=>SD', chi*(1-(1-eta)**2)*theta/N)
         cm.set_coupling_rate('CIR:RU=>RD', chi*eta*theta)
-        cm.set_coupling_rate('CIR*CIR:RU=>RD', chi*(1-(1-eta)**2)*theta/N)
+        # cm.set_coupling_rate('CIR*CIR:RU=>RD', chi*(1-(1-eta)**2)*theta/N)
 
         return cm
 
