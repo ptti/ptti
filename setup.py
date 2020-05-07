@@ -51,6 +51,7 @@ setup(name='ptti',
       packages=find_packages(),
       install_requires=[
           'compyrtment',
+          'gitpython',
           'kappy',
           'matplotlib',
           'numba',

@@ -1,9 +1,15 @@
 __all__ = ["config_load"]
 
 from ptti.plotting import plot_defaults
+from ptti.version import platform, python, software, revision
+
+import pkg_resources
 from collections import OrderedDict
+import logging
 import numpy as np
 import yaml
+
+log = logging.getLogger(__name__)
 
 def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
     class OrderedLoader(Loader):
@@ -78,6 +84,15 @@ def config_load(filename=None, sample=0):
     cfg["meta"].setdefault("rseries", False)
     cfg["meta"].setdefault("plots", plot_defaults)
     cfg["meta"].setdefault("title", "PTTI Simulation")
+
+    if cfg["meta"].setdefault("platform", platform) != platform:
+        log.warning("Config platform ({}) differs from {}".format(cfg["meta"]["platform"], platform))
+    if cfg["meta"].setdefault("software", software) != software:
+        log.warning("Config software version ({}) differs from {}".format(cfg["meta"]["software"], software))
+    if cfg["meta"].setdefault("revision", revision) != revision:
+        log.warning("Config software revision ({}) differs from {}".format(cfg["meta"]["revision"], revision))
+    if cfg["meta"].setdefault("python", python) != python:
+        log.warning("Config Python version ({}) differs from {}".format(cfg["meta"]["python"], python))
 
     cfg.setdefault("initial", {})
     cfg["initial"].setdefault("N", 1000)
