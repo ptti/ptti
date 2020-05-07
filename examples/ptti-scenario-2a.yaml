@@ -7,6 +7,9 @@
 meta:
   title: PTTI Scenario 2a
   output: ptti-scenario-2a
+  start: 2019/12/18
+  tmax: 365
+  steps: 530
 
 ## Initial values for the simulation
 initial:
