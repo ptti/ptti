@@ -180,6 +180,7 @@ interventions:
 
   ## 1st December - increase in cold&flu prevalence
   - time: 349
+    parameters:
                  ## Targetted Testing
       coldflu: 0.04     # prevalence of symptomatic cold & flu in December
       symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
