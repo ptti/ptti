@@ -70,13 +70,18 @@ interventions:
       c: 4
   
   ## On 18th May, start contact tracing
+  ##  Targetted Testing
   - time: 152
     parameters:
-      theta: 100000/N   # 100,000 people tested per day in the UK
-      # ******************************************************** 
-      # For targetted testing need to change this to: 
-      #     targeted = ((infected*symptomatic)+coldflu)/duration
-      # ********************************************************
+           ## Targetted Testing
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
+      infected: IU / N  # proportion of population infected with SARS-Cov-2 (unconfined)
+      duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
+                        #   new people for testing each day - don't want to test the same 
+                        #   people twice during the same illness episode)
+      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+            ## Tracing
       chi: 0.8  # 80% of the ~3000 cases per day (1% of tested) have contacts traced
                 # 18,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
