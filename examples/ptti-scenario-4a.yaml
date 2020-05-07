@@ -188,5 +188,5 @@ interventions:
       duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
                         #   new people for testing each day - don't want to test the same 
                         #   people twice during the same illness episode)
-      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+      theta: ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
             ## Tracing - as above
