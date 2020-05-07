@@ -82,7 +82,7 @@ interventions:
       duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
                         #   new people for testing each day - don't want to test the same 
                         #   people twice during the same illness episode)
-      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+      theta: ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
             ## Tracing
       chi: 0.8  # 80% of the those who test positive per day have contacts traced
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
@@ -101,7 +101,7 @@ interventions:
       duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
                         #   new people for testing each day - don't want to test the same 
                         #   people twice during the same illness episode)
-      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+      theta: ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
             ## Tracing - as above
                 
   ## On 29th June, scale up testing, and contact tracing further
@@ -115,7 +115,7 @@ interventions:
       duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
                         #   new people for testing each day - don't want to test the same 
                         #   people twice during the same illness episode)
-      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+      theta: ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
             ## Tracing - as above
                 
   ## On 27th July, scale up testing, and contact tracing further still
@@ -129,7 +129,7 @@ interventions:
       duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
                         #   new people for testing each day - don't want to test the same 
                         #   people twice during the same illness episode)
-      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+      theta: ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
             ## Tracing - as above
                 
   ## On 31st August, scale up testing, and contact tracing to maximum
@@ -144,7 +144,7 @@ interventions:
       duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
                         #   new people for testing each day - don't want to test the same 
                         #   people twice during the same illness episode)
-      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+      theta: ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
             ## Tracing - as above
 
   ## On 28th September, relax lockdown more, phase two
@@ -160,7 +160,7 @@ interventions:
       duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
                         #   new people for testing each day - don't want to test the same 
                         #   people twice during the same illness episode)
-      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+      theta: ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
             ## Tracing - as above
       
   ## On 26th October, relax lockdown more, phase three
@@ -175,7 +175,7 @@ interventions:
       duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
                         #   new people for testing each day - don't want to test the same 
                         #   people twice during the same illness episode)
-      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+      theta: ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
             ## Tracing - as above
 
   ## 1st December - increase in cold&flu prevalence
