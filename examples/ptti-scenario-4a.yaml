@@ -137,6 +137,7 @@ interventions:
   ##  Targetted Testing
   - time: 257
     parameters:
+      c: 7      # Contacts per day increse from 4 to 7
            ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in September
       symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
@@ -162,6 +163,7 @@ interventions:
                         #   people twice during the same illness episode)
       theta: ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
             ## Tracing - as above
+            
       
   ## On 26th October, relax lockdown more, phase three
   ## Contacts per day increse from 9 to 11
