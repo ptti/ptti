@@ -78,8 +78,8 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
-      beta: 0.022 # one-third (33%) reduction in Beta, 
-                  # conservative assumption based on DELVE 4th May review
+      beta: 0.0231  # 30% reduction in Beta due to pulic wearing of home-made cloth face coverings 
+                    # conservative assumption based on DELVE 4th May review
 
   ## On 1st June, scale up testing, and contact tracing 
   ##  start relax lockdown, phase one
