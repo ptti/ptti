@@ -82,9 +82,9 @@ interventions:
                         #    symptomatic Covid and coldflu because they are indistinguishable)
       theta: symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested
             ## Tracing
-      chi: 0.4  # 80% of the those who test positive per day have contacts traced
+      chi: 0.2  # 80% of the those who test positive per day have contacts traced
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.4  # 80% of contacts for each case successfully traced by contact tracers, 
+      eta: 0.2  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
                 # These tracing rates continue throughout the rest of the simulation
 
