@@ -10,6 +10,8 @@ meta:
   title: PTTI Scenario 4a
   output: ptti-scenario-4a
   start: 2019/12/18
+  tmax: 365
+  steps: 365
 
 ## Initial values for the simulation
 initial:
@@ -82,62 +84,108 @@ interventions:
                         #   people twice during the same illness episode)
       theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
             ## Tracing
-      chi: 0.8  # 80% of the ~3000 cases per day (1% of tested) have contacts traced
-                # 18,000 contact tracers starting on this date should be able to
+      chi: 0.8  # 80% of the those who test positive per day have contacts traced
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
+                # These tracing rates continue throughout the rest of the simulation
 
   ## On 1st June, scale up testing, and contact tracing
+  ##  Targetted Testing
   - time: 166
     parameters:
-      theta: 300000/N   # 300,000 people tested per day in the UK
-      chi: 0.8  # 80% of the ~6000 cases per day (2% of tested) have contacts traced
-                # 36,000 contact tracers starting on this date should be able to
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
-                #   with support from mobile phone apps
+           ## Targetted Testing
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in June
+      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
+      infected: IU / N  # proportion of population infected with SARS-Cov-2 (unconfined)
+      duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
+                        #   new people for testing each day - don't want to test the same 
+                        #   people twice during the same illness episode)
+      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+            ## Tracing - as above
                 
   ## On 29th June, scale up testing, and contact tracing further
+  ##  Targetted Testing
   - time: 194
     parameters:
-      theta: 900000/N   # 900,000 people tested per day in the UK
-      chi: 0.8  # 80% of the ~9000 cases per day (1% of tested) have contacts traced
-                # 54,000 contact tracers starting on this date should be able to
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
-                #   with support from mobile phone apps
+           ## Targetted Testing
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in July
+      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
+      infected: IU / N  # proportion of population infected with SARS-Cov-2 (unconfined)
+      duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
+                        #   new people for testing each day - don't want to test the same 
+                        #   people twice during the same illness episode)
+      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+            ## Tracing - as above
                 
   ## On 27th July, scale up testing, and contact tracing further still
+   ##  Targetted Testing
   - time: 222
     parameters:
-      theta: 3000000/N   # 3,000,000 people tested per day in the UK
-      chi: 0.8  # 80% of the ~11667 cases per day (0.39% of tested) have contacts traced
-                # 70,000 contact tracers starting on this date should be able to
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
-                #   with support from mobile phone apps
+           ## Targetted Testing
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in July
+      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
+      infected: IU / N  # proportion of population infected with SARS-Cov-2 (unconfined)
+      duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
+                        #   new people for testing each day - don't want to test the same 
+                        #   people twice during the same illness episode)
+      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+            ## Tracing - as above
                 
   ## On 31st August, scale up testing, and contact tracing to maximum
   ##  start to relax lockdown, phase one
+  ##  Targetted Testing
   - time: 257
     parameters:
-      theta: 9000000/N   # 9,000,000 people tested per day in the UK (
-      chi: 0.8  # 80% of the ~11667 cases per day (0.13% of tested) have contacts traced
-                # 70,000 contact tracers starting on this date should be able to
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
-                #   with support from mobile phone apps
-      c: 7      # Contacts per day increse from 4 to 7
+           ## Targetted Testing
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in September
+      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
+      infected: IU / N  # proportion of population infected with SARS-Cov-2 (unconfined)
+      duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
+                        #   new people for testing each day - don't want to test the same 
+                        #   people twice during the same illness episode)
+      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+            ## Tracing - as above
 
   ## On 28th September, relax lockdown more, phase two
   ## Contacts per day increse from 7 to 9
+  ##  Targetted Testing
   - time: 285
     parameters:
       c: 9  
+           ## Targetted Testing
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in September
+      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
+      infected: IU / N  # proportion of population infected with SARS-Cov-2 (unconfined)
+      duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
+                        #   new people for testing each day - don't want to test the same 
+                        #   people twice during the same illness episode)
+      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+            ## Tracing - as above
       
   ## On 26th October, relax lockdown more, phase three
   ## Contacts per day increse from 9 to 11
   - time: 313
     parameters:
       c: 11   # assume contacts per day won't go back up to pre-pandemic level of 13
+                 ## Targetted Testing
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in October
+      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
+      infected: IU / N  # proportion of population infected with SARS-Cov-2 (unconfined)
+      duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
+                        #   new people for testing each day - don't want to test the same 
+                        #   people twice during the same illness episode)
+      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+            ## Tracing - as above
+
+  ## 1st December - increase in cold&flu prevalence
+  - time: 349
+                 ## Targetted Testing
+      coldflu: 0.04     # prevalence of symptomatic cold & flu in December
+      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
+      infected: IU / N  # proportion of population infected with SARS-Cov-2 (unconfined)
+      duration: 7       # 7 day duration of symptoms (divide by this so as to only target 
+                        #   new people for testing each day - don't want to test the same 
+                        #   people twice during the same illness episode)
+      theta: = ((infected*symptomatic)+coldflu)/duration    # proportion targetted for testing each day
+            ## Tracing - as above
