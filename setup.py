@@ -56,6 +56,7 @@ setup(name='ptti',
           'matplotlib',
           'numba',
           'numpy',
+          'PyYAML',
       ],
       python_requires='>=3.1.*',
       entry_points={
