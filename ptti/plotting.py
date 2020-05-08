@@ -10,6 +10,20 @@ from glob import glob
 import yaml
 
 yaml_plot_defaults = """
+- name: susceptibles
+  title: Susceptible Individuals
+  timeseries:
+    - title: Unconfined
+      columns: [SU]
+    - title: Isolated
+      columns: [SD]
+- name: exposed
+  title: Exposed Individuals
+  timeseries:
+    - title: Unconfined
+      columns: [EU]
+    - title: Isolated
+      columns: [ED]
 - name: infections
   title: Infectious Individuals
   timeseries:
