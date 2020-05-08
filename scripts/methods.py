@@ -9,6 +9,7 @@ from ptti.model import runModel
 from ptti.seirct_ode import SEIRCTODEMem
 from ptti.seirct_abm import SEIRCTABM
 
+from multiprocessing import Pool
 import logging as log
 import pkg_resources
 import sys
@@ -117,17 +118,30 @@ def figure_testing_tracing():
                 fp.write(line)
             fp.write("\n")
 
+def _runabm(cfg):
+    log.info("Starting sample {}".format(cfg["meta"]["seed"]))
+    t, traj = runModel(**cfg["meta"], **cfg)
+    log.info("Done sample {}".format(cfg["meta"]["seed"]))
+    return t, traj
+
 def compare_abm(mkcfg, desc, out):
     trajectories = []
-    samples = 10
-    for i in range(samples):
-        log.info("Figure: {} sample {}/{}".format(desc, i+1, samples))
+    samples = 25
 
-        cfg = mkcfg()
-        cfg["meta"]["model"] = SEIRCTABM
-        t, traj = runModel(**cfg["meta"], **cfg)
+    def configs():
+        for i in range(samples):
+            cfg = mkcfg()
+            cfg["meta"]["model"] = SEIRCTABM
+            cfg["meta"]["seed"] = i
+            yield cfg
+    configs = list(configs())
 
-        trajectories.append(traj)
+
+    p = Pool()
+    results = p.map(_runabm, configs)
+
+    t = results[0][0]
+    trajectories = [r[1] for r in results]
 
     avg = np.average(trajectories, axis=0)
     std = np.std(trajectories, axis=0)
@@ -145,9 +159,9 @@ def compare_abm(mkcfg, desc, out):
 def figure_abm1():
     def mkcfg():
         cfg = basic_config()
-        cfg["initial"]["N"] = 50000
-        cfg["initial"]["IU"] = 100
-        cfg["parameters"]["theta"] = 0.0714
+        cfg["initial"]["N"] = 1000
+        cfg["initial"]["IU"] = 10
+        cfg["parameters"]["theta"] = 0.1429
         cfg["parameters"]["eta"] = 0.5
         cfg["parameters"]["chi"] = 0.5
         return cfg
@@ -179,11 +193,11 @@ def figure_abm3():
 
     compare_abm(mkcfg, "ABM 2", "strongtesting-{}-1.tsv")
 
-
-#figure_testing()
-#figure_c_testing()
-#figure_tracing()
-#figure_testing_tracing()
-figure_abm1()
-#figure_abm2()
-#figure_abm3()
+if __name__ == '__main__':
+    #figure_testing()
+    #figure_c_testing()
+    #figure_tracing()
+    #figure_testing_tracing()
+    figure_abm1()
+    #figure_abm2()
+    #figure_abm3()

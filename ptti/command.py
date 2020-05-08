@@ -3,9 +3,13 @@ import pkg_resources
 from ptti.config import config_load, config_save
 from ptti.model import runModel
 from ptti.plotting import plot
+from multiprocessing import Pool
 import logging as log
 import sys
 import numpy as np
+
+log.basicConfig(stream=sys.stdout, level=log.INFO,
+                format='%(asctime)s - %(levelname)s - %(message)s')
 
 def command():
     models = {}
@@ -37,6 +41,8 @@ def command():
                         help="Set logging level")
     parser.add_argument("--dump-state", action="store_true",
                         default=False, help="Dump model state and exit")
+    parser.add_argument("--parallel", action="store_true",
+                        default=False, help="Execute samples in parallel")
 
     args = parser.parse_args()
 
@@ -72,27 +78,35 @@ def command():
         print(state)
         sys.exit(0)
 
+    if args.parallel:
+        pmap = Pool().map
+    else:
+        pmap = lambda f,v: list(map(f,v))
+
     cfg = mkcfg(0)
-    trajectories = []
-    for i in range(cfg["meta"]["samples"]):
-        cfg = mkcfg(i)
-
-        t, traj = runModel(**cfg["meta"], **cfg)
-
-        tseries = np.vstack([t, traj.T]).T
-
-        outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
-        np.savetxt(outfile, tseries, delimiter="\t")
-        trajectories.append(outfile)
-
-        cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
-        config_save(cfg, cfgout)
-
-        ## increment random seed for the benefit of stochastic simulations
-        cfg["meta"]["seed"] += 1
+    samples = [(i, mkcfg(i)) for i in range(cfg["meta"]["samples"])]
+    trajectories = pmap(runSamples, samples)
 
     if args.plot:
         plot(**cfg["meta"], **cfg)
+
+def runSamples(arg):
+    i, cfg = arg
+
+    t, traj = runModel(**cfg["meta"], **cfg)
+
+    tseries = np.vstack([t, traj.T]).T
+
+    outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
+    np.savetxt(outfile, tseries, delimiter="\t")
+
+    cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
+    config_save(cfg, cfgout)
+
+    ## increment random seed for the benefit of stochastic simulations
+    cfg["meta"]["seed"] += 1
+
+    return outfile
 
 if __name__ == '__main__':
     command()
