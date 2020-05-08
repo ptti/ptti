@@ -1,0 +1,52 @@
+##
+## This is the basic scenario for the methods paper
+##
+
+meta:
+  title: PTTI Pathological Case
+  output: ptti-pathological
+  rseries: true
+  tmax:  300
+  steps: 300
+
+## Initial values for the simulation
+initial:
+  ## N is the total population
+  N:    67000000
+  ## IU is the number of unconfined, infected individuals
+  IU:   100000
+
+## Parameters of the simulation.
+## All rates are per individual per day.
+parameters:
+  ## beta is the infectiousness of the disease, the
+  ## probability of infecting a contact.
+  beta:  0.033
+
+  ## c is the contact rate per day. 13 is an accepted
+  ## value on average under normal circumstances.
+  c:     13.0
+
+  ## alpha is the rate at which exposed individuals
+  ## (infected but not infectious) become infectious.
+  alpha: 0.2
+
+  ## gamma is the rate at which individuals either 
+  ## recover, or are taken into hospital and assumed
+  ## to be isolated. One week.
+  gamma: 0.1429
+
+  ## kappa is the rate at which individuals leave
+  ## isolation. This is one week according to UK policy.
+  ## The WHO thinks it should be 0.0714.
+  kappa: 0.1429
+
+  ## theta governs testing, and we start with none
+  theta: 0.02
+
+  ## chi is the rate at which contacts are traced.
+  ## Tracing is triggered by testing.
+  chi:   1.0
+
+  ## eta is the success rate of tracing.
+  eta:   0.2
