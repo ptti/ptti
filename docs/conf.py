@@ -24,6 +24,9 @@ author = 'Simone Sturniolo, William Waites, David Manheim, Tim Colbourn, Jasmina
 
 # -- General configuration ---------------------------------------------------
 
+# the entry point into the documentation
+master_doc = 'index'
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
