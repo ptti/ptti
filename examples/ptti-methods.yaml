@@ -6,13 +6,15 @@ meta:
   title: PTTI Scenario for Methods
   output: ptti-methods
   rseries: true
+  tmax:  300
+  steps: 300
 
 ## Initial values for the simulation
 initial:
   ## N is the total population
   N:    67000000
   ## IU is the number of unconfined, infected individuals
-  IU:   2
+  IU:   100000
 
 ## Parameters of the simulation.
 ## All rates are per individual per day.

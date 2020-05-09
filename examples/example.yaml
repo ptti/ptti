@@ -1,0 +1,7 @@
+meta:
+ title:  Example simulation
+ model:  SEIRCTODEMem
+ output: example
+initial:
+ N:  67000000
+ IU: 100000

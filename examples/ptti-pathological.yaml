@@ -12,16 +12,16 @@ meta:
 ## Initial values for the simulation
 initial:
   ## N is the total population
-  N:    67000000
+  N:    1000
   ## IU is the number of unconfined, infected individuals
-  IU:   100000
+  IU:   10
 
 ## Parameters of the simulation.
 ## All rates are per individual per day.
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta:  0.033
+  beta:  0.018
 
   ## c is the contact rate per day. 13 is an accepted
   ## value on average under normal circumstances.
@@ -34,19 +34,19 @@ parameters:
   ## gamma is the rate at which individuals either 
   ## recover, or are taken into hospital and assumed
   ## to be isolated. One week.
-  gamma: 0.1429
+  gamma: 0.0714
 
   ## kappa is the rate at which individuals leave
   ## isolation. This is one week according to UK policy.
   ## The WHO thinks it should be 0.0714.
-  kappa: 0.1429
+  kappa: 0.03
 
   ## theta governs testing, and we start with none
   theta: 0.02
 
   ## chi is the rate at which contacts are traced.
   ## Tracing is triggered by testing.
-  chi:   1.0
+  chi:   0.1
 
   ## eta is the success rate of tracing.
-  eta:   0.2
+  eta:   1.0
