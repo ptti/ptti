@@ -99,13 +99,10 @@ They are not very sophisticated but are useful for quickly inspecting
 model output. This uses the [Matplotlib] python library, but you could
 just as well use [gnuplot]. Some example plots:
 
-![Susceptible](https://github.com/ptti/ptti/raw/master/examples/example-susceptibles.png|width=200)
-
-![Exposed](https://github.com/ptti/ptti/raw/master/examples/example-exposed.png|width=200)
-
-![Infectious](https://github.com/ptti/ptti/raw/master/examples/example-infectious.png|width=200)
-
-![Removed](https://github.com/ptti/ptti/raw/master/examples/example-recovered.png|width=200)
+<image src="https://github.com/ptti/ptti/raw/master/examples/example-susceptibles.png" width=250 />
+<image src="https://github.com/ptti/ptti/raw/master/examples/example-exposed.png" width=250 />
+<image src="https://github.com/ptti/ptti/raw/master/examples/example-infectious.png" width=250 />
+<image src="https://github.com/ptti/ptti/raw/master/examples/example-recovered.png" width=200 />
 
 ## Programmatic interface
 
