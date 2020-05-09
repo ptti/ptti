@@ -62,6 +62,7 @@ setup(name='ptti',
       entry_points={
           'console_scripts': [
               'ptti = ptti.command:command',
+              'ptti-compare = ptti.command:compare'
           ],
           'models': [
               'SEIRODE      = ptti.seirct_ode:SEIRODE',
