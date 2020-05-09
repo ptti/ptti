@@ -37,7 +37,8 @@ def command():
     parser = argparse.ArgumentParser(
         "Population-wide Testing, Tracing and Isolation Models")
     parser.add_argument("-m", "--model", default=None,
-                        help="Select model: {}".format(", ".join(models.keys())))
+                        help="Select model: {}".format(", ".join(
+                            models.keys())))
     parser.add_argument("-N", type=int, default=None,
                         help="Population size")
     parser.add_argument("-IU", type=int, default=None,
@@ -49,7 +50,8 @@ def command():
     parser.add_argument("--samples", type=int, default=None,
                         help="Number of samples")
     parser.add_argument("-y", "--yaml", default=None,
-                        help="YAML file describing parameters and interventions")
+                        help="YAML file describing parameters and "
+                        "interventions")
     parser.add_argument("-o", "--output", type=str,
                         default=None, help="Output filename")
     parser.add_argument("-R", "--rseries", action="store_true",
@@ -137,6 +139,97 @@ def command():
 
     if args.plot:
         plot(**cfg["meta"], **cfg)
+
+def compare():
+    # Compare two different runs of the same model, gauge one vs. the other
+    # and produce various metrics
+
+    parser = argparse.ArgumentParser(
+        "Comparison between different runs of the same model")
+    parser.add_argument("input",
+                        help=".tsv file containing the results to compare")
+    parser.add_argument("reference",
+                        help=".tsv file containing the reference results")
+    parser.add_argument("--reference-std", "-rstd",
+                        type=str, default=None,
+                        help=".tsv file containing the standard deviation"
+                        " of the reference results. If not present, only"
+                        " compute absolute errors")
+    parser.add_argument("--columns", "-cols",
+                        type=int, default=None,
+                        help="Number of columns of the two models to compare"
+                        ". The first x columns will be compared")
+
+    args = parser.parse_args()
+
+    idata = np.loadtxt(args.input)
+    rdata = np.loadtxt(args.reference)
+
+    if args.reference_std is not None:
+        stddata = np.loadtxt(args.reference_std)
+        if stddata.shape != rdata.shape:
+            raise RuntimeError("Invalid reference standard deviation data")
+    else:
+        stddata = None
+
+    cn = args.columns
+    if cn is None:
+        cn = min(idata.shape[1], rdata.shape[1]) - 1
+        print("Comparing first {0} columns".format(cn))
+    elif cn > min(idata.shape[1], rdata.shape[1]):
+        raise RuntimeError("Not enough columns in one or both models")
+
+    # Sanity check
+    if ((idata.shape[0] != rdata.shape[0]) or
+            not np.all(idata[:, 0] == rdata[:, 0])):
+        raise RuntimeError("The two time axes don't match")
+
+    L = idata.shape[0]
+    report = {}
+
+    # Absolute errors
+    abserr = np.zeros((L, cn+1))
+    abserr[:, 0] = idata[:, 0]
+    abserr[:, 1:] = idata[:, 1:cn+1]-rdata[:, 1:cn+1]
+
+    errfile = "{}-abserr.tsv".format(args.input.split('.')[0])
+    np.savetxt(errfile, abserr, delimiter="\t")
+
+    # Integrated absolute errors
+    intabserr = np.trapz(np.abs(abserr[:, 1:]), x=abserr[:, 0], axis=0)
+    intabserr /= (abserr[-1, 0]-abserr[0, 0])
+    report["abserr"] = intabserr.tolist()
+
+    # Relative errors
+    relerr = abserr.copy()
+    relerr[:, 1:cn+1] /= np.where(rdata[:, 1:cn+1]
+                                  != 0, rdata[:, 1:cn+1], np.inf)
+
+    errfile = "{}-relerr.tsv".format(args.input.split('.')[0])
+    np.savetxt(errfile, relerr, delimiter="\t")
+
+    # Integrated relative errors
+    intrelerr = np.trapz(np.abs(relerr[:, 1:]), x=relerr[:, 0], axis=0)
+    intrelerr /= (relerr[-1, 0]-relerr[0, 0])
+    report["relerr"] = intrelerr.tolist()
+
+    # Normalised errors
+    if stddata is not None:
+        stderr = abserr.copy()
+        stderr[:, 1:cn+1] /= np.where(stddata[:, 1:cn+1]
+                                      != 0, stddata[:, 1:cn+1], np.inf)
+
+        errfile = "{}-stderr.tsv".format(args.input.split('.')[0])
+        np.savetxt(errfile, stderr, delimiter="\t")
+
+        # Integrated normalised errors
+        intstderr = np.trapz(np.abs(stderr[:, 1:]), x=stderr[:, 0], axis=0)
+        intstderr /= (stderr[-1, 0]-stderr[0, 0])
+        report["stderr"] = intstderr.tolist()
+
+    repfile = "{}-err.yaml".format(args.input.split('.')[0])
+    config_save(report, repfile)
+
 
 def runSample(arg):
     i, cfg = arg
