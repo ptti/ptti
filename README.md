@@ -31,7 +31,7 @@ The software has a variety of useful features:
     that any model implementation with any number of compartments or 
     states or agents can use to be incorporated into the simulation
     machinery. It does have to be written in [Python]. We're sorry, it
-    would have taken too long in [Haskell].
+    would have taken too long to make this software in [Haskell].
   
 ## Installation
 
