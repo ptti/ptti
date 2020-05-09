@@ -192,7 +192,8 @@ def compare():
     abserr[:, 0] = idata[:, 0]
     abserr[:, 1:] = idata[:, 1:cn+1]-rdata[:, 1:cn+1]
 
-    errfile = "{}-abserr.tsv".format(args.input.split('.')[0])
+    outbase = args.input.rsplit(".", 1)[0]
+    errfile = "{}-abserr.tsv".format(outbase)
     np.savetxt(errfile, abserr, delimiter="\t")
 
     # Integrated absolute errors
@@ -205,7 +206,7 @@ def compare():
     relerr[:, 1:cn+1] /= np.where(rdata[:, 1:cn+1]
                                   != 0, rdata[:, 1:cn+1], np.inf)
 
-    errfile = "{}-relerr.tsv".format(args.input.split('.')[0])
+    errfile = "{}-relerr.tsv".format(outbase)
     np.savetxt(errfile, relerr, delimiter="\t")
 
     # Integrated relative errors
@@ -219,7 +220,7 @@ def compare():
         stderr[:, 1:cn+1] /= np.where(stddata[:, 1:cn+1]
                                       != 0, stddata[:, 1:cn+1], np.inf)
 
-        errfile = "{}-stderr.tsv".format(args.input.split('.')[0])
+        errfile = "{}-stderr.tsv".format(outbase)
         np.savetxt(errfile, stderr, delimiter="\t")
 
         # Integrated normalised errors
@@ -227,7 +228,7 @@ def compare():
         intstderr /= (stderr[-1, 0]-stderr[0, 0])
         report["stderr"] = intstderr.tolist()
 
-    repfile = "{}-err.yaml".format(args.input.split('.')[0])
+    repfile = "{}-err.yaml".format(outbase)
     config_save(report, repfile)
 
 
