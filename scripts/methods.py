@@ -12,6 +12,7 @@ from ptti.seirct_abm import SEIRCTABM
 from multiprocessing import Pool
 import logging as log
 import pkg_resources
+from glob import glob
 import sys
 import os
 import numpy as np
@@ -118,30 +119,35 @@ def figure_testing_tracing():
                 fp.write(line)
             fp.write("\n")
 
-def _runabm(cfg):
+def _runabm(arg):
+    cfg, seed = arg
+    cfg["meta"]["seed"] = seed
     log.info("Starting sample {}".format(cfg["meta"]["seed"]))
     t, traj = runModel(**cfg["meta"], **cfg)
     log.info("Done sample {}".format(cfg["meta"]["seed"]))
     return t, traj
 
-def compare_abm(mkcfg, desc, out):
-    trajectories = []
-    samples = 25
+def mpirun_abm(mkcfg, out):
+    from mpi4py import MPI
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
 
-    def configs():
-        for i in range(samples):
-            cfg = mkcfg()
-            cfg["meta"]["model"] = SEIRCTABM
-            cfg["meta"]["seed"] = i
-            yield cfg
-    configs = list(configs())
+    cfg = mkcfg()
+    t, traj = _runabm((cfg, rank))
 
+    np.savetxt("{}-{}.traj".format(out, rank), traj, delimiter="\t")
+    np.savetxt("{}-{}.t".format(out, rank), t, delimiter="\t")
 
-    p = Pool()
-    results = p.map(_runabm, configs)
+def prun_abm(mkcfg, out):
+    from multiprocessing import Pool
+    results = Pool().map(_runabm, [(mkcfg(), i) for i in range(100)])
+    for i, (t, traj) in enumerate(results):
+        np.savetxt("{}-{}.traj".format(out, i), traj, delimiter="\t")
+        np.savetxt("{}-{}.t".format(out, i), t, delimiter="\t")
 
-    t = results[0][0]
-    trajectories = [r[1] for r in results]
+def compare_abm(cfg, out):
+    t = [np.loadtxt(f, delimiter="\t") for f in glob("{}*.t".format(out))][0]
+    trajectories = [np.loadtxt(f, delimiter="\t") for f in glob("{}*.traj".format(out))]
 
     avg = np.average(trajectories, axis=0)
     std = np.std(trajectories, axis=0)
@@ -151,23 +157,21 @@ def compare_abm(mkcfg, desc, out):
     np.savetxt(out.format("abm-std+2"), np.vstack([t, avg.T+2*std.T]).T, delimiter="\t")
     np.savetxt(out.format("abm-std-2"), np.vstack([t, avg.T-2*std.T]).T, delimiter="\t")
 
-    cfg = mkcfg()
     cfg["meta"]["model"] = SEIRCTODEMem
     t, traj = runModel(**cfg["meta"], **cfg)
     np.savetxt(out.format("ode"), np.vstack([t, traj.T]).T, delimiter="\t")
 
 def figure_abm1():
-    def mkcfg():
-        cfg = basic_config()
-        cfg["initial"]["N"] = 1000
-        cfg["initial"]["IU"] = 10
-        cfg["parameters"]["theta"] = 0.1429
-        cfg["parameters"]["eta"] = 0.5
-        cfg["parameters"]["chi"] = 0.5
-        return cfg
-
-    compare_abm(mkcfg, "ABM 1", "compare-{}-1.tsv")
-
+    cfg = basic_config()
+    cfg["meta"]["model"] = SEIRCTABM
+    cfg["meta"]["tmax"] = 600
+    cfg["meta"]["steps"] = 600
+    cfg["initial"]["N"] = 50000
+    cfg["initial"]["IU"] = 100
+    cfg["parameters"]["theta"] = 0.1429
+    cfg["parameters"]["eta"] = 0.5
+    cfg["parameters"]["chi"] = 0.5
+    return cfg
 
 def figure_abm2():
     def mkcfg():
@@ -198,6 +202,6 @@ if __name__ == '__main__':
     #figure_c_testing()
     #figure_tracing()
     #figure_testing_tracing()
-    figure_abm1()
+    compare_abm(figure_abm1, "compare")
     #figure_abm2()
     #figure_abm3()

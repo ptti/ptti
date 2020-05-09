@@ -21,7 +21,7 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta:  "[0.030, 0.033, 0.036][sample]"
+  beta:  0.033
 
   ## c is the contact rate per day. 13 is an accepted
   ## value on average under normal circumstances.
