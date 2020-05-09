@@ -178,7 +178,7 @@ def compare():
     np.savetxt(errfile, abserr, delimiter="\t")
 
     # Integrated absolute errors
-    intabserr = np.trapz(abserr[:, 1:], x=abserr[:, 0], axis=0)
+    intabserr = np.trapz(np.abs(abserr[:, 1:]), x=abserr[:, 0], axis=0)
     intabserr /= (abserr[-1, 0]-abserr[0, 0])
     report["abserr"] = intabserr.tolist()
 
@@ -191,7 +191,7 @@ def compare():
     np.savetxt(errfile, relerr, delimiter="\t")
 
     # Integrated relative errors
-    intrelerr = np.trapz(relerr[:, 1:], x=relerr[:, 0], axis=0)
+    intrelerr = np.trapz(np.abs(relerr[:, 1:]), x=relerr[:, 0], axis=0)
     intrelerr /= (relerr[-1, 0]-relerr[0, 0])
     report["relerr"] = intrelerr.tolist()
 
@@ -205,7 +205,7 @@ def compare():
         np.savetxt(errfile, stderr, delimiter="\t")
 
         # Integrated normalised errors
-        intstderr = np.trapz(stderr[:, 1:], x=stderr[:, 0], axis=0)
+        intstderr = np.trapz(np.abs(stderr[:, 1:]), x=stderr[:, 0], axis=0)
         intstderr /= (stderr[-1, 0]-stderr[0, 0])
         report["stderr"] = intstderr.tolist()
 
