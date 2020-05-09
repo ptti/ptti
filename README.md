@@ -91,6 +91,39 @@ They are not very sophisticated but are useful for quickly inspecting
 model output. This uses the [Matplotlib] python library, but you could
 just as well use [gnuplot]. Some example plots:
 
+## Programmatic interface
+
+To run the models from a python program, for example in a [Jupyter]
+notebook, see the `runModel` function in the [ptti/models.py] file.
+Its signature is:
+
+    def runModel(model, t0, tmax, steps, parameters={}, initial={},
+                 interventions=[], rseries=False, seed=0, **unused):
+
+The first argument is a model class, for example,
+`ptti.seirct_ode.SEIRCTODEMem`. The next three arguments give the time
+to start the simulation, the end time, and the number of time-steps.
+This is followed by parameters and initial conditions. The parameters
+all have defaults so you only need to specify those that are different.
+Similarly for the initial conditions. To run the model for 300 days 
+with a population of 5000000, with 1000 infectious individuals initially
+and a conspicuously high testing rate, one would do:
+
+    from ptti.seirct_ode import SEIRCTODEMem
+    from ptti.model import runModel
+    
+    params  = { "theta": 1.0 }
+    initial = { "N": 5000000, "IU": 1000 }
+    t, traj = runModel(SEIRCTODEMem, 0, 300, 300, params, initial)
+
+and `t` will be an array of times, and `traj` will be an array of 
+each observable (compartment) for each time.
+
+Of the other arguments, `interventions` specifies interventions and
+`rseries` causes an extra column to be added to the trajectory for the
+computed value of the reproduction number at each time. The `seed` 
+argument is for the random seed to use and is intended to make 
+stochastic simulations repeatable.
 
 [Matplotlib]: https://matplotlib.org
 [gnuplot]: http://www.gnuplot.info
@@ -102,3 +135,5 @@ just as well use [gnuplot]. Some example plots:
 [KaSim]: https://kappalanguage.org/
 [MPI]: https://www.mpi-forum.org/
 [Haskell]: https://www.haskell.org/
+[Jupyter]: https://jupyter.org/
+[ptti/models.py]: https://github.com/ptti/ptti/blob/master/ptti/model.py
