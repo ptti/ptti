@@ -47,7 +47,7 @@ INDEX_RD = 7
 
 INDEX_CT = 8
 
-@jit(nopython=True)
+@jit(nopython=True, cache=True)
 def count_states(states, diagnosed, traceable):
     SU = np.sum((states == STATE_S)*(diagnosed == 0))
     SD = np.sum((states == STATE_S)*diagnosed)
@@ -61,7 +61,7 @@ def count_states(states, diagnosed, traceable):
     return SU, SD, EU, ED, IU, ID, RU, RD, CT
 
 
-@jit(nopython=True)
+@jit(nopython=True, cache=True)
 def count_pcis(states, diagnosed, contactM):
     SUi = np.where((states == STATE_S)*(1-diagnosed))[0]
     SDi = np.where((states == STATE_S)*diagnosed)[0]
@@ -85,7 +85,7 @@ def count_pcis(states, diagnosed, contactM):
     return SUpci, SDpci, EUpci, EDpci, IUpci, IDpci, RUpci, RDpci
 
 
-@jit(nopython=True)
+@jit(nopython=True, cache=True)
 def random_agent_i(states, diagnosed, tstate, tdiag=None):
     if tdiag is None:
         return np.random.choice(np.where(states == tstate)[0])
@@ -94,7 +94,7 @@ def random_agent_i(states, diagnosed, tstate, tdiag=None):
                                          (diagnosed == tdiag))[0])
 
 
-@jit(nopython=True)
+@jit(nopython=True, cache=True)
 def seirxud_abm_gill(tmax=10,
                      N=1000,
                      I0=10,

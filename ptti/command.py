@@ -11,12 +11,14 @@ import numpy as np
 log.basicConfig(stream=sys.stdout, level=log.INFO,
                 format='%(asctime)s - %(levelname)s - %(message)s')
 
+
 def command():
     models = {}
     for ep in pkg_resources.iter_entry_points(group='models'):
         models.update({ep.name: ep.load()})
 
-    parser = argparse.ArgumentParser("Population-wide Testing, Tracing and Isolation Models")
+    parser = argparse.ArgumentParser(
+        "Population-wide Testing, Tracing and Isolation Models")
     parser.add_argument("-m", "--model", default=None,
                         help="Select model: {}".format(", ".join(models.keys())))
     parser.add_argument("-N", type=int, default=None,
@@ -39,6 +41,9 @@ def command():
                         default=False, help="Plot trajectories")
     parser.add_argument("--loglevel", default="INFO",
                         help="Set logging level")
+    parser.add_argument("-st", "--statistics", action="store_true",
+                        default=False,
+                        help="Save average and standard deviation files")
     parser.add_argument("--dump-state", action="store_true",
                         default=False, help="Dump model state and exit")
     parser.add_argument("--parallel", action="store_true",
@@ -81,14 +86,39 @@ def command():
     if args.parallel:
         pmap = Pool().map
     else:
-        pmap = lambda f,v: list(map(f,v))
+        def pmap(f, v): return list(map(f, v))
 
     cfg = mkcfg(0)
     samples = [(i, mkcfg(i)) for i in range(cfg["meta"]["samples"])]
     trajectories = pmap(runSamples, samples)
 
+    for s, traj in zip(samples, trajectories):
+
+        i, cfg = s
+        outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
+        np.savetxt(outfile, traj, delimiter="\t")
+
+        cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
+        config_save(cfg, cfgout)
+
+    if args.statistics:
+        # Average trajectory?
+        tt = np.array(trajectories)
+        tavg = np.average(tt[:, :, 1:], axis=0)
+        tstd = np.std(tt[:, :, 1:], axis=0)
+
+        tavg = np.concatenate([tt[0, :, 0:1], tavg], axis=1)
+        tstd = np.concatenate([tt[0, :, 0:1], tstd], axis=1)
+
+        avgfile = "{}-avg.tsv".format(cfg["meta"]["output"])
+        np.savetxt(avgfile, tavg, delimiter="\t")
+
+        stdfile = "{}-std.tsv".format(cfg["meta"]["output"])
+        np.savetxt(stdfile, tstd, delimiter="\t")
+
     if args.plot:
         plot(**cfg["meta"], **cfg)
+
 
 def runSamples(arg):
     i, cfg = arg
@@ -97,16 +127,11 @@ def runSamples(arg):
 
     tseries = np.vstack([t, traj.T]).T
 
-    outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
-    np.savetxt(outfile, tseries, delimiter="\t")
-
-    cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
-    config_save(cfg, cfgout)
-
-    ## increment random seed for the benefit of stochastic simulations
+    # increment random seed for the benefit of stochastic simulations
     cfg["meta"]["seed"] += 1
 
-    return outfile
+    return tseries
+
 
 if __name__ == '__main__':
     command()
