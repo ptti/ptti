@@ -41,11 +41,13 @@ compiler. The most straightforward way to use this software is to
 first create a virtual environment using, for example, [Conda],
 and then clone this repository and install it in-place:
 
-    conda create -n ptti python=3
-    conda activate ptti
-    git clone https://github.com/ptti/ptti
-    cd ptti
-    python setup.py develop
+```sh
+conda create -n ptti python=3
+conda activate ptti
+git clone https://github.com/ptti/ptti
+cd ptti
+python setup.py develop
+```
 
 For rule-based simulations, the [KaSim] kappa-language simulator
 should also be installed. It is a separate program that is used
@@ -64,17 +66,21 @@ certain condition is met).
 An example description that simply sets some initial conditions and 
 uses the default values to run a simulation:
 
-    meta:
-      title:  Example simulation
-      model:  SEIRCTODEMem
-      output: example
-    initial:
-      N:  67000000
-      IU: 100000
+ ```yaml
+ meta:
+  title:  Example simulation
+  model:  SEIRCTODEMem
+  output: example
+initial:
+  N:  67000000
+  IU: 100000
+```
 
 This example is run with the `ptti` command as follows:
 
-    ptti -y example.yaml
+```sh
+ptti -y example.yaml
+```
 
 Doing so will produce a tab-separated output file of the resulting
 time-series called `example-0.tsv`. The reason for the `0` in the 
@@ -84,7 +90,9 @@ trajectories. For deterministic models, we only need the one.
 
 Another version of this command,
 
-    ptti -y example.yaml --plot
+```sh
+ptti -y example.yaml --plot
+```
 
 will cause some simple plots to be created to visualise the output.
 They are not very sophisticated but are useful for quickly inspecting
@@ -97,8 +105,10 @@ To run the models from a python program, for example in a [Jupyter]
 notebook, see the `runModel` function in the [ptti/models.py] file.
 Its signature is:
 
-    def runModel(model, t0, tmax, steps, parameters={}, initial={},
-                 interventions=[], rseries=False, seed=0, **unused):
+```python
+def runModel(model, t0, tmax, steps, parameters={}, initial={},
+             interventions=[], rseries=False, seed=0, **unused)
+```
 
 The first argument is a model class, for example,
 `ptti.seirct_ode.SEIRCTODEMem`. The next three arguments give the time
@@ -109,12 +119,14 @@ Similarly for the initial conditions. To run the model for 300 days
 with a population of 5000000, with 1000 infectious individuals initially
 and a conspicuously high testing rate, one would do:
 
-    from ptti.seirct_ode import SEIRCTODEMem
-    from ptti.model import runModel
+```python
+from ptti.seirct_ode import SEIRCTODEMem
+from ptti.model import runModel
     
-    params  = { "theta": 1.0 }
-    initial = { "N": 5000000, "IU": 1000 }
-    t, traj = runModel(SEIRCTODEMem, 0, 300, 300, params, initial)
+params  = { "theta": 1.0 }
+initial = { "N": 5000000, "IU": 1000 }
+t, traj = runModel(SEIRCTODEMem, 0, 300, 300, params, initial)
+```
 
 and `t` will be an array of times, and `traj` will be an array of 
 each observable (compartment) for each time.
