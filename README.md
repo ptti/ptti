@@ -10,7 +10,7 @@ tracing and Isolation. It contains the following models:
   * SEIRCTODEMem an ODE implementation of a compartmental model with
     extra memory states
   * SEIRODE a plain SEIR model for comparison
-  * SEIRKappa a rule-based model
+  * SEIRCTKappa a rule-based model
 
 The software has a variety of useful features:
 
