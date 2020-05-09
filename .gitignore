@@ -1,0 +1,6 @@
+*.pyc
+*.nbc
+*.nbi
+*~
+*.bak
+*.log
