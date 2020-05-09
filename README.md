@@ -100,6 +100,7 @@ model output. This uses the [Matplotlib] python library, but you could
 just as well use [gnuplot]. Some example plots:
 
 <image src="https://github.com/ptti/ptti/raw/master/examples/example-susceptibles.png" width="300" /><image src="https://github.com/ptti/ptti/raw/master/examples/example-exposed.png" width="300" />
+
 <image src="https://github.com/ptti/ptti/raw/master/examples/example-infections.png" width="300" /><image src="https://github.com/ptti/ptti/raw/master/examples/example-removed.png" width="300" />
 
 ## Programmatic interface
