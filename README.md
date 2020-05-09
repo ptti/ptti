@@ -124,12 +124,12 @@ with a population of 5000000, with 1000 infectious individuals initially
 and a conspicuously high testing rate, one would do:
 
 ```python
->>> from ptti.seirct_ode import SEIRCTODEMem
->>> from ptti.model import runModel
->>>    
->>> params  = { "theta": 1.0 }
->>> initial = { "N": 5000000, "IU": 1000 }
->>> t, traj = runModel(SEIRCTODEMem, 0, 300, 300, params, initial)
+from ptti.seirct_ode import SEIRCTODEMem
+from ptti.model import runModel
+
+params  = { "theta": 1.0 }
+initial = { "N": 5000000, "IU": 1000 }
+t, traj = runModel(SEIRCTODEMem, 0, 300, 300, params, initial)
 ```
 
 and `t` will be an array of times, and `traj` will be an array of 
