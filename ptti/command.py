@@ -74,7 +74,6 @@ def command():
 
     def mkcfg(sample):
         cfg = config_load(args.yaml, sample)
-        log.debug("Config: {}".format(cfg))
 
         for meta in ("model", "tmax", "steps", "samples", "rseries", "output"):
             arg = getattr(args, meta)
@@ -92,6 +91,7 @@ def command():
                 sys.exit(255)
             cfg["meta"]["model"] = model
 
+        log.debug("Config: {}".format(cfg))
         return cfg
 
     if args.dump_state:
