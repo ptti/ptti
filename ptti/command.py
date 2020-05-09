@@ -5,14 +5,31 @@ from ptti.model import runModel
 from ptti.plotting import plot
 from multiprocessing import Pool
 import logging as log
+import os
 import sys
 import numpy as np
 
-log.basicConfig(stream=sys.stdout, level=log.INFO,
-                format='%(asctime)s - %(levelname)s - %(message)s')
+## MPI is an optional dependency for running on HPC systems
+try:
+    from mpi4py import MPI
+except ImportError:
+    MPI = None
 
+def inmpi():
+    return "PMIX_RANK" in os.environ
+def mpirank():
+    return int(os.environ.get("PMIX_RANK", "0"))
+
+log.basicConfig(stream=sys.stdout, level=log.INFO,
+                format='%(asctime)s - %(name)s:%(levelname)s - %(message)s')
 
 def command():
+    ## if we are running in MPI, and we are a worker process, skip all this
+    if inmpi() and mpirank() > 0:
+        mpiwork()
+        sys.exit(0)
+
+    ## locate models by name from pkg_resources
     models = {}
     for ep in pkg_resources.iter_entry_points(group='models'):
         models.update({ep.name: ep.load()})
@@ -42,8 +59,7 @@ def command():
     parser.add_argument("--loglevel", default="INFO",
                         help="Set logging level")
     parser.add_argument("-st", "--statistics", action="store_true",
-                        default=False,
-                        help="Save average and standard deviation files")
+                        default=False, help="Save average and standard deviation files")
     parser.add_argument("--dump-state", action="store_true",
                         default=False, help="Dump model state and exit")
     parser.add_argument("--parallel", action="store_true",
@@ -52,7 +68,7 @@ def command():
     args = parser.parse_args()
 
     log.basicConfig(stream=sys.stdout, level=getattr(log, args.loglevel),
-                    format='%(asctime)s - %(levelname)s - %(message)s')
+                    format='%(asctime)s - %(name)s:%(levelname)s - %(message)s')
 
     def mkcfg(sample):
         cfg = config_load(args.yaml, sample)
@@ -84,13 +100,16 @@ def command():
         sys.exit(0)
 
     if args.parallel:
-        pmap = Pool().map
+        if inmpi():
+            pmap = mpimap
+        else:
+            pmap = Pool().map
     else:
         def pmap(f, v): return list(map(f, v))
 
     cfg = mkcfg(0)
     samples = [(i, mkcfg(i)) for i in range(cfg["meta"]["samples"])]
-    trajectories = pmap(runSamples, samples)
+    trajectories = pmap(runSample, samples)
 
     for s, traj in zip(samples, trajectories):
 
@@ -119,19 +138,61 @@ def command():
     if args.plot:
         plot(**cfg["meta"], **cfg)
 
-
-def runSamples(arg):
+def runSample(arg):
     i, cfg = arg
+
+    # set random seed for the benefit of stochastic simulations
+    cfg["meta"]["seed"] = i
 
     t, traj = runModel(**cfg["meta"], **cfg)
 
     tseries = np.vstack([t, traj.T]).T
 
-    # increment random seed for the benefit of stochastic simulations
-    cfg["meta"]["seed"] += 1
-
     return tseries
 
+def mpimap(f, v):
+    if MPI is None:
+        log.error("Using MPI requires installation of mpi4py")
+        sys.exit(255)
+
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    size = comm.Get_size()
+
+    import logging
+    log = logging.getLogger("MPI [{}/{}]".format(rank, size))
+    log.info("Running under MPI")
+
+    chunksize = int(len(v)/size)
+    if len(v) % size > 0:
+        chunksize += 1
+    chunks = [v[i*chunksize:(i+1)*chunksize] for i in range(size)]
+
+    chunk = comm.scatter(chunks, root=0)
+    log.info("processing chunk of size {}".format(len(chunk)))
+    result = list(map(runSample, chunk))
+    data = comm.gather(result, root=0)
+
+    return sum(data, [])
+
+def mpiwork():
+    if MPI is None:
+        log.error("Using MPI requires installation of mpi4py")
+        sys.exit(255)
+
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    size = comm.Get_size()
+
+    import logging
+    log = logging.getLogger("MPI [{}/{}]".format(rank, size))
+    log.info("MPI worker running".format(rank, size))
+
+    chunk = comm.scatter(None, root=0)
+    log.info("processing chunk of size {}".format(len(chunk)))
+    result = list(map(runSample, chunk))
+    comm.gather(result, root=0)
+    log.info("done")
 
 if __name__ == '__main__':
     command()
