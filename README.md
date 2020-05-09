@@ -124,12 +124,12 @@ with a population of 5000000, with 1000 infectious individuals initially
 and a conspicuously high testing rate, one would do:
 
 ```python
-from ptti.seirct_ode import SEIRCTODEMem
-from ptti.model import runModel
-    
-params  = { "theta": 1.0 }
-initial = { "N": 5000000, "IU": 1000 }
-t, traj = runModel(SEIRCTODEMem, 0, 300, 300, params, initial)
+>>> from ptti.seirct_ode import SEIRCTODEMem
+>>> from ptti.model import runModel
+>>>    
+>>> params  = { "theta": 1.0 }
+>>> initial = { "N": 5000000, "IU": 1000 }
+>>> t, traj = runModel(SEIRCTODEMem, 0, 300, 300, params, initial)
 ```
 
 and `t` will be an array of times, and `traj` will be an array of 
@@ -140,6 +140,35 @@ Of the other arguments, `interventions` specifies interventions and
 computed value of the reproduction number at each time. The `seed` 
 argument is for the random seed to use and is intended to make 
 stochastic simulations repeatable.
+
+The parameters that are understood by a model, and the observables
+that it provides can be retrieved from the corresponding model 
+properties:
+
+```python
+>>> pprint(model.parameters)
+{'alpha': {'default': 0.2, 'descr': 'incubation rate'},
+ 'beta': {'default': 0.033, 'descr': 'transmission probability'},
+ 'c': {'default': 13.0, 'descr': 'contact rate'},
+ 'chi': {'default': 0.25, 'descr': 'tracing rate'},
+ 'eta': {'default': 0.5, 'descr': 'tracing success probability'},
+ 'gamma': {'default': 0.1429, 'descr': 'recovery rate'},
+ 'kappa': {'default': 0.0714, 'descr': 'isolation exit rate'},
+ 'theta': {'default': 0.0714, 'descr': 'testing rate'}}
+>>> pprint(model.observables)
+[{'descr': 'susceptible and unconfined', 'name': 'SU'},
+ {'descr': 'susceptible and distanced', 'name': 'SD'},
+ {'descr': 'exposed and unconfined', 'name': 'EU'},
+ {'descr': 'infectious and distanced', 'name': 'ED'},
+ {'descr': 'infectious and unconfined', 'name': 'IU'},
+ {'descr': 'infectious and distanced', 'name': 'ID'},
+ {'descr': 'removed and unconfined', 'name': 'RU'},
+ {'descr': 'removed and distanced', 'name': 'RD'},
+ {'descr': 'traceable and susceptible', 'name': 'CIS'},
+ {'descr': 'traceable and exposed', 'name': 'CIE'},
+ {'descr': 'traceable and infectious', 'name': 'CII'},
+ {'descr': 'traceable and exposed', 'name': 'CIR'}]
+```
 
 [Matplotlib]: https://matplotlib.org
 [gnuplot]: http://www.gnuplot.info
