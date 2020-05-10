@@ -194,7 +194,8 @@ t, traj = runModel(SEIRCTODEMem, 0, 300, 300, params, initial)
 ```
 
 and `t` will be an array of times, and `traj` will be an array of 
-each observable (compartment) for each time.
+each observable (compartment) for each time. A full example of this
+programmatic use is available in [examples/ukfitting.py].
 
 Of the other arguments, `interventions` specifies interventions and
 `rseries` causes an extra column to be added to the trajectory for the
@@ -244,3 +245,4 @@ properties:
 [Jupyter]: https://jupyter.org/
 [ptti/models.py]: https://github.com/ptti/ptti/blob/master/ptti/model.py
 [GNU Parallel]: https://www.gnu.org/software/parallel/
+[examples/ukfitting.py]: https://github.com/ptti/ptti/blob/master/examples/ukfitting.py
