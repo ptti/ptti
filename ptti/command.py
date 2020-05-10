@@ -66,6 +66,8 @@ def command():
                         default=False, help="Dump model state and exit")
     parser.add_argument("--parallel", action="store_true",
                         default=False, help="Execute samples in parallel")
+    parser.add_argument("-v", "--var", nargs="*", default=[],
+                        help="Set variables / parameters")
 
     args = parser.parse_args()
 
@@ -83,6 +85,11 @@ def command():
             arg = getattr(args, init)
             if arg is not None:
                 cfg["initial"][init] = arg
+
+        for v in args.var:
+            k,v = v.split("=", 1)
+            v = float(v)
+            cfg["parameters"][k] = v
 
         if isinstance(cfg["meta"]["model"], str):
             model = models.get(cfg["meta"]["model"])
