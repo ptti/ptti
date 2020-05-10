@@ -151,8 +151,8 @@ def compare():
     # Compare two different runs of the same model, gauge one vs. the other
     # and produce various metrics
 
-    parser = argparse.ArgumentParser(
-        "Comparison between different runs of the same model")
+    parser = argparse.ArgumentParser("ptti-compare",
+                                     description="Comparison between different runs of the same model")
     parser.add_argument("input",
                         help=".tsv file containing the results to compare")
     parser.add_argument("reference",
@@ -166,14 +166,17 @@ def compare():
                         type=int, default=None,
                         help="Number of columns of the two models to compare"
                         ". The first x columns will be compared")
+    parser.add_argument("--skip",
+                        type=int, default=0,
+                        help="Skip the first several datapoints")
 
     args = parser.parse_args()
 
-    idata = np.loadtxt(args.input)
-    rdata = np.loadtxt(args.reference)
+    idata = np.loadtxt(args.input)[args.skip:]
+    rdata = np.loadtxt(args.reference)[args.skip:]
 
     if args.reference_std is not None:
-        stddata = np.loadtxt(args.reference_std)
+        stddata = np.loadtxt(args.reference_std)[args.skip:]
         if stddata.shape != rdata.shape:
             raise RuntimeError("Invalid reference standard deviation data")
     else:
