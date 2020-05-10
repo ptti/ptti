@@ -162,7 +162,7 @@ done
 ```
 
 For these kinds of exercises, the excellent [GNU Parallel] can be very
-helpful
+helpful.
 
 ## Programmatic interface
 
