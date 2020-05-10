@@ -1,0 +1,40 @@
+Shutdown:
+  UK_GDP_Monthly: 186000000000
+  UK_Open_Contacts: 13
+  UK_Shutdown_Contacts: 3.9
+  UK_Shutdown_GDP_Penalty: 0.08
+Test:
+  Cost_Per_PCR_Test: 4
+  Hours_per_Shift: 9
+  Lab_Overhead_Cost_Daily: 500
+  Lab_Supervisor_Salary: 300
+  Lab_Tech_Salary: 200
+  Lab_Techs_Per_Machine_Per_Shift: 2
+  PCR_Machine_Daily_Maintenance: 10
+  PCR_Machines_Cost: 27000
+  PCR_Machines_Per_Lab: 10
+  Shifts_per_Day: 2
+  Staff_Training_Cost: 200
+  Tests_per_Batch: 96
+  Tests_per_Machine_per_Day: 3456.0
+  Tests_per_Machine_per_Hour: 192.0
+  Tests_per_Machine_per_Shift: 1728.0
+  Time_per_Batch: 0.5
+Trace:
+  Cost_Per_Extra_Phones_for_Tracers: 200
+  Cost_per_Tracer: 85
+  Daily_Travel_Cost: 10
+  Hiring_Cost: 200
+  Number_of_Tracing_Team_Leads: 343
+  Phone_Credit_Costs: 5
+  Rural_Pct: 0.17
+  Tracing_Supervisor_Salary: 160
+  Team_Lead_Salary: 300
+  Time_to_Trace_Contact: 0.35
+  Tracer_Percentage_Needing_Phones: 0.1
+  Tracer_Salary: 80
+  Tracer_Training_Course_Cost: 72000
+  Tracers_Per_Infected_Person: 7.25
+  Tracers_Per_Supervisor: 50
+  Tracing_App_Development_Deployment: 10000000
+  Tracing_Daily_Public_Communications_Costs: 100000
