@@ -50,7 +50,7 @@ ax2.set_ylabel("Deaths")
 ax2.set_xlim(t0, tmax)
 ax2.set_yscale("log")
 ax2.plot(t, deaths, label="Simulated")
-ax2.plot(ukt, ukdeaths, label="UK deaths")
+ax2.plot(ukt, ukdeaths, label="UK data")
 ax2.legend()
 
 fig.show()
