@@ -154,7 +154,7 @@ done
 or even a nested loop to try different combinations of infection rate and 
 contact rate:
 ```sh
-for b in 0.28 0.30 0.32 0.34; do
+for b in 0.028 0.030 0.032 0.034; do
     for c in 8 10 12 14 16; do
         ptti -y example.yaml -o example-beta${b}-c${c} -v beta=${b} c=${c}
     done
