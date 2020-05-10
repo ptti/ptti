@@ -103,6 +103,67 @@ just as well use [gnuplot]. Some example plots:
 
 <image src="https://github.com/ptti/ptti/raw/master/examples/example-infections.png" width="300" /><image src="https://github.com/ptti/ptti/raw/master/examples/example-removed.png" width="300" />
 
+## Advanced usage
+
+The `ptti` program accepts several command-line arguments that modify
+its behaviour. In particular, values specified in the `.yaml`
+configuration file can be overridden:
+
+```
+usage: ptti [-h] [-m MODEL] [-N N] [-IU IU] [--tmax TMAX] [--steps STEPS] [--samples SAMPLES]
+            [-y YAML] [-o OUTPUT] [-R] [--plot] [--loglevel LOGLEVEL] [-st] [--dump-state]
+            [--parallel] [-v [VAR [VAR ...]]]
+
+Population-wide Testing, Tracing and Isolation Models
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -m MODEL, --model MODEL
+                        Select model: SEIRCTABM, SEIRCTKappa, SEIRCTODEMem, SEIRODE
+  -N N                  Population size
+  -IU IU                Initial infected population
+  --tmax TMAX           Simulation end time
+  --steps STEPS         Simulation reporting time-steps
+  --samples SAMPLES     Number of samples
+  -y YAML, --yaml YAML  YAML file describing parameters and interventions
+  -o OUTPUT, --output OUTPUT
+                        Output filename
+  -R, --rseries         Compute R along the time-series
+  --plot                Plot trajectories
+  --loglevel LOGLEVEL   Set logging level
+  -st, --statistics     Save average and standard deviation files
+  --dump-state          Dump model state and exit
+  --parallel            Execute samples in parallel
+  -v [VAR [VAR ...]], --var [VAR [VAR ...]]
+                        Set variables / parameters
+```
+
+For example, we may wish to run `100` iterations of an agent-based model, and 
+output statistics about the average trajectory and its standard deviation, while
+making sure to use all available processors,
+```sh
+ptti -y example.yaml -m SEIRCTABM --samples 100 --statistics --parallel
+```
+
+Or we may wish to sweep through a variety of testing rates,
+```sh
+for t in 0.0 0.1 0.2 0.3 0.4 0.5; do
+    ptti -y example.yaml -o example-theta${t} -v theta=${t}
+done
+```
+or even a nested loop to try different combinations of infection rate and 
+contact rate:
+```sh
+for b in 0.28 0.30 0.32 0.34; do
+    for c in 8 10 12 14 16; do
+        ptti -y example.yaml -o example-beta${b}-c${c} -v beta=${b} c=${c}
+    done
+done
+```
+
+For these kinds of exercises, the excellent [GNU Parallel] can be very
+helpful
+
 ## Programmatic interface
 
 To run the models from a python program, for example in a [Jupyter]
@@ -182,3 +243,4 @@ properties:
 [Haskell]: https://www.haskell.org/
 [Jupyter]: https://jupyter.org/
 [ptti/models.py]: https://github.com/ptti/ptti/blob/master/ptti/model.py
+[GNU Parallel]: https://www.gnu.org/software/parallel/
