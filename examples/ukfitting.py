@@ -5,35 +5,41 @@ from ptti.seirct_ode import SEIRCTODEMem
 from ptti.model import runModel
 from ptti.data import uk_mortality
 
-t0, tmax, steps = 0, 150, 150
+t0, tmax, steps = -34, 150, 150   # Day 0 is 21st Jan 2020 according to uk_mortality.csv
 
-ifr = 0.01
+ifr = 0.008
 offset = 0 ## date offset for uk case data
 
 initial = {
-    "N": 67000000,
-    "IU": 1,
+    "N": 67886011,
+    "IU": 2,
 }
 
 params = {
-    "beta":  0.038,
+    "beta":  0.030,
     "c":     13,
     "alpha": 0.2,
     "gamma": 0.1429,
     "theta": 0.0,
 }
 
-t, traj = runModel(SEIRCTODEMem, t0, tmax, steps, params, initial)
-IU = traj[:, 4]
-ID = traj[:, 5]
+interventions = [
+    { "time": 89, "parameters": { "c": 10 } },
+    { "time": 96, "parameters": { "c": 4 } }
+]
+
+
+t, traj = runModel(SEIRCTODEMem, t0, tmax, steps, params, initial, interventions)
+RU = traj[:, 7]
+RD = traj[:, 8]
 t += offset
-cases = IU + ID
+cases = RU + RD
 deaths = ifr * cases
 
 ukm = uk_mortality()
 ukt = ukm[:,0]
 ukcases = ukm[:,1]
-ukdeaths = ukm[:,2]
+ukdeaths = ukm[:,2]*1.6
 
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
