@@ -3,6 +3,9 @@ Shutdown:
   UK_Open_Contacts: 13
   UK_Shutdown_Contacts: 3.9
   UK_Shutdown_GDP_Penalty: 0.08
+Policies:
+  Hiring_Policy: 'Policy'
+  Window_Length: 0
 Test:
   Cost_Per_PCR_Test: 4
   Hours_per_Shift: 9

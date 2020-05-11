@@ -61,7 +61,6 @@ econ_inputs['Trace']['Daily_Travel_Cost'] = 10
 econ_inputs['Trace']['Tracing_Daily_Public_Communications_Costs'] = 100000 #Messaging, etc.
 
 
-
 # Testing Costs
 
 # PCR Machine Capabilities
