@@ -1,25 +1,24 @@
 from math import ceil, exp
 import yaml
 
-Test = False
-# Run model for testing:
-if Test:
-    from ptti.seirct_ode import SEIRCTODEMem
-    Test_YAML = r'examples\ptti-discussion.yaml'
-    Econ_YAML = r'economics\economic-inputs.yaml'
-    with open(Test_YAML) as file:
-        scenario = yaml.load(file, Loader=yaml.FullLoader)
-    with open(Econ_YAML) as file:
-        economics = yaml.load(file, Loader=yaml.FullLoader)
+# Test = False
+# # Run model for testing:
+# if Test:
+#     from ptti.seirct_ode import SEIRCTODEMem
+#     Test_YAML = r'examples\ptti-discussion.yaml'
+#     Econ_YAML = r'economics\economic-inputs.yaml'
+#     with open(Test_YAML) as file:
+#         scenario = yaml.load(file, Loader=yaml.FullLoader)
+#     with open(Econ_YAML) as file:
+#         economics = yaml.load(file, Loader=yaml.FullLoader)
+#
+#     Model = SEIRCTODEMem()
+#     model_outputs = Model.run(t0=0, tsteps=365, tmax=365, state=Model.initial_conditions(**scenario['initial']))
 
-    Model = SEIRCTODEMem()
-    model_outputs = Model.run(t0=0, tsteps=365, tmax=365, state=Model.initial_conditions(**scenario['initial']))
-
-# Test = Econ_Outputs(model_outputs, Test_YAML)
+# Test = Econ_Outputs(model_outputs, Test_YAML,Econ_YAML, True)
 
 
-
-def Econ_Outputs(model_outputs, scenario_YAML,econ_YAML):
+def Econ_Outputs(model_outputs, scenario_YAML, econ_YAML, write_file=False):
     with open(scenario_YAML) as file:
         scenario = yaml.load(file, Loader=yaml.FullLoader)
     with open(econ_YAML) as file:
@@ -32,7 +31,7 @@ def Econ_Outputs(model_outputs, scenario_YAML,econ_YAML):
     Output['policy'] = scenario
     Output['model_output'] = model_outputs
     Output['timesteps'] = Output['model_output'][0]
-    Days = len(model_outputs[0]) # Total number of days modeled
+    Days = len(model_outputs[0])  # Total number of days modeled
     Output['compartments'] = model_outputs[1]
 
     Costs = 0
@@ -42,19 +41,21 @@ def Econ_Outputs(model_outputs, scenario_YAML,econ_YAML):
     Output['variables'] = dict()
     # GEt parameter values, which can change over time due to interventions.
     for var in scenario['parameters'].keys():
-        Output['variables'][var] = [scenario['parameters'][var] for d in range(Days)] # Initial value.
+        Output['variables'][var] = [float(scenario['parameters'][var]) for d in range(Days)] # Initial value.
     for intervention in scenario['interventions']:
         for var in intervention['parameters']:
-            Output['variables'][var][intervention['time']:] = [intervention['parameters'][var] for i in range(Days-int(intervention['time']))]
+            if var in Output['variables'].keys():
+                Output['variables'][var][intervention['time']:] = [float(intervention['parameters'][var]) for i in range(Days-int(intervention['time']))]
 
-    Output['I'] = [a + b for a, b in zip(Output['compartments'][:, 4], Output['compartments'][:,5])]
+    Output['I'] = [float(a + b) for a, b in zip(Output['compartments'][:, 4], Output['compartments'][:,5])]
 
     Output['econ']['trace'] = [0 for d in range(Days)] # Number of people that must be traced.
     for d in range(Days):
         if Output['variables']['theta'][d] > 0:
             Output['econ']['trace'][d] = Output['variables']['c'][d] * Output['variables']['theta'][d] / (
                 Output['variables']['gamma'][d] + Output['variables']['theta'][d] *
-                (1 + Output['variables']['eta'][d] * Output['variables']['chi'][d]) ) * Output['compartments'][d, 6] #IU
+                (1 + Output['variables']['eta'][d] * Output['variables']['chi'][d]) ) *\
+                                         float(Output['compartments'][d, 6]) #IU
     # if True: #policy['Trace']: # Currently, we always assumes we pay to trace,
 
     To_Trace = Output['econ']['trace']
@@ -65,6 +66,8 @@ def Econ_Outputs(model_outputs, scenario_YAML,econ_YAML):
     Period_Starts = []
     Period_Ends = []
     Period_Start = 0
+    # Two ways to do periods for hiring; per policy period, or per window. We can do both.
+
     for p in Output['policy']['interventions']:
         Period_End = p['time']
         Period_Starts.append(Period_Start)
@@ -74,16 +77,19 @@ def Econ_Outputs(model_outputs, scenario_YAML,econ_YAML):
         Tracers_Needed_Per_Hiring_Window.append(Tracers_This_Period)
         Period_Start = Period_End # For next period.
     # Last Period:
-    Period_Starts.append(Period_Start)
-    Period_Ends.append(Days)
-    Period_Lengths.append(Days - Period_Start)
-    Tracers_Needed_Per_Hiring_Window.append(max(To_Trace[Period_Start:Days]) * Time_to_Trace_Contact)
+    if Days > Period_Start:
+        Period_Starts.append(Period_Start)
+        Period_Ends.append(Days)
+        Period_Lengths.append(Days - Period_Start)
+        Tracers_Needed_Per_Hiring_Window.append(max(To_Trace[Period_Start:Days]) * Time_to_Trace_Contact)
 
     # We assume that each day, all people whose contacts can be traced have all contacts traced by a team.
     # This means to keep tracing on a one-day lag, i.e. by end of the next day,  we need enough people to trace
     # the maximum expected number in any one day during that period.
     Max_Tracers = max(Tracers_Needed_Per_Hiring_Window)
 
+    # We assume we need supervisors full time, regardless of number of tracers at the time.
+    Number_of_Tracing_Supervisors = Max_Tracers / Tracers_Per_Supervisor
     # The above now does a bunch of checking to get the numbers for tracers needed. Now we take the sum.
     Total_Max_Tracing_Workers = Number_of_Tracing_Supervisors + Number_of_Tracing_Team_Leads + Max_Tracers
     Recruitment_Costs = Hiring_Cost * Total_Max_Tracing_Workers
@@ -195,11 +201,23 @@ def Econ_Outputs(model_outputs, scenario_YAML,econ_YAML):
     Output['econ']['GDP']['Projected'] = Overall_Period_GDP
     Output['econ']['GDP']['Reduction_from_Baseline'] = 1-(Overall_Period_GDP/No_Pandemic_GDP)
     Output['econ']['GDP']['Benefit_over_Shutdown'] = Overall_Period_GDP - Full_Shutdown_GDP
-    Output['econ']['Total_Costs'] = Costs
+    Output['econ']['Total_Costs'] = float(Costs)
     Output['Trace_Outputs'] = Trace_Outputs
     Output['Test_Outputs'] = Test_Outputs
 
-    return Output  #  What else is useful to graph / etc?
+    if write_file:
+        Output_write = dict()
+        Output_write['econ'] = Output['econ'].copy()
+        Output_write['Trace'] = Output['Trace_Outputs'].copy()
+        Output_write['Test'] = Output['Test_Outputs'].copy()
+        outfile = scenario_YAML
+        import ntpath
+        basename = ntpath.splitext(ntpath.basename(scenario_YAML))[0]
+        with open(basename + '-econ-out.yaml', 'w') as file:
+            documents = yaml.dump(Output_write, file)
+            file.close()
+
+    return Output  # What else is useful to graph / etc?
 
 #
 # test_output_0 = test_output(900, 0.25, 30, 110)  # Good enough for a basic test.
