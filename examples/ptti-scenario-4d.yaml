@@ -71,6 +71,13 @@ interventions:
   - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
     parameters:
       c: 4
+
+  ## On 13th May, start relax lockdown, phase one: 
+  ##    those who can’t work from home encouraged back to work 
+  ## Contacts per day increse from 4 to 6
+  - time: 147
+    parameters:
+      c: 6
   
   ## On 18th May, start contact tracing
   ##  start cloth face covering (mask) wearing in public
@@ -78,7 +85,7 @@ interventions:
   - time: 152
     parameters:
           ## Face coverings
-      beta: 0.022 # one-third (33%) reduction in Beta, 
+      beta: 0.023 # 30% reduction in Beta 
           ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
       symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
@@ -98,11 +105,13 @@ interventions:
                 # These tracing rates continue throughout the rest of the simulation
 
   ## On 1st June, scale up testing, and contact tracing 
-  ##  start relax lockdown, phase one
-  ##  Targetted Testing - scale up tested (proportion of symptomatics tested during their week long illness)
+  ##  start relax lockdown, phase two
+  ##  some schools may open 1st June
+  ##    Contacts per day increse from 6 to 8
   - time: 166
     parameters:
-           ## Targetted Testing
+      c: 8    # Contacts per day increse from 6 to 8
+      ## Targetted Testing - scale up tested (proportion of symptomatics tested during their week long illness)
       coldflu: 0.02     # prevalence of symptomatic cold & flu in June
       symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
       tested: 0.2       # proportion of symptomatic who are tested (this is the same for 
@@ -113,11 +122,9 @@ interventions:
                         #   correct for double counting of those who have both
                         # it is divided by duration of symptoms so as to only test each sympomatic 
                         # person once during their illness
-            ## Tracing - as above
-      c: 7      # Contacts per day increse from 4 to 7
+            ## Tracing - as above   
                 
   ## On 29th June, scale up testing, and contact tracing further
-  ##  relax lockdown more, phase two
   ##  Targetted Testing - scale up tested further (proportion of symptomatics tested during their week long illness)
   - time: 194
     parameters:
@@ -133,7 +140,13 @@ interventions:
                         # it is divided by duration of symptoms so as to only test each sympomatic 
                         # person once during their illness
             ## Tracing - as above
-      c: 9      # Contacts per day increse from 7 to 9
+  
+  ## On 4th July, relax lockdown more, phase three
+  ##  some entertainment venues may open
+  ## Contacts per day increse from 8 to 11
+  - time: 199
+    parameters:
+      c: 11   # assume contacts per day won't go back up to pre-pandemic level of 13    
                 
   ## On 27th July, scale up testing, and contact tracing further still
   ##  relax lockdown more, phase three
@@ -152,8 +165,6 @@ interventions:
                         # it is divided by duration of symptoms so as to only test each sympomatic 
                         # person once during their illness
             ## Tracing - as above
-      c: 11     # Contacts per day increse from 9 to 11
-                # assume contacts per day won't go back up to pre-pandemic level of 13
                 
   ## On 31st August, scale up testing, and contact tracing to maximum
   ##  Targetted Testing - maximum propotion (80%) of symptomatics tested during their week long illness - note this has been
