@@ -1,5 +1,5 @@
 SAMPLES = 10
-BENCHMARKS = bmark-notest bmark-noct-lowtest bmark-noct-hightest bmark-lowct-lowtest bmark-highct-lowtest bmark-lowct-hightest bmark-highct-hightest
+BENCHMARKS = bmark-notest bmark-noct-lowtest bmark-noct-hightest bmark-lowct-lowtest bmark-highct-lowtest bmark-lowct-hightest bmark-highct-hightest bmark-highct-verylowtest
 
 ${BENCHMARKS:=-out-abm-avg.tsv}: %-out-abm-avg.tsv : %.yaml
 	TARG=$@; \

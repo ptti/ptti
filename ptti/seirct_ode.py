@@ -28,10 +28,6 @@ yaml_seirct_obs = """
   descr: removed and distanced
 - name:  CIS
   descr: traceable and susceptible
-- name:  CIE
-  descr: traceable and exposed
-- name:  CII
-  descr: traceable and infectious
 - name:  CIR
   descr: traceable and exposed
 """
@@ -88,22 +84,24 @@ class SEIRCTODEMem(Model):
 
         # Now the stuff that depends on memory
         cm.set_coupling_rate('IU*SU:=>CIS', c*(1-beta)/N)
-        cm.set_coupling_rate('IU*CIS:CIS=>CIE', c*beta/N)
+        cm.set_coupling_rate('IU*CIS:CIS=>', c*beta/N)
         cm.set_coupling_rate('CIS:CIS=>', gamma+theta*eta*chi)
+        # cm.set_coupling_rate('IU*CIS:CIS=>CIE', c*beta/N)
         # Quadratic terms currently removed. It's a bit hard to justify them
         # theoretically even though heuristically they make sense
         # cm.set_coupling_rate('CIS*CIS:CIS=>', chi*(1-(1-eta)**2)*theta/N)
 
-        cm.set_coupling_rate('IU*SU:=>CIE', c*beta/N)
-        cm.set_coupling_rate('IU*EU:=>CIE', c/N)
-        cm.set_coupling_rate('CIE:CIE=>CII', alpha)
-        cm.set_coupling_rate('CIE:CIE=>', gamma+theta*eta*chi)
+        # cm.set_coupling_rate('IU*SU:=>CIE', c*beta/N)
+        # cm.set_coupling_rate('IU*EU:=>CIE', c/N)
+        # cm.set_coupling_rate('CIE:CIE=>CII', alpha)
+        # cm.set_coupling_rate('CIE:CIE=>', gamma+theta*eta*chi)
 
-        cm.set_coupling_rate('IU*IU:=>CII', c/N)
-        cm.set_coupling_rate('CII:CII=>CIR', gamma)
-        cm.set_coupling_rate('CII:CII=>', gamma+theta*(1+eta*chi))
+        # cm.set_coupling_rate('IU*IU:=>CII', c/N)
+        # cm.set_coupling_rate('CII:CII=>CIR', gamma)
+        # cm.set_coupling_rate('CII:CII=>', gamma+theta*(1+eta*chi))
 
         cm.set_coupling_rate('IU*RU:=>CIR', c/N)
+        cm.set_coupling_rate('IU:=>CIR', gamma)
         cm.set_coupling_rate('CIR:CIR=>', gamma+theta*eta*chi)
         # cm.set_coupling_rate('CIR*CIR:CIR=>', chi*(1-(1-eta)**2)*theta/N)
 
