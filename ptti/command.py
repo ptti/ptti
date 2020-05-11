@@ -34,8 +34,8 @@ def command():
     for ep in pkg_resources.iter_entry_points(group='models'):
         models.update({ep.name: ep.load()})
 
-    parser = argparse.ArgumentParser(
-        "Population-wide Testing, Tracing and Isolation Models")
+    parser = argparse.ArgumentParser("ptti",
+                                     description="Population-wide Testing, Tracing and Isolation Models")
     parser.add_argument("-m", "--model", default=None,
                         help="Select model: {}".format(", ".join(
                             models.keys())))
