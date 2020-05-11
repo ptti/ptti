@@ -1,0 +1,17 @@
+meta:
+  model: SEIRCTABM
+  tmax:  600
+  steps: 600
+  output: eta-err-0.3.yaml
+initial:
+  N: 10000
+  IU:  100
+parameters:
+  beta:  0.033
+  c:     13
+  alpha: 0.2
+  gamma: 0.1429
+  kappa: 0.0714
+  theta: 0.0714
+  eta:   0.3
+  chi:   0.5

@@ -1,0 +1,17 @@
+#!/bin/sh
+#PBS -j oe
+#PBS -N abm1-30k
+#PBS -l walltime=01:00:00
+#PBS -l select=100:ncpus=1:mem=4gb
+
+module load git
+module load openmpi
+
+. ~/miniconda3/etc/profile.d/conda.sh
+conda activate ptti
+
+YAML=abm1.yaml
+OUTPUT=abm1-30k
+
+cd ~/ptti-data
+mpirun ptti -N 30000 -IU 100 -m SEIRCTABM --samples 100 -st --parallel -y $YAML -o $OUTPUT

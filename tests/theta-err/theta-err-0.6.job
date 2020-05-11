@@ -1,0 +1,17 @@
+#!/bin/sh
+#PBS -j oe
+#PBS -N theta-0.6
+#PBS -l walltime=08:00:00
+#PBS -l select=100:ncpus=1:mem=6gb
+
+module load git
+module load openmpi
+
+. ~/miniconda3/etc/profile.d/conda.sh
+conda activate ptti
+
+YAML=theta-err-0.6.yaml
+OUTPUT=theta-err-0.6
+
+cd ~/ptti-data/theta-err
+mpirun ptti --samples 100 -st --parallel -y $YAML -o $OUTPUT
