@@ -28,10 +28,10 @@ interventions = [
     { "time": 96, "parameters": { "c": 4 } }
 ]
 
-
-t, traj = runModel(SEIRCTODEMem, t0, tmax, steps, params, initial, interventions)
-RU = traj[:, 7]
-RD = traj[:, 8]
+model = SEIRCTODEMem
+t, traj = runModel(model, t0, tmax, steps, params, initial, interventions)
+RU = traj[:, model.colindex("RU")]
+RD = traj[:, model.colindex("RD")]
 t += offset
 cases = RU + RD
 deaths = ifr * cases
