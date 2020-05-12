@@ -105,6 +105,11 @@ class Model(object):
         Return the index in the columns of the trajectory for
         the named observable.
         """
+        ## this enables uniform use of colindex mainly for the
+        ## benefit of plotting, so that computed columns like
+        ## R can be specified numerically
+        if isinstance(c, int):
+            return c
         for i, o in enumerate(cls.observables):
             if o["name"] == c:
                 return i
@@ -193,7 +198,7 @@ class Model(object):
             Rs.append(np.trapz(s[:n]*ker[::-1]/N, t))
         return np.array(Rs)
 
-def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[], rseries=False, seed=0, **unused):
+def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[], rseries=True, seed=0, **unused):
     """
     Run the provided model with the given parameters, initial conditions and
     interventions. The model is run up to the given time, the parameters are
