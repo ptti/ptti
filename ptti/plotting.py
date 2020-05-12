@@ -36,6 +36,11 @@ yaml_plot_defaults = """
   timeseries:
     - title: Removed / Recovered
       columns: [RU, RD]
+- name: reproduction
+  title: Reproduction Number
+  timeseries:
+    - title: Reproduction Number
+      columns: [-1]
 """
 
 plot_defaults = yaml.load(yaml_plot_defaults, yaml.FullLoader)

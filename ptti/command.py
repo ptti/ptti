@@ -54,8 +54,6 @@ def command():
                         "interventions")
     parser.add_argument("-o", "--output", type=str,
                         default=None, help="Output filename")
-    parser.add_argument("-R", "--rseries", action="store_true",
-                        default=False, help="Compute R along the time-series")
     parser.add_argument("--plot", action="store_true",
                         default=False, help="Plot trajectories")
     parser.add_argument("--loglevel", default="INFO",
@@ -77,7 +75,7 @@ def command():
     def mkcfg(sample):
         cfg = config_load(args.yaml, sample)
 
-        for meta in ("model", "tmax", "steps", "samples", "rseries", "output"):
+        for meta in ("model", "tmax", "steps", "samples", "output"):
             arg = getattr(args, meta)
             if arg is not None:
                 cfg["meta"][meta] = arg
@@ -102,7 +100,8 @@ def command():
         return cfg
 
     if args.dump_state:
-        m = model()
+        cfg = mkcfg(0)
+        m = cfg["meta"]["model"]()
         m.set_parameters(**cfg["parameters"])
         state = m.initial_conditions(**cfg["initial"])
         print(state)
