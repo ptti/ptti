@@ -1,11 +1,14 @@
+Medical:
+  Hospitalized_Pct_Deaths: 0.44
+  ICU_Fatality: 0.59
+  ICU_Pct: 0.17
+  IFR: 0.008
+  Non_ICU_Fatality: 0.36
 Shutdown:
   UK_GDP_Monthly: 186000000000
   UK_Open_Contacts: 13
   UK_Shutdown_Contacts: 3.9
   UK_Shutdown_GDP_Penalty: 0.08
-Policies:
-  Hiring_Policy: 'Policy'
-  Window_Length: 0
 Test:
   Cost_Per_PCR_Test: 4
   Hours_per_Shift: 9
@@ -31,7 +34,6 @@ Trace:
   Number_of_Tracing_Team_Leads: 343
   Phone_Credit_Costs: 5
   Rural_Pct: 0.17
-  Tracing_Supervisor_Salary: 160
   Team_Lead_Salary: 300
   Time_to_Trace_Contact: 0.35
   Tracer_Percentage_Needing_Phones: 0.1
@@ -41,3 +43,4 @@ Trace:
   Tracers_Per_Supervisor: 50
   Tracing_App_Development_Deployment: 10000000
   Tracing_Daily_Public_Communications_Costs: 100000
+  Tracing_Supervisor_Salary: 160
