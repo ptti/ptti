@@ -81,7 +81,7 @@ def config_load(filename=None, sample=0):
     cfg["meta"].setdefault("samples", 1)
     cfg["meta"].setdefault("seed", 0)
     cfg["meta"].setdefault("output", "simdata")
-    cfg["meta"].setdefault("rseries", False)
+    cfg["meta"].setdefault("rseries", True)
     cfg["meta"].setdefault("plots", plot_defaults)
     cfg["meta"].setdefault("title", "PTTI Simulation")
 
