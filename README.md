@@ -128,7 +128,6 @@ optional arguments:
   -y YAML, --yaml YAML  YAML file describing parameters and interventions
   -o OUTPUT, --output OUTPUT
                         Output filename
-  -R, --rseries         Compute R along the time-series
   --plot                Plot trajectories
   --loglevel LOGLEVEL   Set logging level
   -st, --statistics     Save average and standard deviation files
@@ -172,7 +171,7 @@ Its signature is:
 
 ```python
 def runModel(model, t0, tmax, steps, parameters={}, initial={},
-             interventions=[], rseries=False, seed=0, **unused)
+             interventions=[], rseries=True, seed=0, **unused)
 ```
 
 The first argument is a model class, for example,
@@ -197,11 +196,9 @@ and `t` will be an array of times, and `traj` will be an array of
 each observable (compartment) for each time. A full example of this
 programmatic use is available in [examples/ukfitting.py].
 
-Of the other arguments, `interventions` specifies interventions and
-`rseries` causes an extra column to be added to the trajectory for the
-computed value of the reproduction number at each time. The `seed` 
-argument is for the random seed to use and is intended to make 
-stochastic simulations repeatable.
+Of the other arguments, `interventions` specifies interventions.
+The `seed` argument is for the random seed to use and is intended to
+make stochastic simulations repeatable.
 
 The parameters that are understood by a model, and the observables
 that it provides can be retrieved from the corresponding model 
