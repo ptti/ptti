@@ -5,11 +5,11 @@ import yaml
 # # Run model for testing:
 # if Test:
 #     from ptti.seirct_ode import SEIRCTODEMem
-#     Test_YAML = r'examples\ptti-discussion.yaml'
-#     Econ_YAML = r'economics\economic-inputs.yaml'
-#     with open(Test_YAML) as file:
+#     scenario_YAML = r'examples\ptti-discussion.yaml'
+#     econ_YAML = r'economics\economic-inputs.yaml'
+#     with open(scenario_YAML) as file:
 #         scenario = yaml.load(file, Loader=yaml.FullLoader)
-#     with open(Econ_YAML) as file:
+#     with open(econ_YAML) as file:
 #         economics = yaml.load(file, Loader=yaml.FullLoader)
 #
 #     Model = SEIRCTODEMem()
@@ -180,6 +180,27 @@ def Econ_Outputs(model_outputs, scenario_YAML, econ_YAML, write_file=False):
 
     Costs += Testing_Costs
 
+    ## Medical Outcomes
+    # Because the R compartment is cumulative, we can take the final value as the total number of cases.
+    Total_Resolved_Cases = Output['compartments'][-1,6] + Output['compartments'][-1,7] # RU + RD
+    locals().update(econ['Medical']) #Retreive local variables
+    Medical_Outcomes = dict()
+    Medical_Outcomes['Cases'] = Total_Resolved_Cases
+    Medical_Outcomes['Deaths'] = Total_Resolved_Cases * IFR
+
+    In_Hospital_Deaths = Hospitalized_Pct_Deaths * Medical_Outcomes['Deaths']
+
+    # We work out number of hospitalizations backwards from data.
+    # ICU_Pct of patients go to the ICU, and the fatality rate for those cases is ICU_Fatality.
+    # ICU_Pct * Hospital_Cases * ICU_Fatality + (1-ICU_Pct) * Hospital_Cases * Non_ICU_Fatality = In_Hospital_Deaths.
+    # Hospital_Cases = In_Hospital_Deaths / ICU_Pct * ICU_Fatality + (1-ICU_Pct) * Non_ICU_Fatality
+
+    Medical_Outcomes['Hospital_Cases'] = In_Hospital_Deaths / (ICU_Pct*ICU_Fatality) + ((1-ICU_Pct) * Non_ICU_Fatality)
+    Medical_Outcomes['ICU_Cases'] = Medical_Outcomes['Hospital_Cases'] * ICU_Pct
+
+    Output['Medical'] = Medical_Outcomes
+
+
     ### Now, calculate fraction of economy open.
 
     # Economy Scales with Output['variables']['c'].
@@ -210,6 +231,7 @@ def Econ_Outputs(model_outputs, scenario_YAML, econ_YAML, write_file=False):
         Output_write['econ'] = Output['econ'].copy()
         Output_write['Trace'] = Output['Trace_Outputs'].copy()
         Output_write['Test'] = Output['Test_Outputs'].copy()
+        Output_write['Medical'] = Output['Medical'].copy()
         outfile = scenario_YAML
         import ntpath
         basename = ntpath.splitext(ntpath.basename(scenario_YAML))[0]

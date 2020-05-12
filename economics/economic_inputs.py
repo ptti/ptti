@@ -78,6 +78,7 @@ econ_inputs['Test']['Tests_per_Machine_per_Day'] = econ_inputs['Test']['Tests_pe
 
 econ_inputs['Test']['Lab_Techs_Per_Machine_Per_Shift'] = 2 # One to run the test, one to fill the wells.
 
+
 #Personnel Costs
 # Moved to Econ Model
 # Lab_supervisors	= Needed_Labs
@@ -95,6 +96,16 @@ econ_inputs['Test']['Cost_Per_PCR_Test'] = 4  # 3.50 for testing supplies, 0.50 
 econ_inputs['Test']['Lab_Overhead_Cost_Daily'] = 500  # Estimated cost of £500 per day per lab for 289 labs with 10 RT LAMP PCR machines each
 econ_inputs['Test']['PCR_Machines_Cost'] = 27000 #  Roche COBAS 8800 Machines, as suggested by: https://www.bmj.com/content/368/bmj.m1163
 econ_inputs['Test']['PCR_Machine_Daily_Maintenance'] = 10  # assume maintenance costs averaging £10 per day
+
+
+econ_inputs['Medical'] = dict() #Based on 16,759 Cases - https://www.medrxiv.org/content/10.1101/2020.04.23.20076042v1
+econ_inputs['Medical']['ICU_Pct'] = 0.17
+econ_inputs['Medical']['ICU_Fatality'] = 0.59
+econ_inputs['Medical']['Non_ICU_Fatality'] = 0.36
+
+econ_inputs['Medical']['Hospitalized_Pct_Deaths'] = 0.44  # The percentage of deaths that occur in hospitals
+
+econ_inputs['Medical']['IFR'] = 0.008
 
 import yaml
 with open(r'economics\economic-inputs.yaml', 'w') as file:
