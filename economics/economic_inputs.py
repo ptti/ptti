@@ -17,7 +17,7 @@ econ_inputs['Shutdown']['UK_GDP_Monthly'] = 186000000000
 
 econ_inputs['Trace'] = dict()
 econ_inputs['Trace']['Time_to_Trace_Contact'] = 2.8 / 8.0  # 2.8 hours to trace each contact
-#Pct_Symptomatic = 0.5
+
 
 # Hire_Interval = 90 # Now Unused
 
@@ -106,6 +106,20 @@ econ_inputs['Medical']['Non_ICU_Fatality'] = 0.36
 econ_inputs['Medical']['Hospitalized_Pct_Deaths'] = 0.44  # The percentage of deaths that occur in hospitals
 
 econ_inputs['Medical']['IFR'] = 0.008
+
+# Based on Spreadsheet from v1.
+econ_inputs['Medical']['NHS_Death_Cost'] = 500
+econ_inputs['Medical']['NHS_ICU_Cost'] = 29335
+econ_inputs['Medical']['NHS_Hospital_Cost'] = 2422
+
+
+econ_inputs['Medical']['Productivity_Not_Working_Cost'] = 119
+econ_inputs['Medical']['Productivity_Death_Cost'] = 358
+econ_inputs['Medical']['Productivity_ICU_Cost'] = 2509
+econ_inputs['Medical']['Productivity_Hospital_Cost'] = 1195
+econ_inputs['Medical']['Productivity_Symptomatic_Cost'] = 358
+econ_inputs['Medical']['Pct_Symptomatic'] = 0.5
+
 
 import yaml
 with open(r'economics\economic-inputs.yaml', 'w') as file:
