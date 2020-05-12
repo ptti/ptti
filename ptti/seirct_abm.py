@@ -142,7 +142,7 @@ def seirxud_abm_gill(tmax=10,
         I = counts[INDEX_IU] + counts[INDEX_ID]
 
         # Possible contacts
-        wSIc = c*counts[INDEX_SU]*counts[INDEX_IU]/N
+        wSIc = c*counts[INDEX_IU]
         # E becomes I
         wEI = alpha*E
         # I becomes R
@@ -169,11 +169,12 @@ def seirxud_abm_gill(tmax=10,
 
         if rn < wp[0]:
             # Contact between a random SU and a random IU
-            si = random_agent_i(states, diagnosed, STATE_S, False)
+            rndi = np.random.randint(0, N)
             ii = random_agent_i(states, diagnosed, STATE_I, False)
-            contactM[si, ii] = True
-            if np.random.random() <= beta:
-                states[si] = STATE_E
+            contactM[rndi, ii] = True
+            is_SU = (states[rndi] == STATE_S)*(not diagnosed[rndi])
+            if is_SU and np.random.random() <= beta:
+                states[rndi] = STATE_E
         elif rn < wp[1]:
             # E becomes I
             ei = random_agent_i(states, diagnosed, STATE_E)

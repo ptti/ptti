@@ -5,7 +5,7 @@ meta:
   output: bmark-highct-hightest-out
 initial:
   N: 10000
-  IU:  10
+  IU:  100
 parameters:
   beta:  0.033
   c:     13

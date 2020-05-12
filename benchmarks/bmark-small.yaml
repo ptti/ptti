@@ -2,9 +2,9 @@ meta:
   model: SEIRCTODEMem
   tmax:  600
   steps: 600
-  output: bmark-notest-out
+  output: bmark-highct-lowtest-out
 initial:
-  N: 10000
+  N: 1000
   IU:  100
 parameters:
   beta:  0.033
@@ -12,6 +12,6 @@ parameters:
   alpha: 0.2
   gamma: 0.1429
   kappa: 0.0714
-  theta: 0.0
-  eta:   0.0
-  chi:   0.0
+  theta: 0.1
+  eta:   0.8
+  chi:   0.5
