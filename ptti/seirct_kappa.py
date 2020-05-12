@@ -34,9 +34,18 @@ yaml_obs = """
 - name:  RD
   descr: removed and distanced
   kappa: "|P(s{r}, d{d})|"
-- name:  C
-  descr: traceable
-  kappa: "|C()|"
+- name:  CS
+  descr: traceable_s
+  kappa: "|C(s{s})|"
+- name:  CE
+  descr: traceable_e
+  kappa: "|C(s{e})|"
+- name:  CI
+  descr: traceable_i
+  kappa: "|C(s{i})|"
+- name:  CR
+  descr: traceable_r
+  kappa: "|C(s{r})|"
 """
 
 class SEIRCTKappa(Model):
@@ -61,9 +70,10 @@ class SEIRCTKappa(Model):
         obs = dict((o["name"], o) for o in self.observables)
         inits = ["%init: {}\t{}\t// {}".format(n, obs[k]["kappa"].strip("|"), obs[k]["descr"])
                  for k, n in ivs.items()]
-        SU = "%init: {}\t{}\t// {}".format(N - sum(ivs.values()),
-                                           obs["SU"]["kappa"].strip("|"), obs["SU"]["descr"])
-        inits.append(SU)
+        if "SU" not in ivs:
+            SU = "%init: {}\t{}\t// {}".format(N - sum(ivs.values()),
+                                               obs["SU"]["kappa"].strip("|"), obs["SU"]["descr"])
+            inits.append(SU)
         return "\n".join(inits)
 
     def _obs(self):
@@ -110,8 +120,8 @@ class SEIRCTKappa(Model):
         ## construct a new Kappa program to support exogeneous interventions
         last   = traj[-1]
         onames = [o["name"] for o in self.observables]
-        init   = dict((o, self.colindex(o)) for o in onames)
-        N      = np.sum(last[i] for i in self.pcols)
+        init   = dict((o, last[self.colindex(o)]) for o in onames)
+        N      = np.sum(last[i] for i in self.pcols[:8])
         kappa_text = self.initial_conditions(N, **init)
 
         return t, traj, kappa_text
