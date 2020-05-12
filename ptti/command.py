@@ -102,7 +102,8 @@ def command():
         return cfg
 
     if args.dump_state:
-        m = model()
+        cfg = mkcfg(0)
+        m = cfg["meta"]["model"]()
         m.set_parameters(**cfg["parameters"])
         state = m.initial_conditions(**cfg["initial"])
         print(state)
