@@ -3,12 +3,21 @@ Medical:
   ICU_Fatality: 0.59
   ICU_Pct: 0.17
   IFR: 0.008
+  NHS_Death_Cost: 500
+  NHS_Hospital_Cost: 2422
+  NHS_ICU_Cost: 29335
   Non_ICU_Fatality: 0.36
+  Pct_Symptomatic: 0.5
+  Productivity_Death_Cost: 358
+  Productivity_Hospital_Cost: 1195
+  Productivity_ICU_Cost: 2509
+  Productivity_Not_Working_Cost: 119
+  Productivity_Symptomatic_Cost: 358
 Shutdown:
   UK_GDP_Monthly: 186000000000
   UK_Open_Contacts: 13
   UK_Shutdown_Contacts: 3.9
-  UK_Shutdown_GDP_Penalty: 0.08
+  UK_Shutdown_GDP_Penalty: 0.25
 Test:
   Cost_Per_PCR_Test: 4
   Hours_per_Shift: 9

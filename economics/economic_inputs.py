@@ -5,7 +5,7 @@ econ_inputs = dict()
 # econ_inputs['Population'] = 67886011 # From scenario
 
 econ_inputs['Shutdown'] = dict()
-econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'] = 0.08  # How much economic damage is happening? 8% reduction for c=4, shutdown.
+econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'] = 0.25  # How much economic damage is happening?
 econ_inputs['Shutdown']['UK_Open_Contacts'] = 13  # Base level
 econ_inputs['Shutdown']['UK_Shutdown_Contacts'] = 3.9  # Shutdown level
 econ_inputs['Shutdown']['UK_GDP_Monthly'] = 186000000000
