@@ -3,10 +3,12 @@ import numpy as np
 
 from ptti.seirct_ode import SEIRCTODEMem
 from ptti.model import runModel
-from ptti.data import uk_mortality
+from ptti.data import uk_mortality_2
+# uk_mortality_2 data starts on 15th Feb 2020,
+#   first cases 23rd Feb (t=53), first deaths 5th March (t=64)
 
-t0, tmax, steps = -34, 150, 150   # Day 0 is 21st Jan 2020 according to uk_mortality.csv
-
+t0, tmax, steps = -14, 127, 141  # Day 0 is 1st Jan 2020, -14 is 18th Dec 2019
+    # simulation runs from 1st Jan to 7th May (t=127)
 ifr = 0.008
 offset = 0 ## date offset for uk case data
 
@@ -16,7 +18,7 @@ initial = {
 }
 
 params = {
-    "beta":  0.030,
+    "beta":  0.0375,
     "c":     13,
     "alpha": 0.2,
     "gamma": 0.1429,
@@ -24,8 +26,8 @@ params = {
 }
 
 interventions = [
-    { "time": 89, "parameters": { "c": 10 } },
-    { "time": 96, "parameters": { "c": 4 } }
+    { "time": 75, "parameters": { "c": 10 } },  # 16th March 2020 voluntary distancing
+    { "time": 82, "parameters": { "c": 4 } }    # 23rd March 2020 lockdown
 ]
 
 model = SEIRCTODEMem
