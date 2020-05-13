@@ -29,6 +29,14 @@ ${BENCHMARKS:=-out-0-err.yaml}: %-out-0-err.yaml : %-out-0.tsv %-out-abm-avg.tsv
 compare: ${BENCHMARKS:=-out-0-err.yaml}
 	@echo 'Running all comparisons'
 
+${BENCHMARKS:=.pdf}: %.pdf : %-out-0.tsv %-out-abm-avg.tsv plots_template.gp
+	TARG=$@; \
+	SEED=$${TARG%.pdf}; \
+	sed 's/@/'$$SEED'/g' plots_template.gp | gnuplot
+	
+plot: ${BENCHMARKS:=.pdf}
+	@echo 'Plotting all benchmark calculations' 
+
 benchmark: run-abm run-ode compare
 	@echo 'Running benchmark'
 

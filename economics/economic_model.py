@@ -198,8 +198,16 @@ def Econ_Outputs(model_outputs, scenario_YAML, econ_YAML, write_file=False):
     Medical_Outcomes['Hospital_Cases'] = In_Hospital_Deaths / (ICU_Pct*ICU_Fatality) + ((1-ICU_Pct) * Non_ICU_Fatality)
     Medical_Outcomes['ICU_Cases'] = Medical_Outcomes['Hospital_Cases'] * ICU_Pct
 
-    Output['Medical'] = Medical_Outcomes
+    Medical_Outcomes['NHS_Costs'] = Medical_Outcomes['Deaths'] * NHS_Death_Cost + \
+                                    Medical_Outcomes['ICU_Cases'] * NHS_ICU_Cost + \
+                                    Medical_Outcomes['Hospital_Cases'] * NHS_Hospital_Cost
 
+    Medical_Outcomes['Productivity_Loss'] = Medical_Outcomes['Deaths'] * Productivity_Death_Cost + \
+                                            Medical_Outcomes['ICU_Cases'] * Productivity_ICU_Cost + \
+                                            Medical_Outcomes['Hospital_Cases'] * Productivity_Hospital_Cost + \
+                                            Medical_Outcomes['Cases'] * Productivity_Symptomatic_Cost * Pct_Symptomatic
+
+    Output['Medical'] = Medical_Outcomes
 
     ### Now, calculate fraction of economy open.
 
