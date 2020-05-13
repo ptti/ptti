@@ -322,3 +322,4 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
         traj  = np.vstack((traj.T, rs)).T
 
     return t, traj
+

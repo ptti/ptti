@@ -4,9 +4,9 @@ import time
 import numpy as np
 from ptti.seirct_ode import SEIRODE
 
-def uk_mortality():
+def uk_mortality_2():
     def read_csv():
-        fn = pkg_resources.resource_filename("ptti", "data/uk_mortality.csv")
+        fn = pkg_resources.resource_filename("ptti", "data/uk_mortality_2.csv")
         with open(fn) as fp:
             for date, cases, deaths in csv.reader(fp, delimiter=','):
                 if date == "date": ## header
