@@ -4,7 +4,8 @@ This repository contains software for simulating epidemiological models
 of various kinds: compartmental models, agent-based models, and rule-based
 models. It is intended for studying the effects of testing and contact
 tracing for containing disease outbreaks. We call this TTI - Testing, 
-tracing and Isolation. It contains the following models:
+tracing and Isolation. The underlying principles are described in our
+[SEIR-TTI paper]. This software contains the following models:
 
   * SEIRCTABM an agent-based model
   * SEIRCTODEMem an ODE implementation of a compartmental model with
@@ -243,3 +244,4 @@ properties:
 [ptti/models.py]: https://github.com/ptti/ptti/blob/master/ptti/model.py
 [GNU Parallel]: https://www.gnu.org/software/parallel/
 [examples/ukfitting.py]: https://github.com/ptti/ptti/blob/master/examples/ukfitting.py
+[SEIR-TTI paper]: https://github.com/ptti/ptti/raw/master/docs/tti.pdf
