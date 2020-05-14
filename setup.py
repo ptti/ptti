@@ -38,7 +38,6 @@ setup(name='ptti',
           # Topics
           'Topic :: Scientific/Engineering',
           'Topic :: Scientific/Engineering :: Artificial Life',
-          'Topic :: Scientific/Engineering :: Chemistry',
 
           # License
           'License :: OSI Approved :: MIT License',
