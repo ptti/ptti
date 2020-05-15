@@ -31,7 +31,7 @@ interventions = [
 ]
 
 model = SEIRCTODEMem
-t, traj = runModel(model, t0, tmax, steps, params, initial, interventions)
+t, traj, events = runModel(model, t0, tmax, steps, params, initial, interventions)
 RU = traj[:, model.colindex("RU")]
 RD = traj[:, model.colindex("RD")]
 t += offset
