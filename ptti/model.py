@@ -68,6 +68,8 @@ class Model(object):
     ## observables = [{ 'name': 'I', 'descr': 'infectious }]
     observables = []
 
+    conditions = None
+
     def __init__(self):
         self.set_parameters(**dict((k, self.parameters[k]["default"])
                                    for k in self.parameters.keys()))
@@ -81,10 +83,16 @@ class Model(object):
         are then available as instance variables.
         """
         for k, v in params.items():
-            if k in self.parameters:
-                setattr(self, k, v)
-            else:
-                log.warning("[{}] unknown parameter provided {} = {}".format(self.name, k, v))
+            setattr(self, k, v)
+
+    def reset_parameters(self, **params):
+        """
+        Reset the model parameters. By default, this just calls
+        `set_parameters()`. It is intended for implementations
+        that carry internal state that also needs to be reset
+        when parameters change due to interventions.
+        """
+        return self.set_parameters(**params)
 
     def initial_conditions(self, **init):
         """
@@ -98,6 +106,11 @@ class Model(object):
           - any other initial state required by the model
         """
         raise Unimplemented("[{}] initial_conditions".format(self.name))
+
+    def add_condition(self, callable):
+        if self.conditions is None:
+            self.conditions = []
+        self.conditions.append(callable)
 
     @classmethod
     def colindex(cls, c):
@@ -260,8 +273,13 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
         betas = []
         cs    = []
 
+    for iv in [i for i in interventions if "condition" in i]:
+        _add_condition(m, iv)
+
     ts = t0
-    for iv in interventions:
+    for iv in [i for i in interventions if "time" in i]:
+        if "time" not in interventions:
+            continue
         ti, pi = iv["time"], iv["parameters"]
 
         ## end time for this segment
@@ -322,3 +340,15 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
         traj  = np.vstack((traj.T, rs)).T
 
     return t, traj
+
+
+def _add_condition(m, iv):
+    g = { col: m.colindex(col) for col in [o["name"] for o in m.observables] }
+    cond = iv["condition"]
+    def e(t, x):
+        g.update(m.__dict__)
+        if eval(cond, g, {"t": t, "x": x}):
+            log.info("Condition '{}' met at t = {}".format(cond, t))
+            m.reset_parameters(**iv["parameters"])
+        return 0.0
+    m.add_condition(e)

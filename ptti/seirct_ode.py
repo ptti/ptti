@@ -55,7 +55,7 @@ class SEIRCTODEMem(Model):
         return (y0, N)
 
 
-    def _cmodel(self, N):
+    def couplings(self, N):
         beta  = self.beta
         c     = self.c
         chi   = self.chi
@@ -65,52 +65,54 @@ class SEIRCTODEMem(Model):
         theta = self.theta
         kappa = self.kappa
 
-        states = list(o["name"] for o in self.observables)
-        cm = CModel(states)
+        return (
+            ('SU*IU:SU=>EU', beta*c/N),
+            ('SD:SD=>SU', kappa),
 
-        cm.set_coupling_rate('SU*IU:SU=>EU', beta*c/N)
-        cm.set_coupling_rate('SD:SD=>SU', kappa)
+            ('EU:EU=>IU', alpha),
+            ('ED:ED=>ID', alpha),
 
-        cm.set_coupling_rate('EU:EU=>IU', alpha)
-        cm.set_coupling_rate('ED:ED=>ID', alpha)
+            ('IU:IU=>RU', gamma),
+            ('ID:ID=>RD', gamma),
 
-        cm.set_coupling_rate('IU:IU=>RU', gamma)
-        cm.set_coupling_rate('ID:ID=>RD', gamma)
+            ('RD:RD=>RU', kappa),
 
-        cm.set_coupling_rate('RD:RD=>RU', kappa)
+            ('EU:EU=>ED', eta*chi*theta),
+            ('IU:IU=>ID', theta*(1+eta*chi)),
 
-        cm.set_coupling_rate('EU:EU=>ED', eta*chi*theta)
-        cm.set_coupling_rate('IU:IU=>ID', theta*(1+eta*chi))
+            # Now the stuff that depends on memory
+            ('IU*SU:=>CIS', c*(1-beta)/N),
+            ('IU*CIS:CIS=>', c*beta/N),
+            ('CIS:CIS=>', gamma+theta*eta*chi),
+            # ('IU*CIS:CIS=>CIE', c*beta/N),
+            # Quadratic terms currently removed. It's a bit hard to justify them
+            # theoretically even though heuristically they make sense
+            # ('CIS*CIS:CIS=>', chi*(1-(1-eta)**2)*theta/N),
 
-        # Now the stuff that depends on memory
-        cm.set_coupling_rate('IU*SU:=>CIS', c*(1-beta)/N)
-        cm.set_coupling_rate('IU*CIS:CIS=>', c*beta/N)
-        cm.set_coupling_rate('CIS:CIS=>', gamma+theta*eta*chi)
-        # cm.set_coupling_rate('IU*CIS:CIS=>CIE', c*beta/N)
-        # Quadratic terms currently removed. It's a bit hard to justify them
-        # theoretically even though heuristically they make sense
-        # cm.set_coupling_rate('CIS*CIS:CIS=>', chi*(1-(1-eta)**2)*theta/N)
+            # ('IU*SU:=>CIE', c*beta/N),
+            # ('IU*EU:=>CIE', c/N),
+            # ('CIE:CIE=>CII', alpha),
+            # ('CIE:CIE=>', gamma+theta*eta*chi),
 
-        # cm.set_coupling_rate('IU*SU:=>CIE', c*beta/N)
-        # cm.set_coupling_rate('IU*EU:=>CIE', c/N)
-        # cm.set_coupling_rate('CIE:CIE=>CII', alpha)
-        # cm.set_coupling_rate('CIE:CIE=>', gamma+theta*eta*chi)
+            # ('IU*IU:=>CII', c/N),
+            # ('CII:CII=>CIR', gamma),
+            # ('CII:CII=>', gamma+theta*(1+eta*chi)),
 
-        # cm.set_coupling_rate('IU*IU:=>CII', c/N)
-        # cm.set_coupling_rate('CII:CII=>CIR', gamma)
-        # cm.set_coupling_rate('CII:CII=>', gamma+theta*(1+eta*chi))
+            ('IU*RU:=>CIR', c/N),
+            ('IU:=>CIR', gamma),
+            ('CIR:CIR=>', gamma+theta*eta*chi),
+            # ('CIR*CIR:CIR=>', chi*(1-(1-eta)**2)*theta/N),
 
-        cm.set_coupling_rate('IU*RU:=>CIR', c/N)
-        cm.set_coupling_rate('IU:=>CIR', gamma)
-        cm.set_coupling_rate('CIR:CIR=>', gamma+theta*eta*chi)
-        # cm.set_coupling_rate('CIR*CIR:CIR=>', chi*(1-(1-eta)**2)*theta/N)
+            ('CIS:SU=>SD', chi*eta*theta),
+            # ('CIS*CIS:SU=>SD', chi*(1-(1-eta)**2)*theta/N),
+            ('CIR:RU=>RD', chi*eta*theta),
+            # ('CIR*CIR:RU=>RD', chi*(1-(1-eta)**2)*theta/N),
+        )
 
-        cm.set_coupling_rate('CIS:SU=>SD', chi*eta*theta)
-        # cm.set_coupling_rate('CIS*CIS:SU=>SD', chi*(1-(1-eta)**2)*theta/N)
-        cm.set_coupling_rate('CIR:RU=>RD', chi*eta*theta)
-        # cm.set_coupling_rate('CIR*CIR:RU=>RD', chi*(1-(1-eta)**2)*theta/N)
-
-        return cm
+    def reset_parameters(self, **params):
+        self.set_parameters(**params)
+        for name, rate in self.couplings(self.N):
+            self.cm.edit_coupling_rate(name, rate)
 
     def run(self, t0, tmax, tsteps, state):
         """
@@ -118,10 +120,16 @@ class SEIRCTODEMem(Model):
         starting model state.
         """
         y0, N = state
-        cm = self._cmodel(N)
+
+        self.N = N
+        states = list(o["name"] for o in self.observables)
+        self.cm = CModel(states)
+        for name, rate in self.couplings(N):
+            self.cm.set_coupling_rate(name, rate, name=name)
+
         t = np.linspace(t0, tmax, tsteps)
 
-        traj = cm.integrate(t, y0)
+        traj = self.cm.integrate(t, y0, events=self.conditions)
 
         return (t, traj["y"], (traj["y"][-1, :], N))
 
@@ -162,7 +170,6 @@ class SEIRODE(Model):
         y0[columns.index("SU")] = N - sum(o.values())
         return (y0, N)
 
-
     def _cmodel(self, N):
         beta  = self.beta
         c     = self.c
@@ -187,7 +194,7 @@ class SEIRODE(Model):
         cm = self._cmodel(N)
         t = np.linspace(t0, tmax, tsteps)
 
-        traj = cm.integrate(t, y0)
+        traj = cm.integrate(t, y0, events=self.conditions)
 
         return (t, traj["y"], (traj["y"][-1, :], N))
 

@@ -85,7 +85,7 @@ def plot(model, output, plots, interventions, title, envelope=True, start=None, 
             else:
                 ax.plot(time, meanseries, lw=1.0, color=colour, label=ts["title"])
 
-        for intv in interventions:
+        for intv in [i for i in interventions if "time" in i]:
             ax.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
 
         ax.set_title("{}: {}".format(title, plot["title"]))
