@@ -273,8 +273,9 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
         betas = []
         cs    = []
 
+    events = []
     for iv in [i for i in interventions if "condition" in i]:
-        _add_condition(m, iv)
+        _add_condition(m, iv, events)
 
     ts = t0
     for iv in [i for i in interventions if "time" in i]:
@@ -339,16 +340,19 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
         rs    = m.R(t, traj, betas, cs)
         traj  = np.vstack((traj.T, rs)).T
 
-    return t, traj
+    return t, traj, events
 
 
-def _add_condition(m, iv):
+def _add_condition(m, iv, events):
     g = { col: m.colindex(col) for col in [o["name"] for o in m.observables] }
     cond = iv["condition"]
     def e(t, x):
         g.update(m.__dict__)
         if eval(cond, g, {"t": t, "x": x}):
             log.info("Condition '{}' met at t = {}".format(cond, t))
+            record = iv.copy()
+            record["time"] = t
+            events.append(record)
             m.reset_parameters(**iv["parameters"])
         return 0.0
     m.add_condition(e)

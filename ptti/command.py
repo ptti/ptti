@@ -4,10 +4,12 @@ from ptti.config import config_load, config_save
 from ptti.model import runModel
 from ptti.plotting import plot
 from multiprocessing import Pool
+import collections
 import logging as log
 import os
 import sys
 import numpy as np
+import yaml
 
 ## MPI is an optional dependency for running on HPC systems
 try:
@@ -117,16 +119,18 @@ def command():
 
     cfg = mkcfg(0)
     samples = [(i, mkcfg(i)) for i in range(cfg["meta"]["samples"])]
-    trajectories = pmap(runSample, samples)
+    results = pmap(runSample, samples)
 
-    for s, traj in zip(samples, trajectories):
-
+    for s, (traj, events) in zip(samples, results):
         i, cfg = s
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
         np.savetxt(outfile, traj, delimiter="\t")
 
         cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
         config_save(cfg, cfgout)
+
+        eout = "{}-{}-events.yaml".format(cfg["meta"]["output"], i)
+        saveEvents(events, eout)
 
     if args.statistics:
         # Average trajectory?
@@ -247,11 +251,11 @@ def runSample(arg):
     # set random seed for the benefit of stochastic simulations
     cfg["meta"]["seed"] = i
 
-    t, traj = runModel(**cfg["meta"], **cfg)
+    t, traj, events = runModel(**cfg["meta"], **cfg)
 
     tseries = np.vstack([t, traj.T]).T
 
-    return tseries
+    return tseries, events
 
 def mpimap(f, v):
     if MPI is None:
@@ -296,6 +300,23 @@ def mpiwork():
     result = list(map(runSample, chunk))
     comm.gather(result, root=0)
     log.info("done")
+
+def saveEvents(events, outfile):
+        ## slightly dodgy, but intended to produce readable YAML
+        def _clean(e):
+            cleaned = {}
+            for k, v in e.items():
+                if isinstance(v, collections.OrderedDict):
+                    cleaned[k] = dict(v)
+                elif isinstance(v, np.float64):
+                    cleaned[k] = float(v)
+                else:
+                    cleaned[k] = v
+            return cleaned
+
+        events = [_clean(e) for e in events]
+        with open(outfile, "w") as fp:
+            fp.write(yaml.dump(events))
 
 if __name__ == '__main__':
     command()
