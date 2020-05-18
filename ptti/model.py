@@ -267,12 +267,6 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
     times = []
     trajs = []
 
-    ## also record a time-series of betas and cs for
-    ## piece-wise computation of R(t)
-    if rseries:
-        betas = []
-        cs    = []
-
     events = []
     for iv in [i for i in interventions if "condition" in i]:
         _add_condition(m, iv, events)
@@ -298,11 +292,6 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
         times.append(t)
         trajs.append(traj)
 
-        ## save the beta and c being used
-        if rseries:
-            betas.append(m.beta * np.ones(len(t)))
-            cs.append(m.c * np.ones(len(t)))
-
         ## update the parameters
         log.info("Intervention: {}".format(pi))
         m.set_parameters(**pi)
@@ -324,17 +313,36 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
         times.append(t)
         trajs.append(traj)
 
-        ## save the beta and c being used
-        if rseries:
-            betas.append(m.beta * np.ones(len(t)))
-            cs.append(m.c * np.ones(len(t)))
-
     t    = np.hstack(times)
     traj = np.vstack(trajs)
 
     if rseries:
-        betas = np.hstack(betas)
-        cs    = np.hstack(cs)
+        ## compute the simulation segments where beta and c change because we need
+        ## them to calculate R.
+        ivs = sorted(events + [i for i in interventions if "time" in i], key=lambda x: x["time"])
+
+        betapieces = [(i["time"], i["parameters"]["beta"]) for i in ivs if "beta" in i["parameters"]]
+        betapieces.insert(0, (0, parameters["beta"]))
+
+        cpieces = [(i["time"], i["parameters"]["c"]) for i in ivs if "c" in i["parameters"]]
+        cpieces.insert(0, (0, parameters["c"]))
+
+        ## project the values onto the right segment
+        def _project(pieces):
+            segments = []
+            for i in range(len(pieces)):
+                start, v = pieces[i]
+                if i < len(pieces)-1:
+                    end, _ = pieces[i+1]
+                    seg = v * (t >= start)*(t < end)
+                else:
+                    seg = v * (t >= start)
+                segments.append(seg)
+            return np.sum(segments, axis=0)
+
+        betas = _project(betapieces)
+        cs    = _project(cpieces)
+
         rs    = m.R(t, traj, betas, cs)
         traj  = np.vstack((traj.T, rs)).T
 

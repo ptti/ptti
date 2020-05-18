@@ -49,7 +49,7 @@ setup(name='ptti',
       license='GPLv3',
       packages=find_packages(),
       install_requires=[
-          'compyrtment',
+          'compyrtment>=0.5.6',
           'gitpython',
           'kappy',
           'matplotlib',
