@@ -3,8 +3,8 @@ import numpy as np
 
 from ptti.seirct_ode import SEIRCTODEMem
 from ptti.model import runModel
-from ptti.data import uk_mortality_2
-# uk_mortality_2 data starts on 15th Feb 2020,
+from ptti.data import uk_mortality
+# uk_mortality data starts on 15th Feb 2020,
 #   first cases 23rd Feb (t=53), first deaths 5th March (t=64)
 
 t0, tmax, steps = -14, 127, 141  # Day 0 is 1st Jan 2020, -14 is 18th Dec 2019
@@ -31,7 +31,7 @@ interventions = [
 ]
 
 model = SEIRCTODEMem
-t, traj = runModel(model, t0, tmax, steps, params, initial, interventions)
+t, traj, events = runModel(model, t0, tmax, steps, params, initial, interventions)
 RU = traj[:, model.colindex("RU")]
 RD = traj[:, model.colindex("RD")]
 t += offset

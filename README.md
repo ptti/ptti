@@ -4,7 +4,8 @@ This repository contains software for simulating epidemiological models
 of various kinds: compartmental models, agent-based models, and rule-based
 models. It is intended for studying the effects of testing and contact
 tracing for containing disease outbreaks. We call this TTI - Testing, 
-tracing and Isolation. It contains the following models:
+tracing and Isolation. The underlying principles are described in our
+[SEIR-TTI paper]. This software contains the following models:
 
   * SEIRCTABM an agent-based model
   * SEIRCTODEMem an ODE implementation of a compartmental model with
@@ -21,9 +22,8 @@ The software has a variety of useful features:
   * Simple configuration: simulations are described in a user-friendly
     YAML file (though there is nothing to prevent running them directly
     in [Python] if you wish).
-  * Interventions: the simulation is stopped at set times (in future,
-    on conditions as well), parameters are changed, and the simulation
-    continues.
+  * Interventions: the simulation is stopped at set times or on certain
+    conditions, parameters are changed, and the simulation continues.
   * Parallel execution: simulations can be conducted in parallel using
     as many CPUs as are available, and also supports [MPI] for use in
     High-Performance Computing environments.
@@ -189,11 +189,12 @@ from ptti.model import runModel
 
 params  = { "theta": 1.0 }
 initial = { "N": 5000000, "IU": 1000 }
-t, traj = runModel(SEIRCTODEMem, 0, 300, 300, params, initial)
+t, traj, events = runModel(SEIRCTODEMem, 1, 300, 300, params, initial)
 ```
 
 and `t` will be an array of times, and `traj` will be an array of 
-each observable (compartment) for each time. A full example of this
+each observable (compartment) for each time. `events` will be a list of
+events caused by conditional interventions. A full example of this
 programmatic use is available in [examples/ukfitting.py].
 
 Of the other arguments, `interventions` specifies interventions.
@@ -243,3 +244,4 @@ properties:
 [ptti/models.py]: https://github.com/ptti/ptti/blob/master/ptti/model.py
 [GNU Parallel]: https://www.gnu.org/software/parallel/
 [examples/ukfitting.py]: https://github.com/ptti/ptti/blob/master/examples/ukfitting.py
+[SEIR-TTI paper]: https://github.com/ptti/ptti/raw/master/docs/tti.pdf

@@ -38,20 +38,20 @@ setup(name='ptti',
           # Topics
           'Topic :: Scientific/Engineering',
           'Topic :: Scientific/Engineering :: Artificial Life',
-          'Topic :: Scientific/Engineering :: Chemistry',
 
           # License
-          'License :: OSI Approved :: MIT License',
+          'License :: OSI Approved :: GNU General Public License (GPL)',
           # Specify the Python versions you support here. In particular,
           # ensure that you indicate whether you support Python 2, Python 3
           # or both.
         'Programming Language :: Python :: 3',
       ],
-      license='MIT',
+      license='GPLv3',
       packages=find_packages(),
       install_requires=[
           'compyrtment',
           'gitpython',
+          'kappy',
           'matplotlib',
           'numba',
           'numpy',

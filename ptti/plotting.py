@@ -45,7 +45,7 @@ yaml_plot_defaults = """
 
 plot_defaults = yaml.load(yaml_plot_defaults, yaml.FullLoader)
 
-def plot(model, output, plots, interventions, title, envelope=True, start=None, **unused):
+def plot(model, output, plots, title, envelope=True, start=None, **unused):
 
     colours = [mcolors.to_rgb(c) for c in mcolors.TABLEAU_COLORS.values()]
 
@@ -53,6 +53,9 @@ def plot(model, output, plots, interventions, title, envelope=True, start=None, 
               for tsvfile in glob("{}*.tsv".format(output))]
     times = [a[:,0] for a in arrays]
     trajectories = [a[:,1:] for a in arrays]
+
+    with open("{}-0-events.yaml".format(output)) as fp:
+        interventions = yaml.load(fp.read(), yaml.FullLoader)
 
     time = times[0]
 
@@ -85,7 +88,7 @@ def plot(model, output, plots, interventions, title, envelope=True, start=None, 
             else:
                 ax.plot(time, meanseries, lw=1.0, color=colour, label=ts["title"])
 
-        for intv in interventions:
+        for intv in [i for i in interventions if "time" in i]:
             ax.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
 
         ax.set_title("{}: {}".format(title, plot["title"]))
