@@ -8,8 +8,8 @@
 ##    Lockdown released when there are less than 20,000 cases per day
 
 meta:
-  title: PTTI Scenario 4a
-  output: ptti-scenario-4a
+  title: PTTI Scenario 4a Trig
+  output: ptti-scenario-4a-Trig
   start: 2019/12/18
   tmax: 895
   steps: 895
@@ -72,12 +72,12 @@ interventions:
     parameters:
       c: 4
 
-## Release lockdown suddenly when below 20k cases
+## Release lockdown gradually when below 20k cases
   - condition: x[IU] + x[ID] - 20000
     direction: -1.0
     parameters:
-      c: 13
-      lockded: False
+      c: 7
+      locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
     direction: 1.0
