@@ -7,7 +7,7 @@ meta:
   title: Lockdown Thrash
   output: lockdown-thrash
   envelope: false
-#  start: 2019/12/24
+  start: 2019/12/24
 
 ## Initial values for the simulation
 initial:
@@ -57,13 +57,13 @@ parameters:
 ## Exogenous interventions. The time is given in
 ## simulation days.
 interventions:
-  ## Lockdown trigger on 20k cases
+  ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
     direction: 1.0
     parameters:
       c: 3.9
       locked: True
-  ## Release lockdown suddenly when below 10k cases
+  ## Release lockdown suddenly when below 30k cases
   - condition: x[IU] + x[ID] - 30000
     direction: -1.0
     parameters:
