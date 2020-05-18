@@ -1,11 +1,13 @@
-SAMPLES = 10
-BENCHMARKS = bmark-notest bmark-noct-lowtest bmark-noct-hightest bmark-lowct-lowtest bmark-highct-lowtest \
-bmark-lowct-hightest bmark-highct-hightest bmark-highct-verylowtest bmark-small
+SAMPLES?= 10
+BENCHMARKS?= bmark-notest bmark-noct-lowtest bmark-noct-hightest bmark-lowct-lowtest bmark-highct-lowtest \
+bmark-lowct-hightest bmark-highct-hightest bmark-highct-verylowtest bmark-small bmark-sweet
+
+all: benchmark compare plot
 
 ${BENCHMARKS:=-out-abm-avg.tsv}: %-out-abm-avg.tsv : %.yaml
 	TARG=$@; \
 	SEED=$${TARG%-out-abm-avg.tsv}; \
-	ptti -y $$SEED.yaml -m SEIRCTABM --samples $(SAMPLES) -st -o $${TARG%-avg.tsv}; \
+	ptti -y $$SEED.yaml -m SEIRCTABM --samples $(SAMPLES) --parallel -st -o $${TARG%-avg.tsv}; \
 	find . -name $$SEED'-out-abm-*.tsv' ! -name $$SEED'-out-abm-avg.tsv' ! -name $$SEED'-out-abm-std.tsv' -delete; \
 	find . -name $$SEED'-out-abm-*.yaml' -delete
 
