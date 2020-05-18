@@ -76,7 +76,7 @@ interventions:
   - condition: x[IU] + x[ID] - 20000
     direction: -1.0
     parameters:
-      c: 7
+      c: 9
       locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
