@@ -9,7 +9,6 @@ from ptti.model import runModel
 from ptti.seirct_ode import SEIRCTODEMem
 from ptti.seirct_abm import SEIRCTABM
 
-from multiprocessing import Pool
 import logging as log
 import pkg_resources
 from glob import glob
@@ -35,7 +34,7 @@ def figure_testing():
         cfg["meta"]["model"] = model
         cfg["parameters"]["theta"] = theta
 
-        t, traj = runModel(**cfg["meta"], **cfg)
+        t, traj, _ = runModel(**cfg["meta"], **cfg)
 
         E = traj[:,model.colindex("EU")]
         I = traj[:,model.colindex("IU")]
@@ -62,7 +61,7 @@ def figure_c_testing():
                 cfg["parameters"]["theta"] = theta
                 cfg["parameters"]["c"] = c
 
-                t, traj = runModel(**cfg["meta"], **cfg)
+                t, traj, _ = runModel(**cfg["meta"], **cfg)
 
                 R30 = traj[30, -1]
 
@@ -83,7 +82,7 @@ def figure_tracing():
         cfg["parameters"]["eta"] = eta
         cfg["parameters"]["chi"] = 0.5
 
-        t, traj = runModel(**cfg["meta"], **cfg)
+        t, traj, _ = runModel(**cfg["meta"], **cfg)
 
         E = traj[:,model.colindex("EU")]
         I = traj[:,model.colindex("IU")]
@@ -111,7 +110,7 @@ def figure_testing_tracing():
                 cfg["parameters"]["eta"] = eta
                 cfg["parameters"]["chi"] = 0.5
 
-                t, traj = runModel(**cfg["meta"], **cfg)
+                t, traj, _ = runModel(**cfg["meta"], **cfg)
 
                 R30 = traj[30, -1]
 
@@ -119,89 +118,8 @@ def figure_testing_tracing():
                 fp.write(line)
             fp.write("\n")
 
-def _runabm(arg):
-    cfg, seed = arg
-    cfg["meta"]["seed"] = seed
-    log.info("Starting sample {}".format(cfg["meta"]["seed"]))
-    t, traj = runModel(**cfg["meta"], **cfg)
-    log.info("Done sample {}".format(cfg["meta"]["seed"]))
-    return t, traj
-
-def mpirun_abm(mkcfg, out):
-    from mpi4py import MPI
-    comm = MPI.COMM_WORLD
-    rank = comm.Get_rank()
-
-    cfg = mkcfg()
-    t, traj = _runabm((cfg, rank))
-
-    np.savetxt("{}-{}.traj".format(out, rank), traj, delimiter="\t")
-    np.savetxt("{}-{}.t".format(out, rank), t, delimiter="\t")
-
-def prun_abm(mkcfg, out):
-    from multiprocessing import Pool
-    results = Pool().map(_runabm, [(mkcfg(), i) for i in range(100)])
-    for i, (t, traj) in enumerate(results):
-        np.savetxt("{}-{}.traj".format(out, i), traj, delimiter="\t")
-        np.savetxt("{}-{}.t".format(out, i), t, delimiter="\t")
-
-def compare_abm(cfg, out):
-    t = [np.loadtxt(f, delimiter="\t") for f in glob("{}*.t".format(out))][0]
-    trajectories = [np.loadtxt(f, delimiter="\t") for f in glob("{}*.traj".format(out))]
-
-    avg = np.average(trajectories, axis=0)
-    std = np.std(trajectories, axis=0)
-    np.savetxt(out.format("abm-avg"), np.vstack([t, avg.T]).T, delimiter="\t")
-    np.savetxt(out.format("abm-std+1"), np.vstack([t, avg.T+std.T]).T, delimiter="\t")
-    np.savetxt(out.format("abm-std-1"), np.vstack([t, avg.T-std.T]).T, delimiter="\t")
-    np.savetxt(out.format("abm-std+2"), np.vstack([t, avg.T+2*std.T]).T, delimiter="\t")
-    np.savetxt(out.format("abm-std-2"), np.vstack([t, avg.T-2*std.T]).T, delimiter="\t")
-
-    cfg["meta"]["model"] = SEIRCTODEMem
-    t, traj = runModel(**cfg["meta"], **cfg)
-    np.savetxt(out.format("ode"), np.vstack([t, traj.T]).T, delimiter="\t")
-
-def figure_abm1():
-    cfg = basic_config()
-    cfg["meta"]["model"] = SEIRCTABM
-    cfg["meta"]["tmax"] = 600
-    cfg["meta"]["steps"] = 600
-    cfg["initial"]["N"] = 50000
-    cfg["initial"]["IU"] = 100
-    cfg["parameters"]["theta"] = 0.1429
-    cfg["parameters"]["eta"] = 0.5
-    cfg["parameters"]["chi"] = 0.5
-    return cfg
-
-def figure_abm2():
-    def mkcfg():
-        cfg = basic_config()
-        cfg["initial"]["N"] = 1000
-        cfg["initial"]["IU"] = 10
-        cfg["parameters"]["theta"] = 0.0001
-        cfg["parameters"]["eta"] = 1.0
-        cfg["parameters"]["chi"] = 1.0
-        return cfg
-
-    compare_abm(mkcfg, "ABM 2", "lowtheta-{}-1.tsv")
-
-def figure_abm3():
-    def mkcfg():
-        cfg = basic_config()
-        cfg["initial"]["N"] = 1000
-        cfg["initial"]["IU"] = 10
-        cfg["parameters"]["theta"] = 2.0
-        cfg["parameters"]["eta"] = 1.0
-        cfg["parameters"]["chi"] = 2.0
-        return cfg
-
-    compare_abm(mkcfg, "ABM 2", "strongtesting-{}-1.tsv")
-
 if __name__ == '__main__':
-    #figure_testing()
-    #figure_c_testing()
-    #figure_tracing()
-    #figure_testing_tracing()
-    compare_abm(figure_abm1, "compare")
-    #figure_abm2()
-    #figure_abm3()
+    figure_testing()
+    figure_c_testing()
+    figure_tracing()
+    figure_testing_tracing()
