@@ -45,7 +45,7 @@ yaml_plot_defaults = """
 
 plot_defaults = yaml.load(yaml_plot_defaults, yaml.FullLoader)
 
-def plot(model, output, plots, interventions, title, envelope=True, start=None, **unused):
+def plot(model, output, plots, title, envelope=True, start=None, **unused):
 
     colours = [mcolors.to_rgb(c) for c in mcolors.TABLEAU_COLORS.values()]
 
@@ -53,6 +53,9 @@ def plot(model, output, plots, interventions, title, envelope=True, start=None, 
               for tsvfile in glob("{}*.tsv".format(output))]
     times = [a[:,0] for a in arrays]
     trajectories = [a[:,1:] for a in arrays]
+
+    with open("{}-0-events.yaml".format(output)) as fp:
+        interventions = yaml.load(fp.read(), yaml.FullLoader)
 
     time = times[0]
 

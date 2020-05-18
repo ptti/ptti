@@ -129,7 +129,7 @@ class SEIRCTODEMem(Model):
 
         t = np.linspace(t0, tmax, tsteps)
 
-        traj = self.cm.integrate(t, y0, events=self.conditions)
+        traj = self.cm.integrate(t, y0, events=self.conditions, ivpargs={"max_step": 1.0})
 
         return (t, traj["y"], (traj["y"][-1, :], N))
 

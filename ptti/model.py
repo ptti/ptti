@@ -279,8 +279,6 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
 
     ts = t0
     for iv in [i for i in interventions if "time" in i]:
-        if "time" not in interventions:
-            continue
         ti, pi = iv["time"], iv["parameters"]
 
         ## end time for this segment
@@ -348,11 +346,13 @@ def _add_condition(m, iv, events):
     cond = iv["condition"]
     def e(t, x):
         g.update(m.__dict__)
-        if eval(cond, g, {"t": t, "x": x}):
+        root = eval(cond, g, {"t": t, "x": x})
+        if 0 <= root*e.direction < 1:
             log.info("Condition '{}' met at t = {}".format(cond, t))
             record = iv.copy()
             record["time"] = t
             events.append(record)
             m.reset_parameters(**iv["parameters"])
-        return 0.0
+        return root
+    e.direction = iv.get("direction", 1.0)
     m.add_condition(e)

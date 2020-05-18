@@ -129,8 +129,10 @@ def command():
         cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
         config_save(cfg, cfgout)
 
+        allevents = events + [i for i in cfg["interventions"] if "time" in i]
+        allevents = sorted(allevents, key=lambda i: i["time"])
         eout = "{}-{}-events.yaml".format(cfg["meta"]["output"], i)
-        saveEvents(events, eout)
+        saveEvents(allevents, eout)
 
     if args.statistics:
         # Average trajectory?
