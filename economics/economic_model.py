@@ -195,7 +195,7 @@ def Econ_Outputs(model_outputs, scenario_YAML, econ_YAML, write_file=False):
     # ICU_Pct * Hospital_Cases * ICU_Fatality + (1-ICU_Pct) * Hospital_Cases * Non_ICU_Fatality = In_Hospital_Deaths.
     # Hospital_Cases = In_Hospital_Deaths / ICU_Pct * ICU_Fatality + (1-ICU_Pct) * Non_ICU_Fatality
 
-    Medical_Outcomes['Hospital_Cases'] = In_Hospital_Deaths / (ICU_Pct*ICU_Fatality) + ((1-ICU_Pct) * Non_ICU_Fatality)
+    Medical_Outcomes['Hospital_Cases'] = In_Hospital_Deaths / ((ICU_Pct*ICU_Fatality) + ((1-ICU_Pct) * Non_ICU_Fatality))
     Medical_Outcomes['ICU_Cases'] = Medical_Outcomes['Hospital_Cases'] * ICU_Pct
 
     Medical_Outcomes['NHS_Costs'] = Medical_Outcomes['Deaths'] * NHS_Death_Cost + \
