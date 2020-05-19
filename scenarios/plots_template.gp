@@ -28,10 +28,6 @@ color_RD = '#002277'
 
 load etimesfile
 
-set label "c" at graph 0.9, 0.55
-set label "{/Symbol q}" at graph 0.9, 0.65
-set label "{/Symbol h}{/Symbol c}" at graph 0.9, 0.75
-
 plot odefile u 1:2 w l lw 1.5 lc rgb color_SU ti "S_U", odefile u 1:3 w l lw 1.5 lc rgb color_SD ti "S_D"
 plot odefile u 1:4 w l lw 1.5 lc rgb color_EU ti "E_U", odefile u 1:5 w l lw 1.5 lc rgb color_ED ti "E_D"
 plot odefile u 1:6 w l lw 1.5 lc rgb color_IU ti "I_U", odefile u 1:7 w l lw 1.5 lc rgb color_ID ti "I_D"

@@ -1,4 +1,5 @@
 set xrange [0:530]
+set label "c" at graph 0.9,0.55
 set style rect fc rgb "#aa3366" fs solid 0.5 noborder lw 0
 set obj rect from 0, graph 0.5 to 89.0, graph 0.6
 set style rect fc rgb "#aa3366" fs solid 0.38461538461538464 noborder lw 0
@@ -41,6 +42,7 @@ set style rect fc rgb "#aa3366" fs solid 0.4230769230769231 noborder lw 0
 set obj rect from 804.0, graph 0.5 to 865.0, graph 0.6
 set style rect fc rgb "#aa3366" fs solid 0.4230769230769231 noborder lw 0
 set obj rect from 865.0, graph 0.5 to 530, graph 0.6
+set label "{/Symbol q}" at graph 0.9,0.6499999999999999
 set style rect fc rgb "#0066aa" fs solid 0.0 noborder lw 0
 set obj rect from 0, graph 0.6 to 89.0, graph 0.7
 set style rect fc rgb "#0066aa" fs solid 0.0 noborder lw 0
@@ -83,6 +85,7 @@ set style rect fc rgb "#0066aa" fs solid 0.4942748091603053 noborder lw 0
 set obj rect from 804.0, graph 0.6 to 865.0, graph 0.7
 set style rect fc rgb "#0066aa" fs solid 0.4885496183206106 noborder lw 0
 set obj rect from 865.0, graph 0.6 to 530, graph 0.7
+set label "{/Symbol h}{/Symbol c}" at graph 0.9,0.75
 set style rect fc rgb "#00aa66" fs solid 0.0 noborder lw 0
 set obj rect from 0, graph 0.7 to 89.0, graph 0.7999999999999999
 set style rect fc rgb "#00aa66" fs solid 0.0 noborder lw 0
