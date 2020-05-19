@@ -1,0 +1,93 @@
+##
+## This is Scenario 1: Weak Testing and Isolation with phased lockdown release. 
+##   Lockdown lifted in a phased way as per UK government Covid-19 recovery strategy (11th May): 
+##   those who can’t work from home encouraged back to work from 13th May, some schools 
+##   may open 1st June, some entertainment venues may open 4th July 
+##   (the latter both subject to estimates of infections circulating and R)
+##
+
+meta:
+  title: PTTI Scenario 1
+  output: ptti-scenario-1
+  start: 2019/12/18
+  tmax: 895
+  steps: 895
+
+## Initial values for the simulation
+initial:
+  ## N is the total population
+  N:    67886011    # mid-year 2020 from: https://www.worldometers.info/world-population/uk-population/
+  ## IU is the number of unconfined, infected individuals
+  IU:   2
+
+## Parameters of the simulation.
+## All rates are per individual per day.
+parameters:
+  ## beta is the infectiousness of the disease, the
+  ## probability of infecting a contact.
+  beta:  0.033
+
+  ## c is the contact rate per day. 13 is an accepted
+  ## value on average under normal circumstances.
+  c:     13.0
+
+  ## alpha is the rate at which exposed individuals
+  ## (infected but not infectious) become infectious. 
+  ## 5 day incubation period
+  alpha: 0.2
+
+  ## gamma is the rate at which individuals either 
+  ## recover, or are taken into hospital and assumed
+  ## to be isolated. One week.
+  gamma: 0.1429
+
+  ## kappa is the rate at which individuals leave
+  ## isolation. This is one week according to UK policy.
+  ## The WHO thinks it should be 0.0714 (14 days).
+  ## We agree with WHO and think isolation should last for 14 symptom free days
+  kappa: 0.0714
+
+  ## theta governs testing, and we start with none
+  theta: 0.0
+
+  ## chi is the rate at which contacts are traced.
+  ## Tracing is triggered by testing. Starts at none.
+  chi:   0.0
+
+  ## eta is the success rate of tracing. Starts at none
+  eta:   0.0
+
+## Exogenous interventions. The time is given in
+## simulation days.
+interventions:
+  ## After three months, start of restrictions on 16th March. 
+  ## Reduce contacts from 10 to 13 per day (by ~25%).
+  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: 10
+  ## After one more week, Lockdown, on 23rd March. 
+  ## Reduce contacts to 4 per day (~70% reduction).
+  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: 4
+  
+  ## On 13th May, start relax lockdown, phase one: 
+  ##    those who can’t work from home encouraged back to work 
+  ## Contacts per day increse from 4 to 6
+  - time: 147
+    parameters:
+      c: 6
+
+  ## On 1st June, relax lockdown more, phase two
+  ##  some schools may open 1st June
+  ## Contacts per day increse from 6 to 8
+  - time: 166
+    parameters:
+      c: 8
+      
+  ## On 4th July, relax lockdown more, phase three
+  ##  some entertainment venues may open
+  ## Contacts per day increse from 8 to 11
+  - time: 199
+    parameters:
+      c: 11   # assume contacts per day won't go back up to pre-pandemic level of 13

@@ -1,0 +1,136 @@
+##
+## This is Scenario 2a: Weekly Testing of 80% of people, Contact Tracing of 80% of positives within 
+##  one day with 80% of contacts traced per case. Remain in Lockdown (i.e. continue 
+##  lockdown from 23rd March) while testing, tracing and isolation scaled up. Then:
+##    Lockdown released when there are less than 20,000 cases per day
+##    Lockdown triggered when there are more than 40,000 cases per day
+##
+
+meta:
+  title: PTTI Scenario 2a Trig
+  output: ptti-scenario-2a Trig
+  start: 2019/12/18
+  tmax: 895
+  steps: 895
+
+## Initial values for the simulation
+initial:
+  ## N is the total population
+  N:    67886011    # mid-year 2020 from: https://www.worldometers.info/world-population/uk-population/
+  ## IU is the number of unconfined, infected individuals
+  IU:   2
+
+## Parameters of the simulation.
+## All rates are per individual per day.
+parameters:
+  ## beta is the infectiousness of the disease, the
+  ## probability of infecting a contact.
+  beta:  0.033
+
+  ## c is the contact rate per day. 13 is an accepted
+  ## value on average under normal circumstances.
+  c:     13.0
+
+  ## alpha is the rate at which exposed individuals
+  ## (infected but not infectious) become infectious. 
+  ## 5 day incubation period
+  alpha: 0.2
+
+  ## gamma is the rate at which individuals either 
+  ## recover, or are taken into hospital and assumed
+  ## to be isolated. One week.
+  gamma: 0.1429
+
+  ## kappa is the rate at which individuals leave
+  ## isolation. This is one week according to UK policy.
+  ## The WHO thinks it should be 0.0714 (14 days).
+  ## We agree with WHO and think isolation should last for 14 symptom free days
+  kappa: 0.0714
+
+  ## theta governs testing, and we start with none
+  theta: 0.0
+
+  ## chi is the rate at which contacts are traced.
+  ## Tracing is triggered by testing. Starts at none.
+  chi:   0.0
+
+  ## eta is the success rate of tracing. Starts at none
+  eta:   0.0
+
+## Exogenous interventions. The time is given in
+## simulation days.
+interventions:
+  ## After three months, start of restrictions on 16th March. 
+  ## Reduce contacts from 10 to 13 per day (by ~25%).
+  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: 10
+  ## After one more week, Lockdown, on 23rd March. 
+  ## Reduce contacts to 4 per day (~70% reduction).
+  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: 4
+  
+  ## On 18th May, start contact tracing
+  - time: 152
+    parameters:
+      theta: 100000/N   # 100,000 people tested per day in the UK
+      chi: 0.8  # 80% of the ~3000 cases per day (1% of tested) have contacts traced
+                # 18,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+
+  ## On 1st June, scale up testing, and contact tracing
+  - time: 166
+    parameters:
+      theta: 300000/N   # 300,000 people tested per day in the UK
+      chi: 0.8  # 80% of the ~6000 cases per day (2% of tested) have contacts traced
+                # 36,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+                
+  ## On 29th June, scale up testing, and contact tracing further
+  - time: 194
+    parameters:
+      theta: 900000/N   # 900,000 people tested per day in the UK
+      chi: 0.8  # 80% of the ~9000 cases per day (1% of tested) have contacts traced
+                # 54,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+                
+  ## On 27th July, scale up testing, and contact tracing further still
+  - time: 222
+    parameters:
+      theta: 3000000/N   # 3,000,000 people tested per day in the UK
+      chi: 0.8  # 80% of the ~11667 cases per day (0.39% of tested) have contacts traced
+                # 70,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+                
+  ## On 31st August, scale up testing, and contact tracing to maximum
+  ##  Lockdown released as per less than 20,000 cases trigger (and reinstated with more than
+  ##    40,000 cases trigger as per below)
+  - time: 257
+    parameters:
+      theta: 9000000/N   # 9,000,000 people tested per day in the UK (
+      chi: 0.8  # 80% of the ~11667 cases per day (0.13% of tested) have contacts traced
+                # 70,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+## Release lockdown gradually when below 20k cases
+  - condition: x[IU] + x[ID] - 20000
+    direction: -1.0
+    parameters:
+      c: 8
+      locked: False
+## Lockdown trigger on 40k cases
+  - condition: x[IU] + x[ID] - 40000
+    direction: 1.0
+    parameters:
+      c: 3.9
+      locked: True
