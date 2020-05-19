@@ -4,8 +4,9 @@
 ##  clinically as per 'Numbers T & T' sheet of Test calcs sheets:
 ##  https://docs.google.com/spreadsheets/d/136_sukzkrMrjtpRccAmoUoXn8Ue4GGUY3RRj4VWj7LU/edit?usp=sharing
 ##  with 80% of contacts traced per case (all on one day). ]
-##    Lockdown triggered when there are more than 40,000 cases per day
+##    with lockdown on 23rd March as happened then
 ##    Lockdown released when there are less than 20,000 cases per day
+##    Lockdown triggered when there are more than 40,000 cases per day
 
 meta:
   title: PTTI Scenario 4a Trig
