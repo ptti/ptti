@@ -58,6 +58,8 @@ parameters:
   eta:   0.0
 
   ## below parameters are used in calculation of theta below
+    ## default testing rate (proportion of symptomatics)
+  tested: 0.8   
     ## 50% of SARS-Cov-2 infected (IU) have symptoms
   symptomatic: 0.5 
     ## average duration of symptomatic illness(coldflu or Covid combined)
