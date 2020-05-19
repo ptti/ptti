@@ -10,8 +10,8 @@ meta:
   title: PTTI Scenario 1
   output: ptti-scenario-1
   start: 2019/12/18
-  tmax: 530
-  steps: 530
+  tmax: 895
+  steps: 895
 
 ## Initial values for the simulation
 initial:

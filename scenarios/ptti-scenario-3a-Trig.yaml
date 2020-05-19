@@ -1,12 +1,11 @@
 ##
-## Weekly Testing of 80% of people, Contact Tracing of 80% of positives within one day, 
-##  with 80% of contacts traced per case.
-##  With Phased Lockdown release as per scenario 1 while testing, tracing and isolation scaled up
+## This is Scenario 3a Trig: Cloth face coverings (masks) added 
+## (reduce Beta -transmission per contact- by 30%). Otherwise as per scenario 2a Trig
 ##
 
 meta:
-  title: PTTI Scenario 2b
-  output: ptti-scenario-2b
+  title: PTTI Scenario 3a Trig
+  output: ptti-scenario-3a Trig
   start: 2019/12/18
   tmax: 895
   steps: 895
@@ -69,14 +68,21 @@ interventions:
     parameters:
       c: 4
   
-  ## On 13th May, start relax lockdown, phase one: 
-  ##    those who can’t work from home encouraged back to work 
-  ## Contacts per day increse from 4 to 6
-  - time: 147
+## Release lockdown gradually when below 20k cases
+  - condition: x[IU] + x[ID] - 20000
+    direction: -1.0
     parameters:
-      c: 6
-
-  ## On 18th May, start contact tracing
+      c: 8
+      locked: False
+## Lockdown trigger on 40k cases
+  - condition: x[IU] + x[ID] - 40000
+    direction: 1.0
+    parameters:
+      c: 3.9
+      locked: True     
+  
+  ## On 18th May, start contact tracing, 
+  ##  start cloth face covering (mask) wearing in public
   - time: 152
     parameters:
       theta: 100000/N   # 100,000 people tested per day in the UK
@@ -85,10 +91,10 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
+      beta: 0.0231  # 30% reduction in Beta due to pulic wearing of home-made cloth face coverings 
+                    # conservative assumption based on DELVE 4th May review
 
-  ## On 1st June, scale up testing, and contact tracing 
-  ##  start relax lockdown, relax lockdown more, phase two
-  ##  some schools may open 1st June: Contacts per day increse from 6 to 8
+  ## On 1st June, scale up testing, and contact tracing
   - time: 166
     parameters:
       theta: 300000/N   # 300,000 people tested per day in the UK
@@ -97,10 +103,8 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
-      c: 8      # Contacts per day increse from 6 to 8    
                 
   ## On 29th June, scale up testing, and contact tracing further
-  ##  relax lockdown more, phase two
   - time: 194
     parameters:
       theta: 900000/N   # 900,000 people tested per day in the UK
@@ -109,14 +113,6 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
-      c: 9      # Contacts per day increse from 7 to 9
-  
-  ## On 4th July, relax lockdown more, phase three
-  ##  some entertainment venues may open
-  ## Contacts per day increse from 8 to 11
-  - time: 199
-    parameters:
-      c: 11   # assume contacts per day won't go back up to pre-pandemic level of 13    
                 
   ## On 27th July, scale up testing, and contact tracing further still
   - time: 222
@@ -127,7 +123,7 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
-               
+                
   ## On 31st August, scale up testing, and contact tracing to maximum
   - time: 257
     parameters:

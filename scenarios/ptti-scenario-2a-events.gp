@@ -1,4 +1,4 @@
-set xrange [0:530]
+set xrange [0:895]
 set style rect fc rgb "#aa3366" fs solid 0.5 noborder lw 0
 set obj rect from 0, graph 0.5 to 89.0, graph 0.6
 set style rect fc rgb "#aa3366" fs solid 0.38461538461538464 noborder lw 0
@@ -18,7 +18,7 @@ set obj rect from 257.0, graph 0.5 to 285.0, graph 0.6
 set style rect fc rgb "#aa3366" fs solid 0.34615384615384615 noborder lw 0
 set obj rect from 285.0, graph 0.5 to 313.0, graph 0.6
 set style rect fc rgb "#aa3366" fs solid 0.4230769230769231 noborder lw 0
-set obj rect from 313.0, graph 0.5 to 530, graph 0.6
+set obj rect from 313.0, graph 0.5 to 895, graph 0.6
 set style rect fc rgb "#0066aa" fs solid 0.0 noborder lw 0
 set obj rect from 0, graph 0.6 to 89.0, graph 0.7
 set style rect fc rgb "#0066aa" fs solid 0.0 noborder lw 0
@@ -38,7 +38,7 @@ set obj rect from 257.0, graph 0.6 to 285.0, graph 0.7
 set style rect fc rgb "#0066aa" fs solid 0.5 noborder lw 0
 set obj rect from 285.0, graph 0.6 to 313.0, graph 0.7
 set style rect fc rgb "#0066aa" fs solid 0.5 noborder lw 0
-set obj rect from 313.0, graph 0.6 to 530, graph 0.7
+set obj rect from 313.0, graph 0.6 to 895, graph 0.7
 set style rect fc rgb "#00aa66" fs solid 0.0 noborder lw 0
 set obj rect from 0, graph 0.7 to 89.0, graph 0.7999999999999999
 set style rect fc rgb "#00aa66" fs solid 0.0 noborder lw 0
@@ -58,4 +58,4 @@ set obj rect from 257.0, graph 0.7 to 285.0, graph 0.7999999999999999
 set style rect fc rgb "#00aa66" fs solid 0.5 noborder lw 0
 set obj rect from 285.0, graph 0.7 to 313.0, graph 0.7999999999999999
 set style rect fc rgb "#00aa66" fs solid 0.5 noborder lw 0
-set obj rect from 313.0, graph 0.7 to 530, graph 0.7999999999999999
+set obj rect from 313.0, graph 0.7 to 895, graph 0.7999999999999999
