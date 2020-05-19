@@ -16,7 +16,8 @@ econ_inputs['Shutdown']['UK_GDP_Monthly'] = 186000000000
 # In each case, we need to compute costs from
 
 econ_inputs['Trace'] = dict()
-econ_inputs['Trace']['Time_to_Trace_Contact'] = 2.8 / 8.0  # 2.8 hours to trace each contact
+econ_inputs['Trace']['Time_to_Trace_Contact'] = 37.8 / 30.0  
+    # 1.26 hours to trace each contact: 37.8 hours to trace 30 contacts (see Table B of PTTI draft report
 
 
 # Hire_Interval = 90 # Now Unused
