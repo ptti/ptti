@@ -1,0 +1,83 @@
+##
+## This is Scenario 1: Weak Testing and Isolation with lockdown on 23rd March as happened then
+##    Lockdown released when there are less than 20,000 cases per day
+##    Lockdown triggered when there are more than 40,000 cases per day
+##
+
+meta:
+  title: PTTI Scenario 1 Trig
+  output: ptti-scenario-1-Trig
+  start: 2019/12/18
+  tmax: 895
+  steps: 895
+
+## Initial values for the simulation
+initial:
+  ## N is the total population
+  N:    67886011    # mid-year 2020 from: https://www.worldometers.info/world-population/uk-population/
+  ## IU is the number of unconfined, infected individuals
+  IU:   2
+
+## Parameters of the simulation.
+## All rates are per individual per day.
+parameters:
+  ## beta is the infectiousness of the disease, the
+  ## probability of infecting a contact.
+  beta:  0.0375   # this based on fitting in ukfitting.py
+
+  ## c is the contact rate per day. 13 is an accepted
+  ## value on average under normal circumstances.
+  c:     13.0
+
+  ## alpha is the rate at which exposed individuals
+  ## (infected but not infectious) become infectious. 
+  ## 5 day incubation period
+  alpha: 0.2
+
+  ## gamma is the rate at which individuals either 
+  ## recover, or are taken into hospital and assumed
+  ## to be isolated. One week.
+  gamma: 0.1429
+
+  ## kappa is the rate at which individuals leave
+  ## isolation. This is one week according to UK policy.
+  ## The WHO thinks it should be 0.0714 (14 days).
+  ## We agree with WHO and think isolation should last for 14 symptom free days
+  kappa: 0.0714
+
+  ## theta governs testing, and we start with none
+  theta: 0.0
+
+  ## chi is the rate at which contacts are traced.
+  ## Tracing is triggered by testing. Starts at none.
+  chi:   0.0
+
+  ## eta is the success rate of tracing. Starts at none
+  eta:   0.0
+
+## Exogenous interventions. The time is given in
+## simulation days.
+interventions:
+  ## After three months, start of restrictions on 16th March. 
+  ## Reduce contacts from 10 to 13 per day (by ~25%).
+  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: 10
+  ## After one more week, Lockdown, on 23rd March. 
+  ## Reduce contacts to 4 per day (~70% reduction).
+  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: 4
+  
+## Release lockdown gradually when below 20k cases
+  - condition: x[IU] + x[ID] - 20000
+    direction: -1.0
+    parameters:
+      c: 8
+      locked: False
+## Lockdown trigger on 40k cases
+  - condition: x[IU] + x[ID] - 40000
+    direction: 1.0
+    parameters:
+      c: 3.9
+      locked: True

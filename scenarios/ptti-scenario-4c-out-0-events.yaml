@@ -1,0 +1,82 @@
+- parameters:
+    c: 10
+  time: 89
+- parameters:
+    c: 4
+  time: 96
+- parameters:
+    beta: 0.022
+    chi: 0.8
+    coldflu: 0.02
+    duration: 7
+    eta: 0.8
+    symptomatic: 0.5
+    tested: 0.1
+    theta: 0.007414285714285714
+  time: 152
+- parameters:
+    coldflu: 0.02
+    duration: 7
+    symptomatic: 0.5
+    tested: 0.2
+    theta: 0.014800000000000002
+  time: 166
+- parameters:
+    coldflu: 0.01
+    duration: 7
+    symptomatic: 0.5
+    tested: 0.4
+    theta: 0.02902857142857143
+  time: 194
+- parameters:
+    coldflu: 0.01
+    duration: 7
+    symptomatic: 0.5
+    tested: 0.6
+    theta: 0.043457142857142854
+  time: 222
+- parameters:
+    c: 7
+    coldflu: 0.02
+    duration: 7
+    symptomatic: 0.5
+    tested: 0.8
+    theta: 0.05851428571428572
+  time: 257
+- parameters:
+    c: 9
+    coldflu: 0.02
+    duration: 7
+    symptomatic: 0.5
+    tested: 0.8
+    theta: 0.05851428571428572
+  time: 285
+- parameters:
+    c: 11
+    coldflu: 0.03
+    duration: 7
+    symptomatic: 0.5
+    tested: 0.8
+    theta: 0.05920000000000001
+  time: 313
+- parameters:
+    coldflu: 0.04
+    duration: 7
+    symptomatic: 0.5
+    tested: 0.8
+    theta: 0.0598857142857143
+  time: 349
+- parameters:
+    coldflu: 0.03
+    duration: 7
+    symptomatic: 0.5
+    tested: 0.8
+    theta: 0.05920000000000001
+  time: 439
+- parameters:
+    coldflu: 0.02
+    duration: 7
+    symptomatic: 0.5
+    tested: 0.8
+    theta: 0.05851428571428572
+  time: 500
