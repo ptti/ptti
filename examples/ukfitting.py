@@ -1,9 +1,22 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import csv
+import time
 
 from ptti.seirct_ode import SEIRCTODEMem
 from ptti.model import runModel
-from ptti.data import uk_mortality
+
+def uk_mortality(fn):
+    def read_csv():
+        with open(fn) as fp:
+            for date, cases, deaths in csv.reader(fp, delimiter=','):
+                if date == "date": ## header
+                    continue
+                date = time.strptime(date, "%d/%m/%Y")
+                cases, deaths = int(cases), int(deaths)
+                yield (date.tm_yday, cases, deaths)
+    return np.array(list(read_csv()))
+
 # uk_mortality data starts on 15th Feb 2020,
 #   first cases 23rd Feb (t=53), first deaths 5th March (t=64)
 
@@ -38,7 +51,7 @@ t += offset
 cases = RU + RD
 deaths = ifr * cases
 
-ukm = uk_mortality()
+ukm = uk_mortality("uk_mortality.csv")
 ukt = ukm[:,0]
 ukcases = ukm[:,1]
 ukdeaths = ukm[:,2]*1.6
