@@ -1,9 +1,7 @@
 ##
-## This is Scenario 1: Weak Testing and Isolation with phased lockdown release. 
-##   Lockdown lifted in a phased way as per UK government Covid-19 recovery strategy (11th May): 
-##   those who can’t work from home encouraged back to work from 13th May, some schools 
-##   may open 1st June, some entertainment venues may open 4th July 
-##   (the latter both subject to estimates of infections circulating and R)
+## This is Scenario 1: Weak Testing and Isolation with lockdown on 23rd March as happened then
+##    Lockdown released when there are less than 20,000 cases per day
+##    Lockdown triggered when there are more than 40,000 cases per day
 ##
 
 meta:
