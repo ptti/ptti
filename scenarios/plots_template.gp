@@ -33,6 +33,24 @@ plot odefile u 1:4 w l lw 1.5 lc rgb color_EU ti "E_U", odefile u 1:5 w l lw 1.5
 plot odefile u 1:6 w l lw 1.5 lc rgb color_IU ti "I_U", odefile u 1:7 w l lw 1.5 lc rgb color_ID ti "I_D"
 set key bottom right
 plot odefile u 1:8 w l lw 1.5 lc rgb color_RU ti "R_U", odefile u 1:9 w l lw 1.5 lc rgb color_RD ti "R_D"
-
 unset multiplot
+
+set terminal pdfcairo color enhanced dashed font "cmr10,14" size 6,4
+set output sprintf("%s-metrics.pdf", seed)
+set key top left
+
+# These are from the economic model inputs
+Hospitalized_Pct_Deaths=0.44
+ICU_Fatality=0.59
+ICU_Pct=0.17
+IFR=0.008
+Non_ICU_Fatality=0.36
+
+HF = IFR*Hospitalized_Pct_Deaths/(ICU_Pct*ICU_Fatality+(1-ICU_Pct)*Non_ICU_Fatality)
+ICUF = HF*ICU_Pct
+
+set yrange [1:]
+set log y
+plot odefile u 1:(($8+$9)*IFR) w l lw 1.5 lc 0 ti "Deaths", "" u 1:(($6+$7)*HF) w l lw 1.5 lc rgb color_EU ti "Hospitalized", "" u 1:(($6+$7)*ICUF) w l lw 1.5 lc rgb color_IU ti "ICU"
+
 set output
