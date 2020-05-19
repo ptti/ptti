@@ -25,7 +25,7 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta:  0.033
+  beta:  0.0375   # this based on fitting in ukfitting.py
 
   ## c is the contact rate per day. 13 is an accepted
   ## value on average under normal circumstances.
