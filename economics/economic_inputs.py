@@ -101,7 +101,7 @@ econ_inputs['Test']['PCR_Machine_Daily_Maintenance'] = 10  # assume maintenance 
 econ_inputs['Medical'] = dict() #Based on 16,759 Cases - https://www.medrxiv.org/content/10.1101/2020.04.23.20076042v1
 econ_inputs['Medical']['ICU_Pct'] = 0.17
 econ_inputs['Medical']['ICU_Fatality'] = 0.59
-econ_inputs['Medical']['Non_ICU_Fatality'] = 0.36
+econ_inputs['Medical']['Non_ICU_Fatality'] = 0.375  # 1781 deaths in 4752 non-ongoing no-ICU hospital cases
 
 econ_inputs['Medical']['Hospitalized_Pct_Deaths'] = 0.44  # The percentage of deaths that occur in hospitals
 
