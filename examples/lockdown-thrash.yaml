@@ -51,19 +51,14 @@ parameters:
   ## eta is the success rate of tracing.
   eta:   0.25
 
-  ## start out in a state without lockdown
-  locked: False
-
-## Exogenous interventions. The time is given in
-## simulation days.
+## Exogenous interventions and triggers.
 interventions:
-  ## Lockdown trigger on 40k cases
+  ## Lockdown trigger passing 40k cases upwards
   - condition: x[IU] + x[ID] - 40000
     direction: 1.0
     parameters:
       c: 3.9
-      locked: True
-  ## Release lockdown suddenly when below 30k cases
+  ## Release lockdown suddenly when passing 30k cases downwards
   - condition: x[IU] + x[ID] - 30000
     direction: -1.0
     parameters:
