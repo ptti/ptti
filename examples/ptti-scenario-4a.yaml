@@ -58,16 +58,11 @@ parameters:
   eta:   0.0
 
   ## below parameters are used in calculation of theta below
-
-  ## default proportion of symptomatic who are tested
-  ## (this is the same for symptomatic Covid and coldflu
-  ## because they are indistinguishable)
-  tested: 0.8
-
-  ## 50% of SARS-Cov-2 infected (IU) have symptoms
+    ## default testing rate (proportion of symptomatics)
+  tested: 0.8   
+    ## 50% of SARS-Cov-2 infected (IU) have symptoms
   symptomatic: 0.5 
-
-  ## average duration of symptomatic illness(coldflu or Covid combined)
+    ## average duration of symptomatic illness(coldflu or Covid combined)
   duration: 7
 
 ## Exogenous interventions. The time is given in
@@ -109,7 +104,7 @@ interventions:
   - time: 166
     parameters:
       ## Targetted Testing
-      coldflu: 0.02     # prevalence of symptomatic cold & flu in June
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in June
       tested: 0.2       # ramp up testing more
       theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
                         # proportion targetted for testing each day - the third term is to 
@@ -190,34 +185,63 @@ interventions:
   ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
   - time: 349
     parameters:
-      ## Targetted Testing
       coldflu: 0.04     # prevalence of symptomatic cold & flu in December-Feb
       theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day - the third term is to 
-                        #   correct for double counting of those who have both
-                        # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness
+                        # proportion targetted for testing each day
   
   ## 1st March 2021 - decrease in cold&flu prevalence
   ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
   - time: 439
     parameters:
-      ## Targetted Testing
       coldflu: 0.03     # prevalence of symptomatic cold & flu in March-April
       theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day - the third term is to 
-                        #   correct for double counting of those who have both
-                        # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness
+                        # proportion targetted for testing each day
                         
   ## 1st May 2021 - decrease in cold&flu prevalence
-  ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
   - time: 500
     parameters:
-      ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
       theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day - the third term is to 
-                        #   correct for double counting of those who have both
-                        # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness
+                        # proportion targetted for testing each day
+
+  ## 1st June 2021 - decrease in cold&flu prevalence
+  - time: 531
+    parameters:
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in June-August
+      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day
+  
+  ## 1st Sep 2021 - increase in cold&flu prevalence
+  - time: 623
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in Sep
+      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day
+  
+  ## 1st Oct 2021 - increase in cold&flu prevalence
+  - time: 653
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in Oct & Nov
+      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day
+  
+  ## 1st Dec 2021 - increase in cold&flu prevalence
+  - time: 714
+    parameters:
+      coldflu: 0.04     # prevalence of symptomatic cold & flu in Dec-Feb
+      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day
+                                           
+  ## 1st Mar 2022 - decrease in cold&flu prevalence
+  - time: 804
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in Mar-Apr
+      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day
+
+## 1st May 2022 - decrease in cold&flu prevalence
+  - time: 865
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day

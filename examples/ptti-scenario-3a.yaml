@@ -7,8 +7,8 @@ meta:
   title: PTTI Scenario 3a
   output: ptti-scenario-3a
   start: 2019/12/18
-  tmax: 530
-  steps: 530
+  tmax: 895
+  steps: 895
 
 ## Initial values for the simulation
 initial:

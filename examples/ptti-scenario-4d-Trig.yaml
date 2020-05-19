@@ -1,18 +1,20 @@
 ###
-##  This is Scenario 4d: Clinical case identification: As scenarios 3b with face coverings (reduce Beta 
-##    -transmission per contact- by 30%) otherwise as as scenarios 2a but with targetted testing 
+##  This is Scenario 4d Trig: Clinical case identification: As scenarios 3b with face coverings (reduce Beta 
+##    -transmission per contact- by 30%) otherwise as as scenarios 2b but with targetted testing 
 ##    from pool of those identified clinically (by NHS 111) as per 'Numbers T & T' sheet of Test calcs sheets: 
 ##    https://docs.google.com/spreadsheets/d/136_sukzkrMrjtpRccAmoUoXn8Ue4GGUY3RRj4VWj7LU/edit?usp=sharing 
 ##    with 80% of contacts traced per case (all on one day).
-##    With Phased Lockdown as per scenario 1
+##    with lockdown on 23rd March as happened then
+##    Lockdown released when there are less than 20,000 cases per day
+##    Lockdown triggered when there are more than 40,000 cases per day
 ##
 
 meta:
-  title: PTTI Scenario 4d
-  output: ptti-scenario-4d
+  title: PTTI Scenario 4d Trig
+  output: ptti-scenario-4d Trig
   start: 2019/12/18
-  tmax: 530
-  steps: 530
+  tmax: 895
+  steps: 895
 
 ## Initial values for the simulation
 initial:
@@ -80,12 +82,18 @@ interventions:
     parameters:
       c: 4
 
-  ## On 13th May, start relax lockdown, phase one: 
-  ##    those who can’t work from home encouraged back to work 
-  ## Contacts per day increse from 4 to 6
-  - time: 147
+ ## Release lockdown gradually when below 20k cases
+  - condition: x[IU] + x[ID] - 20000
+    direction: -1.0
     parameters:
-      c: 6
+      c: 8
+      locked: False
+## Lockdown trigger on 40k cases
+  - condition: x[IU] + x[ID] - 40000
+    direction: 1.0
+    parameters:
+      c: 3.9
+      locked: True 
   
   ## On 18th May, start contact tracing
   ##  start cloth face covering (mask) wearing in public
@@ -111,12 +119,8 @@ interventions:
                 # These tracing rates continue throughout the rest of the simulation
 
   ## On 1st June, scale up testing, and contact tracing 
-  ##  start relax lockdown, phase two
-  ##  some schools may open 1st June
-  ##    Contacts per day increse from 6 to 8
   - time: 166
     parameters:
-      c: 8    # Contacts per day increse from 6 to 8
       ## Targetted Testing - scale up tested (proportion of symptomatics tested during their week long illness)
       coldflu: 0.02     # prevalence of symptomatic cold & flu in June
       tested: 0.2       # proportion of symptomatic who are tested (this is the same for 
@@ -135,17 +139,9 @@ interventions:
                         #    symptomatic Covid and coldflu because they are indistinguishable)
       theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
                         # proportion targetted for testing each day
-            ## Tracing - as above
-  
-  ## On 4th July, relax lockdown more, phase three
-  ##  some entertainment venues may open
-  ## Contacts per day increse from 8 to 11
-  - time: 199
-    parameters:
-      c: 11   # assume contacts per day won't go back up to pre-pandemic level of 13    
+            ## Tracing - as above  
                 
   ## On 27th July, scale up testing, and contact tracing further still
-  ##  relax lockdown more, phase three
   ##  Targetted Testing - scale up tested further still (proportion of symptomatics tested during their week long illness)
   - time: 222
     parameters:
@@ -257,4 +253,4 @@ interventions:
     parameters:
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
       theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day      
+                        # proportion targetted for testing each day 
