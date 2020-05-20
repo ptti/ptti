@@ -1,8 +1,9 @@
 import yaml
+import numpy as np
 from math import ceil, exp
 from ptti.economic_data import econ_inputs
 
-def calcEconOutputs(model_outputs, scenario):
+def calcEconOutputs(time, trajectory, parameters, scenario):
 
     locals().update(econ_inputs['Shutdown'])
     locals().update(econ_inputs['Test'])
@@ -10,34 +11,27 @@ def calcEconOutputs(model_outputs, scenario):
 
     Output = dict()
     Output['policy'] = scenario
-    Output['model_output'] = model_outputs
-    Output['timesteps'] = Output['model_output'][0]
-    Days = len(model_outputs[0])  # Total number of days modeled
-    Output['compartments'] = model_outputs[1]
+    Output['timesteps'] = time
+    Days = time[-1]-time[0]  # Total number of days modeled
+    Output['compartments'] = trajectory
 
     Costs = 0
 
     Output['Economic'] = dict()
     Output['parameters'] = dict()
-    Output['variables'] = dict()
-    # GEt parameter values, which can change over time due to interventions.
-    for var in scenario['parameters'].keys():
-        Output['variables'][var] = [float(scenario['parameters'][var]) for d in range(Days)] # Initial value.
-    for intervention in scenario['interventions']:
-        for var in intervention['parameters']:
-            if var in Output['variables'].keys():
-                Output['variables'][var][intervention['time']:] = [float(intervention['parameters'][var]) for i in range(Days-int(intervention['time']))]
+    Output['variables'] = dict(parameters)
 
     Output['I'] = [float(a + b) for a, b in zip(Output['compartments'][:, 4], Output['compartments'][:,5])]
 
-    Output['Economic']['trace'] = [0 for d in range(Days)] # Number of people that must be traced.
-    for d in range(Days):
-        if Output['variables']['theta'][d] > 0:
-            Output['Economic']['trace'][d] = Output['variables']['c'][d] * Output['variables']['theta'][d] / (
-                Output['variables']['gamma'][d] + Output['variables']['theta'][d] *
-                (1 + Output['variables']['eta'][d] * Output['variables']['chi'][d]) ) *\
-                                         float(Output['compartments'][d, 6]) #IU
-    # if True: #policy['Trace']: # Currently, we always assumes we pay to trace,
+    # Compute tracing
+    theta = np.array(Output['variables']['theta'])
+    c = np.array(Output['variables']['c'])
+    gamma = np.array(Output['variables']['gamma'])
+    chi = np.array(Output['variables']['chi'])
+    eta = np.array(Output['variables']['eta'])
+    IU = np.array(Output['compartments'][:,4])
+
+    Output['Economic']['trace'] = c*theta/(gamma+theta*(1+eta*chi))*IU
 
     To_Trace = Output['Economic']['trace']
 
@@ -47,22 +41,28 @@ def calcEconOutputs(model_outputs, scenario):
     Period_Starts = []
     Period_Ends = []
     Period_Start = 0
-    # Two ways to do periods for hiring; per policy period, or per window. We can do both.
 
+    # Two ways to do periods for hiring; per policy period, or per window. We can do both.
     for p in Output['policy']['interventions']:
         Period_End = p['time']
+
+        # Ok, so we round this to the closest point...
+        Period_End = np.argmin(abs(time-Period_End))
+
         Period_Starts.append(Period_Start)
         Period_Ends.append(Period_End)
-        Period_Lengths.append(Period_End - Period_Start)
+        Period_Lengths.append(float(time[Period_End] - time[Period_Start]))
+
         Tracers_This_Period = max(To_Trace[Period_Start:Period_End]) * econ_inputs['Trace']['Time_to_Trace_Contact']
         Tracers_Needed_Per_Hiring_Window.append(Tracers_This_Period)
         Period_Start = Period_End # For next period.
-    # Last Period:
-    if Days > Period_Start:
-        Period_Starts.append(Period_Start)
-        Period_Ends.append(Days)
-        Period_Lengths.append(Days - Period_Start)
-        Tracers_Needed_Per_Hiring_Window.append(max(To_Trace[Period_Start:Days]) * econ_inputs['Trace']['Time_to_Trace_Contact'])
+    # Last Period
+    Period_End = len(time)-1
+    Period_Starts.append(Period_Start)
+    Period_Ends.append(Period_End)
+    Period_Lengths.append(float(time[Period_End] - time[Period_Start]))
+    Tracers_This_Period = max(To_Trace[Period_Start:Period_End]) * econ_inputs['Trace']['Time_to_Trace_Contact']
+    Tracers_Needed_Per_Hiring_Window.append(Tracers_This_Period)
 
     # We assume that each day, all people whose contacts can be traced have all contacts traced by a team.
     # This means to keep tracing on a one-day lag, i.e. by end of the next day,  we need enough people to trace
@@ -98,7 +98,7 @@ def calcEconOutputs(model_outputs, scenario):
     # That is all costs from the original cost spreadsheet for Tracing.
 
     Trace_Outputs=dict()
-    Trace_Outputs['Tracers_Needed_Per_Hiring_Window'] = Tracers_Needed_Per_Hiring_Window
+    Trace_Outputs['Tracers_Needed_Per_Hiring_Window'] = list(map(float, Tracers_Needed_Per_Hiring_Window))
     Trace_Outputs['Period_Lengths'] = Period_Lengths
     Trace_Outputs['Tracers_fixed_cost'] = Tracers_fixed_cost
     Trace_Outputs['Tracers_cost'] = Tracers_cost
@@ -108,11 +108,7 @@ def calcEconOutputs(model_outputs, scenario):
     Test_Outputs = dict()
 
     Testing_Costs = 0 # We will add to this.
-
-    Output['Economic']['tests'] = [0 for d in range(Days)] # Number of people tested.
-    for d in range(Days):
-        if Output['variables']['theta'][d] > 0:
-            Output['Economic']['tests'][d] = Output['policy']['initial']['N'] * Output['variables']['theta'][d]
+    Output['Economic']['tests'] = Output['policy']['initial']['N'] * theta
 
     Daily_tests = Output['Economic']['tests']  # Test needs over time.
 
@@ -134,7 +130,7 @@ def calcEconOutputs(model_outputs, scenario):
     Testing_Costs += Total_Required_PCR_Machines*econ_inputs['Test']['PCR_Machines_Cost'] # Buy Machines
     Testing_Costs += Max_Lab_Staff * econ_inputs['Trace']['Hiring_Cost'] # Hire Staff. One Time Cost.
 
-    Total_Required_Tests = sum(Daily_tests)
+    Total_Required_Tests = np.trapz(Daily_tests, time)
     Testing_Costs += Total_Required_Tests * econ_inputs['Test']['Cost_Per_PCR_Test']
 
     for p in range(0, len(Period_Lengths)):
@@ -153,13 +149,13 @@ def calcEconOutputs(model_outputs, scenario):
 
         Testing_Costs += Machines_In_Window * Curr_Period_Days * econ_inputs['Test']['PCR_Machine_Daily_Maintenance']
 
-    Testing_Costs += sum(Daily_tests)*econ_inputs['Test']['Cost_Per_PCR_Test'] # Cost for the actual tests.
+    Testing_Costs += Total_Required_Tests*econ_inputs['Test']['Cost_Per_PCR_Test'] # Cost for the actual tests.
 
 
     Test_Outputs = dict()
     Test_Outputs['Max_Labs'] = Total_Required_PCR_Machines / econ_inputs['Test']['PCR_Machines_Per_Lab']
     Test_Outputs['Max_Total_Staff'] = Max_Lab_Staff
-    Test_Outputs['Total_Tests'] = sum(Daily_tests)
+    Test_Outputs['Total_Tests'] = Total_Required_Tests
 
     Costs += Testing_Costs
 
@@ -201,12 +197,11 @@ def calcEconOutputs(model_outputs, scenario):
     Daily_GDP = []
     Economy_Fraction_Daily = []
     Daily_GDP_Base = econ_inputs['Shutdown']['UK_GDP_Monthly'] / 30
-    for d in range(Days):
-        Shutdown_Fraction = (Output['variables']['c'][d] - econ_inputs['Shutdown']['UK_Shutdown_Contacts']) / (econ_inputs['Shutdown']['UK_Open_Contacts'] - econ_inputs['Shutdown']['UK_Shutdown_Contacts'])
-        Economy_Fraction_Daily.append(1-Shutdown_Fraction)
-        Daily_GDP.append((1-Shutdown_Fraction*econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'])*Daily_GDP_Base)
+    Shutdown_Fraction = (c-econ_inputs['Shutdown']['UK_Shutdown_Contacts'])/(econ_inputs['Shutdown']['UK_Open_Contacts'] - econ_inputs['Shutdown']['UK_Shutdown_Contacts'])
+    Economy_Fraction_Daily = 1-Shutdown_Fraction
+    Daily_GDP = (1-Shutdown_Fraction*econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'])*Daily_GDP_Base
 
-    Overall_Period_GDP = sum(Daily_GDP)
+    Overall_Period_GDP = np.trapz(Daily_GDP, time)
     Full_Shutdown_GDP = Days * Daily_GDP_Base * (1-econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'])
     No_Pandemic_GDP = Days * Daily_GDP_Base
 

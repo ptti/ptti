@@ -137,16 +137,31 @@ def command():
         eout = "{}-{}-events.yaml".format(cfg["meta"]["output"], i)
         saveEvents(allevents, eout)
 
+        # Parameter history
+        params_current = dict(cfg['parameters'])
+        param_history = {k:[v] for k, v in params_current.items()}
+        events_queue = list(allevents) # Copy
+
+        for t in traj[1:,0]:
+            while len(events_queue) > 0 and events_queue[0]['time'] < t:
+                # Update 
+                ev = events_queue.pop(0)
+                params_current.update(ev['parameters'])
+            for k, v in params_current.items():
+                param_history[k].append(v)
+
         if args.econ:
             # Economic analysis
             t, vals = traj[:,0], traj[:,1:]            
-            econ = calcEconOutputs((t, vals, events), cfg)
+
+            econ = calcEconOutputs(t, vals, param_history, cfg)
             econout = "{}-{}-econ.yaml".format(cfg["meta"]["output"], i)
             # Just keep the useful stuff...
             econ = {
                 k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
             }
             config_save(econ, econout, True)
+
 
     if args.statistics:
         # Average trajectory?
