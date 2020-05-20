@@ -3,6 +3,7 @@ import pkg_resources
 from ptti.config import config_load, config_save
 from ptti.model import runModel
 from ptti.plotting import plot
+from ptti.economic import calcEconOutputs
 from multiprocessing import Pool
 import collections
 import logging as log
@@ -68,6 +69,8 @@ def command():
                         default=False, help="Execute samples in parallel")
     parser.add_argument("-v", "--var", nargs="*", default=[],
                         help="Set variables / parameters")
+    parser.add_argument("-e", "--econ", action="store_true", default=False,
+                        help="Perform economic analysis")
 
     args = parser.parse_args()
 
@@ -133,6 +136,17 @@ def command():
         allevents = sorted(allevents, key=lambda i: i["time"])
         eout = "{}-{}-events.yaml".format(cfg["meta"]["output"], i)
         saveEvents(allevents, eout)
+
+        if args.econ:
+            # Economic analysis
+            t, vals = traj[:,0], traj[:,1:]            
+            econ = calcEconOutputs((t, vals, events), cfg)
+            econout = "{}-{}-econ.yaml".format(cfg["meta"]["output"], i)
+            # Just keep the useful stuff...
+            econ = {
+                k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
+            }
+            config_save(econ, econout, True)
 
     if args.statistics:
         # Average trajectory?
@@ -255,7 +269,7 @@ def runSample(arg):
 
     t, traj, events = runModel(**cfg["meta"], **cfg)
 
-    tseries = np.vstack([t, traj.T]).T
+    tseries = np.concatenate([t[:,None], traj], axis=1)
 
     return tseries, events
 

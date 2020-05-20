@@ -11,9 +11,11 @@ import yaml
 
 log = logging.getLogger(__name__)
 
+
 def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=collections.OrderedDict):
     class OrderedLoader(Loader):
         pass
+
     def construct_mapping(loader, node):
         loader.flatten_mapping(node)
         return object_pairs_hook(loader.construct_pairs(node))
@@ -21,6 +23,7 @@ def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=collections.Order
         yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
         construct_mapping)
     return yaml.load(stream, OrderedLoader)
+
 
 def numpy_funcs():
     funcs = ['beta', 'binomial', 'chisquare', 'choice', 'dirichlet', 'exponential', 'gamma',
@@ -30,7 +33,8 @@ def numpy_funcs():
              'rand', 'randint', 'randn', 'random_integers', 'random_sample', 'rayleigh',
              'standard_cauchy', 'standard_exponential', 'standard_gamma', 'standard_normal',
              'standard_t', 'triangular', 'uniform', 'vonmises', 'wald', 'weibull', 'zipf']
-    return { f: getattr(np.random, f) for f in funcs }
+    return {f: getattr(np.random, f) for f in funcs}
+
 
 def config_load(filename=None, sample=0):
     """
@@ -53,16 +57,16 @@ def config_load(filename=None, sample=0):
     else:
         cfg = {}
 
-    gvars = { "sample": sample }
+    gvars = {"sample": sample}
     gvars.update(numpy_funcs())
 
     for k, v in cfg.items():
-        ## collect global variables from initialisation
+        # collect global variables from initialisation
         if k == "initial":
             for i, iv in v.items():
                 gvars[i] = iv
 
-        ## compute global parameters
+        # compute global parameters
         if k == "parameters":
             v.update(_eval_params(v, gvars))
 
@@ -72,7 +76,7 @@ def config_load(filename=None, sample=0):
                     if ik == "parameters":
                         iv.update(_eval_params(iv, gvars))
 
-    ## set some defaults
+    # set some defaults
     cfg.setdefault("meta", {})
     cfg["meta"].setdefault("model", "SEIRCTODEMem")
     cfg["meta"].setdefault("t0", 0)
@@ -86,13 +90,17 @@ def config_load(filename=None, sample=0):
     cfg["meta"].setdefault("title", "PTTI Simulation")
 
     if cfg["meta"].setdefault("platform", platform) != platform:
-        log.warning("Config platform ({}) differs from {}".format(cfg["meta"]["platform"], platform))
+        log.warning("Config platform ({}) differs from {}".format(
+            cfg["meta"]["platform"], platform))
     if cfg["meta"].setdefault("software", software) != software:
-        log.warning("Config software version ({}) differs from {}".format(cfg["meta"]["software"], software))
+        log.warning("Config software version ({}) differs from {}".format(
+            cfg["meta"]["software"], software))
     if cfg["meta"].setdefault("revision", revision) != revision:
-        log.warning("Config software revision ({}) differs from {}".format(cfg["meta"]["revision"], revision))
+        log.warning("Config software revision ({}) differs from {}".format(
+            cfg["meta"]["revision"], revision))
     if cfg["meta"].setdefault("python", python) != python:
-        log.warning("Config Python version ({}) differs from {}".format(cfg["meta"]["python"], python))
+        log.warning("Config Python version ({}) differs from {}".format(
+            cfg["meta"]["python"], python))
 
     cfg.setdefault("initial", {})
     cfg["initial"].setdefault("N", 1000)
@@ -102,6 +110,7 @@ def config_load(filename=None, sample=0):
     cfg.setdefault("interventions", {})
 
     return cfg
+
 
 def _eval_params(d, gvars):
     """
@@ -117,6 +126,23 @@ def _eval_params(d, gvars):
         #print("setting {} to {} = {}".format(k, v, params[k]))
     return params
 
-def config_save(cfg, filename):
+
+def config_save(cfg, filename, listcast=False):
+
+    # Deep cast to normal python types
+    def cast_tolist(cfg):
+        if type(cfg) != dict:
+            return cfg
+        for k, v in cfg.items():
+            if hasattr(v, 'tolist'):
+                cfg[k] = v.tolist()
+            else:
+                cfg[k] = cast_tolist(v)
+
+        return cfg
+
+    if listcast:
+        cfg = cast_tolist(cfg)
+
     with open(filename, "w") as fp:
         fp.write(yaml.dump(cfg))
