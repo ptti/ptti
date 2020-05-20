@@ -61,6 +61,7 @@ setup(name='ptti',
       entry_points={
           'console_scripts': [
               'ptti = ptti.command:command',
+              'ptti-fit = ptti.fit:command',
               'ptti-compare = ptti.command:compare'
           ],
           'models': [
