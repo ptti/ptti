@@ -68,7 +68,7 @@ parameters:
 ## Exogenous interventions. The time is given in
 ## simulation days.
 interventions:
-  ## After three months, start of restrictions on 16th March. 
+  ## After three months, start of restrictions on 16th March.
   ## Reduce contacts from 10 to 13 per day (by ~25%).
   - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
     parameters:
