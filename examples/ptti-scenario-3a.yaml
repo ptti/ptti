@@ -7,8 +7,8 @@ meta:
   title: PTTI Scenario 3a
   output: ptti-scenario-3a
   start: 2019/12/18
-  tmax: 530
-  steps: 530
+  tmax: 895
+  steps: 895
 
 ## Initial values for the simulation
 initial:
@@ -22,7 +22,7 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta:  0.033
+  beta:  0.0375   # this based on fitting in ukfitting.py
 
   ## c is the contact rate per day. 13 is an accepted
   ## value on average under normal circumstances.
@@ -78,7 +78,7 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
-      beta: 0.0231  # 30% reduction in Beta due to pulic wearing of home-made cloth face coverings 
+      beta: 0.02625  # 30% reduction in Beta due to pulic wearing of home-made cloth face coverings 
                     # conservative assumption based on DELVE 4th May review
 
   ## On 1st June, scale up testing, and contact tracing
