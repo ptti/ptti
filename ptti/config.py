@@ -146,3 +146,19 @@ def config_save(cfg, filename, listcast=False):
 
     with open(filename, "w") as fp:
         fp.write(yaml.dump(cfg))
+
+
+def save_human(data, outfile):
+    # but intended to produce readable YAML
+    def _clean(d):
+        if isinstance(d, list):
+            return [_clean(x) for x in d]
+        elif isinstance(d, dict) or isinstance(d, collections.OrderedDict):
+            return { k: _clean(v) for k,v in d.items() }
+        elif isinstance(d, np.float64):
+            return float(d)
+        else:
+            return d
+
+    with open(outfile, "w") as fp:
+        fp.write(yaml.dump(_clean(data)))

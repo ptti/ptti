@@ -11,6 +11,8 @@ import sys
 import csv
 import time
 
+log = logging.getLogger(__name__)
+
 def _getter(p):
    def _f(cfg):
       return cfg["parameters"][p]
@@ -100,12 +102,11 @@ def optimise(cfg, getr, setp, p0, times, removed):
 def command():
    logging.basicConfig(stream=sys.stdout, level=logging.INFO,
                       format='%(asctime)s - %(name)s:%(levelname)s - %(message)s')
-   log = logging.getLogger(__name__)
 
    parser = argparse.ArgumentParser("fit")
    parser.add_argument("-y", "--yaml", default=None, help="Config file")
    parser.add_argument("-m", "--mask", nargs="*", default=[], help="Variables to mask")
-   parser.add_argument("-i", "--ifr", default=0.1, help="Infection fatalaty rate")
+   parser.add_argument("-i", "--ifr", default=0.01, type=float, help="Infection fatalaty rate")
    parser.add_argument("-e", "--end", default=None, help="Truncate the data at end date")
    parser.add_argument("--dgu", default=None, help="coronavirus.data.gov.uk format for the dead\n\t\thttps://coronavirus.data.gov.uk/downloads/csv/coronavirus-deaths_latest.csv")
 
