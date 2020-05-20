@@ -1,0 +1,15 @@
+- parameters:
+    c: 10
+  time: 89
+- parameters:
+    c: 4
+  time: 96
+- parameters:
+    c: 6
+  time: 147
+- parameters:
+    c: 8
+  time: 166
+- parameters:
+    c: 11
+  time: 199

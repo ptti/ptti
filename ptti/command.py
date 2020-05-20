@@ -3,6 +3,7 @@ import pkg_resources
 from ptti.config import config_load, config_save
 from ptti.model import runModel
 from ptti.plotting import plot
+from ptti.economic import calcEconOutputs
 from multiprocessing import Pool
 import collections
 import logging as log
@@ -11,27 +12,32 @@ import sys
 import numpy as np
 import yaml
 
-## MPI is an optional dependency for running on HPC systems
+# MPI is an optional dependency for running on HPC systems
 try:
     from mpi4py import MPI
 except ImportError:
     MPI = None
 
+
 def inmpi():
     return "PMIX_RANK" in os.environ
+
+
 def mpirank():
     return int(os.environ.get("PMIX_RANK", "0"))
+
 
 log.basicConfig(stream=sys.stdout, level=log.INFO,
                 format='%(asctime)s - %(name)s:%(levelname)s - %(message)s')
 
+
 def command():
-    ## if we are running in MPI, and we are a worker process, skip all this
+    # if we are running in MPI, and we are a worker process, skip all this
     if inmpi() and mpirank() > 0:
         mpiwork()
         sys.exit(0)
 
-    ## locate models by name from pkg_resources
+    # locate models by name from pkg_resources
     models = {}
     for ep in pkg_resources.iter_entry_points(group='models'):
         models.update({ep.name: ep.load()})
@@ -68,6 +74,8 @@ def command():
                         default=False, help="Execute samples in parallel")
     parser.add_argument("-v", "--var", nargs="*", default=[],
                         help="Set variables / parameters")
+    parser.add_argument("-e", "--econ", action="store_true", default=False,
+                        help="Perform economic analysis")
 
     args = parser.parse_args()
 
@@ -87,7 +95,7 @@ def command():
                 cfg["initial"][init] = arg
 
         for v in args.var:
-            k,v = v.split("=", 1)
+            k, v = v.split("=", 1)
             v = float(v)
             cfg["parameters"][k] = v
 
@@ -134,6 +142,39 @@ def command():
         eout = "{}-{}-events.yaml".format(cfg["meta"]["output"], i)
         saveEvents(allevents, eout)
 
+        # Parameter history
+        params_current = dict(cfg['parameters'])
+        param_history = {k: [v] for k, v in params_current.items()}
+        # Add something to keep track of the periods
+        curr_period = 0
+        param_history['period'] = [curr_period]
+        events_queue = list(allevents)  # Copy
+
+        for t in traj[1:, 0]:
+            l0 = len(events_queue)
+            while len(events_queue) > 0 and events_queue[0]['time'] < t:
+                # Update
+                ev = events_queue.pop(0)
+                params_current.update(ev['parameters'])
+            if len(events_queue) < l0:
+                curr_period += 1
+            param_history['period'].append(curr_period)
+            for k, v in params_current.items():
+                if k in param_history:
+                    param_history[k].append(v)
+
+        if args.econ:
+            # Economic analysis
+            t, vals = traj[:, 0], traj[:, 1:]
+
+            econ = calcEconOutputs(t, vals, param_history, cfg)
+            econout = "{}-{}-econ.yaml".format(cfg["meta"]["output"], i)
+            # Just keep the useful stuff...
+            econ = {
+                k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
+            }
+            config_save(econ, econout, True)
+
     if args.statistics:
         # Average trajectory?
         tt = np.array(trajectories)
@@ -151,6 +192,7 @@ def command():
 
     if args.plot:
         plot(**cfg["meta"], **cfg)
+
 
 def compare():
     # Compare two different runs of the same model, gauge one vs. the other
@@ -255,9 +297,10 @@ def runSample(arg):
 
     t, traj, events = runModel(**cfg["meta"], **cfg)
 
-    tseries = np.vstack([t, traj.T]).T
+    tseries = np.concatenate([t[:, None], traj], axis=1)
 
     return tseries, events
+
 
 def mpimap(f, v):
     if MPI is None:
@@ -284,6 +327,7 @@ def mpimap(f, v):
 
     return sum(data, [])
 
+
 def mpiwork():
     if MPI is None:
         log.error("Using MPI requires installation of mpi4py")
@@ -303,22 +347,24 @@ def mpiwork():
     comm.gather(result, root=0)
     log.info("done")
 
-def saveEvents(events, outfile):
-        ## slightly dodgy, but intended to produce readable YAML
-        def _clean(e):
-            cleaned = {}
-            for k, v in e.items():
-                if isinstance(v, collections.OrderedDict):
-                    cleaned[k] = dict(v)
-                elif isinstance(v, np.float64):
-                    cleaned[k] = float(v)
-                else:
-                    cleaned[k] = v
-            return cleaned
 
-        events = [_clean(e) for e in events]
-        with open(outfile, "w") as fp:
-            fp.write(yaml.dump(events))
+def saveEvents(events, outfile):
+        # slightly dodgy, but intended to produce readable YAML
+    def _clean(e):
+        cleaned = {}
+        for k, v in e.items():
+            if isinstance(v, collections.OrderedDict):
+                cleaned[k] = dict(v)
+            elif isinstance(v, np.float64):
+                cleaned[k] = float(v)
+            else:
+                cleaned[k] = v
+        return cleaned
+
+    events = [_clean(e) for e in events]
+    with open(outfile, "w") as fp:
+        fp.write(yaml.dump(events))
+
 
 if __name__ == '__main__':
     command()

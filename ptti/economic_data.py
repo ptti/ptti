@@ -1,5 +1,4 @@
-
-econ_inputs = dict()
+econ_inputs = {}
 
 # Parameters
 # econ_inputs['Population'] = 67886011 # From scenario
@@ -118,9 +117,3 @@ econ_inputs['Medical']['Productivity_ICU_Cost'] = 2509
 econ_inputs['Medical']['Productivity_Hospital_Cost'] = 1195
 econ_inputs['Medical']['Productivity_Symptomatic_Cost'] = 358
 econ_inputs['Medical']['Pct_Symptomatic'] = 0.5
-
-
-import yaml
-with open(r'economics\economic-inputs.yaml', 'w') as file:
-    documents = yaml.dump(econ_inputs, file)
-    file.close()
