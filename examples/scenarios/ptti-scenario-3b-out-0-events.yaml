@@ -8,7 +8,7 @@
     c: 6
   time: 147
 - parameters:
-    beta: 0.0231
+    beta: 0.02625
     chi: 0.8
     eta: 0.8
     theta: 0.0014730575346369962

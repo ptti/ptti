@@ -27,4 +27,7 @@ plot: ${SCENARIOS:=.pdf}
 
 clean:
 	# Remove all files
-	find . -name '*-out-*.*' -name '*.pdf' -delete
+	find . -name '*-econ.yaml' -delete	
+	find . -name '*-events.yaml' -delete	
+	find . -name '*-out-*.*' -delete
+	find . -name '*.pdf' -delete

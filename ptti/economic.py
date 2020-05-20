@@ -43,11 +43,10 @@ def calcEconOutputs(time, trajectory, parameters, scenario):
     Period_Start = 0
 
     # Two ways to do periods for hiring; per policy period, or per window. We can do both.
-    for p in Output['policy']['interventions']:
-        Period_End = p['time']
-
-        # Ok, so we round this to the closest point...
-        Period_End = np.argmin(abs(time-Period_End))
+    period_history = np.array(parameters['period'])
+    periods = sorted(list(set(period_history)))
+    for p in periods:
+        Period_Start, Period_End = np.where(period_history == p)[0][[0,-1]]
 
         Period_Starts.append(Period_Start)
         Period_Ends.append(Period_End)
@@ -55,14 +54,6 @@ def calcEconOutputs(time, trajectory, parameters, scenario):
 
         Tracers_This_Period = max(To_Trace[Period_Start:Period_End]) * econ_inputs['Trace']['Time_to_Trace_Contact']
         Tracers_Needed_Per_Hiring_Window.append(Tracers_This_Period)
-        Period_Start = Period_End # For next period.
-    # Last Period
-    Period_End = len(time)-1
-    Period_Starts.append(Period_Start)
-    Period_Ends.append(Period_End)
-    Period_Lengths.append(float(time[Period_End] - time[Period_Start]))
-    Tracers_This_Period = max(To_Trace[Period_Start:Period_End]) * econ_inputs['Trace']['Time_to_Trace_Contact']
-    Tracers_Needed_Per_Hiring_Window.append(Tracers_This_Period)
 
     # We assume that each day, all people whose contacts can be traced have all contacts traced by a team.
     # This means to keep tracing on a one-day lag, i.e. by end of the next day,  we need enough people to trace
