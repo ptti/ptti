@@ -169,14 +169,14 @@ def command():
    fig, (ax1, ax2) = plt.subplots(2, 1)
 
    ax1.set_xlabel("Days since outbreak start")
-   ax1.set_ylabel("Deaths")
+   ax1.set_ylabel("Cumulative infections")
    ax1.set_xlim(0, tmax)
    ax1.plot(t, RU, label="Simulated")
    ax1.plot(times, removed, label="Data")
    ax1.legend()
 
    ax2.set_xlabel("Days since outbreak start")
-   ax2.set_ylabel("Deaths")
+   ax2.set_ylabel("Cumulative infections")
    ax2.set_xlim(0, tmax)
    ax2.set_yscale("log")
    ax2.plot(t, RU, label="Simulated")
