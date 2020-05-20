@@ -58,10 +58,10 @@ def paramArray(cfg, masked=[]):
          if p in masked: continue
          param_funcs.append((_igetter(i,p), _isetter(i,p)))
 
-      getp = lambda cfg: np.array(list(g(cfg) for (g, _) in param_funcs))
-      _ev  = lambda fv: fv[0][1](fv[0][0], fv[1])
-      setp = lambda cfg, a: list(map(_ev, zip([(cfg, s) for (_, s) in param_funcs], a)))
-      return getp, setp
+   getp = lambda cfg: np.array(list(g(cfg) for (g, _) in param_funcs))
+   _ev  = lambda fv: fv[0][1](fv[0][0], fv[1])
+   setp = lambda cfg, a: list(map(_ev, zip([(cfg, s) for (_, s) in param_funcs], a)))
+   return getp, setp
 
 def dgu(fn):
    """
