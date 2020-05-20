@@ -1,11 +1,10 @@
 import argparse
 import pkg_resources
-from ptti.config import config_load, config_save
+from ptti.config import config_load, config_save, save_human
 from ptti.model import runModel
 from ptti.plotting import plot
 from ptti.economic import calcEconOutputs
 from multiprocessing import Pool
-import collections
 import logging as log
 import os
 import sys
@@ -140,7 +139,7 @@ def command():
         allevents = events + [i for i in cfg["interventions"] if "time" in i]
         allevents = sorted(allevents, key=lambda i: i["time"])
         eout = "{}-{}-events.yaml".format(cfg["meta"]["output"], i)
-        saveEvents(allevents, eout)
+        save_human(allevents, eout)
 
         # Parameter history
         params_current = dict(cfg['parameters'])
@@ -173,6 +172,9 @@ def command():
             econ = {
                 k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
             }
+            # Remove time series data
+            del(econ['Economic']['tests'])
+            del(econ['Economic']['trace'])
             config_save(econ, econout, True)
 
     if args.statistics:
@@ -346,25 +348,6 @@ def mpiwork():
     result = list(map(runSample, chunk))
     comm.gather(result, root=0)
     log.info("done")
-
-
-def saveEvents(events, outfile):
-        # slightly dodgy, but intended to produce readable YAML
-    def _clean(e):
-        cleaned = {}
-        for k, v in e.items():
-            if isinstance(v, collections.OrderedDict):
-                cleaned[k] = dict(v)
-            elif isinstance(v, np.float64):
-                cleaned[k] = float(v)
-            else:
-                cleaned[k] = v
-        return cleaned
-
-    events = [_clean(e) for e in events]
-    with open(outfile, "w") as fp:
-        fp.write(yaml.dump(events))
-
 
 if __name__ == '__main__':
     command()

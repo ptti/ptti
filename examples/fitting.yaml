@@ -1,0 +1,17 @@
+meta:
+  title:  Starting values for fitting
+  output: fitting
+initial:
+   N:  67000000
+   IU: 1
+parameters:
+    beta: 0.0034
+    c: 13
+    theta: 0
+interventions:
+  - time: 89
+    parameters:
+      c: 10
+  - time: 96
+    parameters:
+      c: 4
