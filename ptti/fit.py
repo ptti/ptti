@@ -81,6 +81,21 @@ def dgu(fn):
             yield (date.tm_yday, deaths)
    return np.array(list(read_csv()))[::-1]
 
+def data(fn):
+   """
+   Read generic data in (YYYY-MM-DD, dead) format
+   """
+   def read_csv():
+      with open(fn) as fp:
+         for date, dead in csv.reader(fp, delimiter=','):
+            try:
+               date = time.strptime(date, "%Y-%m-%d")
+            except ValueError:
+               continue
+            deaths = int(dead)
+            yield (date.tm_yday, deaths)
+   return np.array(list(read_csv()))
+
 def optimise(cfg, getr, setp, p0, times, removed):
    def _f(x):
       t0 = x[0]
@@ -109,6 +124,7 @@ def command():
    parser.add_argument("-i", "--ifr", default=0.01, type=float, help="Infection fatalaty rate")
    parser.add_argument("-e", "--end", default=None, help="Truncate the data at end date")
    parser.add_argument("--dgu", default=None, help="coronavirus.data.gov.uk format for the dead\n\t\thttps://coronavirus.data.gov.uk/downloads/csv/coronavirus-deaths_latest.csv")
+   parser.add_argument("--data", default=None, help="generic YYYY-MM-DD,dead format for data")
 
    args = parser.parse_args()
 
@@ -116,8 +132,11 @@ def command():
       log.error("--yaml is a required argument")
 
    dead = None
-   if args.dgu:
+   if args.data:
+      dead = data(args.data)
+   elif args.dgu:
       dead = dgu(args.dgu)
+
    if dead is None:
       log.error("There are no dead. Need a data file of some sort")
 
