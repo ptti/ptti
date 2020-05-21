@@ -51,7 +51,7 @@ econ_inputs['Trace']['Tracing_App_Development_Deployment'] = 10000000  # ball pa
 
 econ_inputs['Trace']['Cost_Per_Extra_Phones_for_Tracers'] = 200  # For any tracers without phones / replacements.
 econ_inputs['Trace']['Tracer_Percentage_Needing_Phones'] = 0.1  # Fairly small percentage.
-econ_inputs['Trace']['Tracers_Per_Infected_Person'] = 58.0/8 # See report - 58 hours, tracers work 8 hour days.
+econ_inputs['Trace']['Tracers_Per_Infected_Person'] = 37.8/7.5 # See report - 37.8 hours to trace all contacts during lockdown, tracers work 7.5 hour days.
 
 econ_inputs['Trace']['Rural_Pct'] = 0.17
 econ_inputs['Trace']['Daily_Travel_Cost'] = 10
