@@ -7,10 +7,10 @@ meta:
   tmax: 140
   steps: 140
 initial:
-   N:  67000000
+   N:  67886011
    IU: 1
 parameters:
-    beta: 0.1754120563398207
+    beta: 0.1529452106579659 ## R ~ 1
     c: 1
     gamma: 0.1429
     theta: 0
@@ -18,14 +18,14 @@ parameters:
     chi: 0
 interventions:
   ## nominal start of the epidemic
-  - time: 43
+  - time: 49
     parameters:
-      beta: 1.146256342975407
-  ## lockdown 26 march
-  - time: 85
+      beta: 1.588803141407416 ## R ~ 11.1
+  ## lockdown 23 march
+  - time: 82
     parameters:
-      beta: 0.14462466430812926
-  ## slight relaxation 51 days later
+      beta: 0.15291161785698615 ## R ~ 1
+  ## slight relaxation 54 days later
   - time: 136
     parameters:
-      beta: 7.745072393135159e-05
+      beta: 0.013466588069457427 ## bad data

@@ -164,7 +164,7 @@ the duration of infectiousness and is fixed at one week.
 
 *Justification:*
 
-### Assumption: the overall infection fatality rate (IFR) is 0.008
+### Assumption: the overall infection fatality rate (IFR) is 0.01
 
 The model does not explicitly produce a time-series for the number of dead.
 Rather, it produces the number of individuals removed through recovery or death.
@@ -174,7 +174,9 @@ vary and reflection in the model as the probability of infection (and
 consequently the overall force of the epidemic) depends strongly on this value.
 
 *Justification:* scientific consensus appears to be converging on an IFR of
-around 1% or slightly lower [citation]. However we conduct sensitivity analysis 
+around 1% [citation]. However we conduct sensitivity analysis on the resulting
+infectiousness parameter to understand how this affects the behaviour of the
+model.
 
 ## Fitting the data
 
@@ -184,13 +186,13 @@ scientific consensus. The [PTTI software] includes a tool, `ptti-fit`, for
 calibrating the model to mortality data. The fitting is conducted using the
 [fitting scenario] that includes three interventions:
 
-  * on the 12th of February
-  * on the 26th of March
+  * on the 18th of February
+  * on the 23rd of March
   * on the 13th of May
 
 The first intervention represents a notional start to the epidemic implied by
-the UK government figures. However, we do not believe this to be the true
-date as discussed below
+the UK government figures under our model. However, we do not believe this to be
+the true date as discussed below.
 
 The number of contacts per unit time, *c*, was fixed at 1, and the
 infectiousness, *β*, was allowed to vary. No testing or contact tracing was
@@ -211,40 +213,58 @@ The vertical lines indicate the interventions and the case data begins on the
 6th of March. The values for *β* that were discovered by the optimisation
 process are,
 
-  * 0.175 (equivalent to R = 1.2) from the first of January to the 12th of February
-  * 1.15  (equivalent to R = 8) from the 12th of February until lock-down
-  * 0.144 (equivalent to R = 1) during lock-down
+  * 0.1529 (equivalent to R = 1) from the first of January to the 12th of February
+  * 1.59   (equivalent to R = 11) from the 12th of February until lock-down
+  * 0.1529 (equivalent to R = 1) during lock-down
 
 Of these, only the third is meaningful. The first may be disregarded as it is
 before the notional start of the epidemic implied by the UK government mortality
-data.
+data. Seeding the simulation on the first of January with one infectious
+individual, a value implying that R = 1 will maintain this until the notional
+start of the epidemic. That this was found automatically through fitting is
+a sanity check for identifying the 12th of February as the key date.
 
-The second figure of 1.15 (R = 8) during the initial phase of the epidemic is
+The second figure of 1.59 (R = 11) during the initial phase of the epidemic is
 conspicuously high and this bears explanation. It is, nevertheless, implied by
 the data as can be clearly seen from the figure when presented with a
 logarithmic scale. This value can be revised downwards easily by moving the
 notional start of the epidemic earlier and a value close to the scientific
-consensus value is obtained towards the end of December or beginning of January,
-the specific date not being very influential. The resulting curve, however, no
-longer matches the initial data.
+consensus value is obtained towards the end of December or the beginning of
+January, the specific date not being very influential for obtaining this value.
+The resulting curve, however, no longer matches the initial data. 
 
-The final figure of 0.144 (R = 1) during lock-down appears to be robust against
+The final figure of 0.1529 (R = 1) during lock-down appears to be robust against
 all efforts to vary the starting date and intervention timing, varying from
 slightly below to slightly above. Whilst the initial UK government data is
 suspect, the later data appears more reliable.
 
 On this basis, then, we can infer that *if* it is correct that lock-down reduces
 contact by 70% [citation] *then* the initial value for the infectiousness should
-be 0.476, implying R0 of 3.3, within the range of scientific consensus. By
-adjusting the notional start of the epidemic to be in late December or early
-January, we obtain such an initial value without perturbing the fit or value of
-infectiousness during the lock-down period.
+be 0.51, implying R0 of 3.5, at the high end of the range of scientific
+consensus. By adjusting the notional start of the epidemic to be in late
+December or early January, we obtain such an initial value without perturbing
+the fit or value of infectiousness during the lock-down period.
+
+## Adjustment to dates
+
+Recall that this model assumes individuals are removed through hospitalisation
+or death. From what we have observed of disease progression, the second phase of
+the illness leading to death typically lasts 2-3 weeks. If the mean is 18 days,
+this means that, when fitting to mortality data with this model, an adjustment
+of 18 days is required. Therefore, measured as the first active case, the date
+implied by the UK government data is not the 12th of February but the 25th of
+January, and by the above argument, we believe the true beginning of the
+epidemic in the UK to be in mid-December.
+
+## Conclusions from fitting
 
 We therefore conclude that the following are *consistent with* the data:
 
-  1. The COVID-19 epidemic in the UK was probably seeded at the end of December
-     or beginning of January.
-  2. The reproduction number for a completely susceptible population in the
+  1. The UK government data implies an unreasonably high infectiousness and the
+     epidemic beginning on the 25th of January.
+  2. The COVID-19 epidemic in the UK was probably seeded at in the middle to end
+     of December 2019.
+  3. The reproduction number for a completely susceptible population in the
      absence of any interventions is about 3.3, implying an appropriate value
      for *β* in our full model (*c* equal to 13 without interventions) of 0.036.
 
