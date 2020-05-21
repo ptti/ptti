@@ -112,7 +112,7 @@ as well as the number of cases reported in England and Wales.
 
 The availability of tests both in hospital settings and among different groups
 of workers and individuals has changed over time and varies by location, and the
-supply and provision of continues to be constrained. Because the reported cases
+supply and provision of tests continues to be constrained. Because the reported cases
 depend on testing, these data are difficult to interpret reliably. Due to the
 lack of seroprevalence testing we also do not know the true number of cases in
 the population. Attempting to fit a model that produces a definite number of
@@ -121,7 +121,7 @@ disregard this data.
 
 Mortality data is better but also suffers problems. Reporting of
 coronavirus-related deaths in hospitals is thought to be relatively consistent
-across the UK. The criterion for reporting of deaths outwith hospitals as
+across the UK. The criterion for reporting of deaths outside of hospitals as
 coronavirus-related has changed in time and has differed by region. We
 nevertheless attempt to calibrate our model to this mortality data, estimating
 that it is not as severely defective as the case data.
@@ -129,11 +129,11 @@ that it is not as severely defective as the case data.
 Calibration of our model to mortality data involves some facts and some
 assumptions.
 
-### Fact: lock-down throughout the UK began on the 26th of March
+### Fact: lock-down throughout the UK began on the 23rd of March
 
-Although we suspect a slowing of activity and reduction in contact for several
-weeks before lockdown was ordered, we are only certain that it was ordered
-effective the 26th of March. The effect of this is a reduction of the average
+Although we suspect a slowing of activity and reduction in contact for at least 
+a week before lockdown was ordered, we are only certain that it was ordered
+effective the 23rd of March. The effect of this is a reduction of the average
 contact rate as of that date.
 
 ### Fact: lock-down was eased in England on the 13th of May
