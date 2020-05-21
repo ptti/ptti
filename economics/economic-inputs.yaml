@@ -48,7 +48,7 @@ Trace:
   Tracer_Percentage_Needing_Phones: 0.1
   Tracer_Salary: 80
   Tracer_Training_Course_Cost: 72000
-  Tracers_Per_Infected_Person: 7.25
+  Tracers_Per_Infected_Person: 5.1
   Tracers_Per_Supervisor: 50
   Tracing_App_Development_Deployment: 10000000
   Tracing_Daily_Public_Communications_Costs: 100000
