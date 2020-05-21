@@ -6,7 +6,7 @@ Medical:
   NHS_Death_Cost: 500
   NHS_Hospital_Cost: 2422
   NHS_ICU_Cost: 29335
-  Non_ICU_Fatality: 0.36
+  Non_ICU_Fatality: 0.375
   Pct_Symptomatic: 0.5
   Productivity_Death_Cost: 358
   Productivity_Hospital_Cost: 1195
