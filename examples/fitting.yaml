@@ -1,3 +1,8 @@
+##
+## Example: fitting to coronavirus.data.gov.uk death data
+##
+## ptti-fit -y fitting.yaml --dgu ~/Downloads/coronavirus-deaths_latest.csv --mask c theta --ifr 0.008 -t 13
+##
 meta:
   title:  Starting values for fitting
   output: fitting
@@ -5,13 +10,19 @@ initial:
    N:  67000000
    IU: 1
 parameters:
-    beta: 0.0034
-    c: 13
+    beta: 0.5
+    c: 1
     theta: 0
 interventions:
-  - time: 89
+  ## start of the epidemic change this time
+  - time: 40
     parameters:
-      c: 10
+      beta: 0.5
+  ## lockdown 26 march
   - time: 96
     parameters:
-      c: 4
+      beta: 0.5
+  ## slight relaxation 51 days later
+  - time: 147
+    parameters:
+      beta: 0.5

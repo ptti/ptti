@@ -297,6 +297,15 @@ def runSample(arg):
     # set random seed for the benefit of stochastic simulations
     cfg["meta"]["seed"] = i
 
+    # for indexed samples, select the right parameter:
+    for k,v in cfg["parameters"].copy().items():
+        if isinstance(v, list):
+            cfg["parameters"][k] = v[i]
+    for iv in cfg["interventions"]:
+        for k,v in iv.copy().items():
+            if isinstance(v, list):
+                iv[k] = v[i]
+
     t, traj, events = runModel(**cfg["meta"], **cfg)
 
     tseries = np.concatenate([t[:, None], traj], axis=1)

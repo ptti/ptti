@@ -216,7 +216,7 @@ def Econ_Outputs(model_outputs, scenario_YAML, econ_YAML, write_file=False):
     # Full strength is 0 penalty at UK_Open_Contacts
     Daily_GDP = []
     Economy_Fraction_Daily = []
-    Daily_GDP_Base = UK_GDP_Monthly / 30
+    Daily_GDP_Base = UK_GDP_Monthly / (365/12)
     for d in range(Days):
         Shutdown_Fraction = (Output['variables']['c'][d] - UK_Shutdown_Contacts) / (UK_Open_Contacts - UK_Shutdown_Contacts)
         Economy_Fraction_Daily.append(1-Shutdown_Fraction)
