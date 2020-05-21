@@ -96,18 +96,36 @@ def data(fn):
             yield (date.tm_yday, deaths)
    return np.array(list(read_csv()))
 
-def optimise(cfg, getr, setp, p0, times, removed):
-   def _f(x):
+def optimise(cfg, getr, setp, p0, times, removed, interventions):
+   def obj(x):
+      ## we do not allow negative parameters, very bad
+      if np.any(x[1:] < 0):
+         return np.inf
+
+      ## set time
       t0 = x[0]
-      setp(cfg, x[1:])
       cfg["meta"]["t0"] = t0
+
+      ## register interventions against the reference times
+      def regiv(iv):
+         niv = iv.copy()
+         niv["time"] += t0
+         return niv
+      cfg["interventions"] = [regiv(iv) for iv in interventions]
+
+      ## set the parameters
+      setp(cfg, x[1:])
+
+      ## run the model
       t, traj, _ = runModel(**cfg["meta"], **cfg)
       R = interp1d(t, getr(traj), kind="previous",  bounds_error=False,
                    fill_value=0)(times)
-      return np.sqrt(np.sum( (R-removed)**2 ))
+
+      ## measure the result
+      return np.sqrt(np.sum((R-removed)**2, where=removed >= 0))
 
    p0 = np.hstack([[0.0], p0])
-   fit = minimize(_f, p0, method='nelder-mead',
+   fit = minimize(obj, p0, method='nelder-mead',
                   options={'xatol': 1e-8, 'disp': True})
 
    log.info("Fitting complete:\n{}".format(fit))
@@ -123,6 +141,7 @@ def command():
    parser.add_argument("-m", "--mask", nargs="*", default=[], help="Variables to mask")
    parser.add_argument("-i", "--ifr", default=0.01, type=float, help="Infection fatalaty rate")
    parser.add_argument("-e", "--end", default=None, help="Truncate the data at end date")
+   parser.add_argument("-t", "--time", default=0, type=float, help="Shift dataset time by given amount")
    parser.add_argument("--dgu", default=None, help="coronavirus.data.gov.uk format for the dead\n\t\thttps://coronavirus.data.gov.uk/downloads/csv/coronavirus-deaths_latest.csv")
    parser.add_argument("--data", default=None, help="generic YYYY-MM-DD,dead format for data")
 
@@ -155,7 +174,7 @@ def command():
    getp, setp = paramArray(cfg, args.mask)
 
    ## the times of the dead
-   dead_t = dead[:,0]
+   dead_t = dead[:,0] + args.time
    ## these are the actual counts of the dead
    dead_d = dead[:,1]
 
@@ -167,7 +186,7 @@ def command():
    times = np.linspace(0, tmax, steps)
    ## interpolate the dead onto this time support
    dead_i = interp1d(dead_t, dead_d, kind="previous", bounds_error=False,
-                     fill_value=0)(times)
+                     fill_value=np.nan)(times)
 
    ## scale the dead by the fatality rate
    removed = dead_i / args.ifr
@@ -176,8 +195,10 @@ def command():
    cfg["meta"]["tmax"] = tmax
    cfg["meta"]["steps"] = steps+1
 
+   interventions = cfg.get("interventions", [])
+
    ## perform a stochastic gradient descent
-   t0, params = optimise(cfg, getr, setp, getp(cfg), times, removed)
+   t0, params = optimise(cfg, getr, setp, getp(cfg), times, removed, interventions)
    cfg["meta"]["t0"] = t0
    setp(cfg, params)
 
@@ -193,6 +214,8 @@ def command():
    ax1.set_xlim(0, tmax)
    ax1.plot(t, RU, label="Simulated")
    ax1.plot(times, removed, label="Data")
+   for e in interventions:
+      ax1.axvline(e["time"], c=(0, 0, 0), lw=0.5, ls='--')
    ax1.legend()
 
    ax2.set_xlabel("Days since outbreak start")
@@ -201,8 +224,9 @@ def command():
    ax2.set_yscale("log")
    ax2.plot(t, RU, label="Simulated")
    ax2.plot(times, removed, label="Data")
+   for e in interventions:
+      ax2.axvline(e["time"], c=(0, 0, 0), lw=0.5, ls='--')
    ax2.legend()
-
 
    plt.savefig("{}-fit.png".format(cfg["meta"]["output"]))
 
