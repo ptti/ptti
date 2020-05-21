@@ -131,8 +131,8 @@ assumptions.
 
 ### Fact: lock-down throughout the UK began on the 23rd of March
 
-Although we suspect a slowing of activity and reduction in contact for several
-weeks before lockdown was ordered, we are only certain that it was ordered
+Although we suspect a slowing of activity and reduction in contact for at least 
+a week before lockdown was ordered, we are only certain that it was ordered
 effective the 23rd of March. The effect of this is a reduction of the average
 contact rate as of that date.
 
