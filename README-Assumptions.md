@@ -72,7 +72,7 @@ world. It introduces the limitation that the model will not tell us how specific
 segments of society are affected and whether different strategies would be
 appropriate for different groups.
 
-*Justification:* This is another simplifying assumption. The subject of this
+*Justification:* this is another simplifying assumption. The subject of this
 study is testing, tracing and isolation. We wish to know the effect of this
 on the population level and how it interacts with other interventions for a
 large outbreak. This is not a well-studied topic and for this reason we
@@ -86,7 +86,7 @@ The nature of our [contact tracing approximation], triggered by testing, is such
 that it requires that testing happen on the same time-scale as disease
 progression, or faster.
 
-*Justification:* It is not realistic to expect that testing individuals after
+*Justification:* tt is not realistic to expect that testing individuals after
 they have recovered from the disease or died would be useful for contact
 tracing.
 
@@ -98,7 +98,7 @@ an infectious individual. An alternative formulation could trace proportional
 to the number of infectious contacts: if one has had two infectious contacts,
 then perhaps one is twice is likely to be traced.
 
-*Justification:* This is a conservative assumption. It may underestimate the
+*Justification:* this is a conservative assumption. It may underestimate the
 effectiveness of contact tracing for outbreaks suppression. For policy purposes,
 it is better to under-promise and over-deliver than the reverse.
 
