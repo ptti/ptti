@@ -4,8 +4,9 @@ ptti-scenario-2a ptti-scenario-2b \
 ptti-scenario-3a ptti-scenario-3a-Trig ptti-scenario-3b ptti-scenario-3b-Trig \
 ptti-scenario-4a ptti-scenario-4b ptti-scenario-4c ptti-scenario-4d \
 ptti-scenario-4a-Trig ptti-scenario-4b-Trig ptti-scenario-4c-Trig ptti-scenario-4d-Trig \
+fitting-ukbest
 
-all: benchmark compare plot
+all: plot
 
 ${SCENARIOS:=-out-0.tsv}: %-out-0.tsv : %.yaml
 	TARG=$@; \
@@ -22,6 +23,18 @@ ${SCENARIOS:=.pdf}: %.pdf : %-out-0.tsv plots_template.gp get_trigger_times.py
 	python get_trigger_times.py $$SEED; \
 	sed 's/@/'$$SEED'/g' plots_template.gp | gnuplot
 	
+## specific rule for fitting plot
+fitting-ukbest-out-0.tsv: fitting-ukbest.yaml
+	PTTI -y $< -m SEIRCTODEMem -o fitting-ukbest-out; \
+	rm -f fitting-ukbest-out-0.yaml
+
+fitting-inferred-cases.tsv: dgu-deaths-20200520.csv
+	python dgu_transform.py $< $@
+
+fitting-ukbest.pdf: fitting-ukbest-out-0.tsv fitting-inferred-cases.tsv dgu_transform.py
+	python get_trigger_times.py fitting-ukbest;\
+	gnuplot fitting.gp
+
 plot: ${SCENARIOS:=.pdf}
 	@echo 'Plotting all scenario calculations' 
 
