@@ -121,7 +121,7 @@ disregard this data.
 
 Mortality data is better but also suffers problems. Reporting of
 coronavirus-related deaths in hospitals is thought to be relatively consistent
-across the UK. The criterion for reporting of deaths outwith hospitals as
+across the UK. The criterion for reporting of deaths outside of hospitals as
 coronavirus-related has changed in time and has differed by region. We
 nevertheless attempt to calibrate our model to this mortality data, estimating
 that it is not as severely defective as the case data.
