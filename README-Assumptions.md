@@ -20,11 +20,12 @@ recognise in order to understand what can, and cannot, be learned from a model.
 ## Structural assumptions
 
 We refer specifically to the [SEIR-TTI ODE model] with economic extensions as
-[implemented] in the [PTTI software].
-
-This is fundamentally a SEIR a compartmental model simulated with ordinary
-differential equations (ODE)s. This means that there are automatically the
-following underlying assumptions, and their justifications.
+[implemented] in the [PTTI software]. This is fundamentally a SEIR a
+compartmental model simulated with ordinary differential equations (ODE)s.
+The extensions to include testing, tracing and isolation (TTI) are based on
+a careful probabilistic argument that we discuss in detail in that paper.
+This formulation means that there are automatically several underlying
+assumptions, for which we provide justification here.
 
 ### The outbreak is sufficiently large
 
