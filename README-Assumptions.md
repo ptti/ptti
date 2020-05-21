@@ -87,7 +87,7 @@ The nature of our [contact tracing approximation], triggered by testing, is such
 that it requires that testing happen on the same time-scale as disease
 progression, or faster.
 
-*Justification:* tt is not realistic to expect that testing individuals after
+*Justification:* it is not realistic to expect that testing individuals after
 they have recovered from the disease or died would be useful for contact
 tracing.
 
@@ -105,10 +105,160 @@ it is better to under-promise and over-deliver than the reverse.
 
 ## Assumptions about the data
 
-This software package includes a tool, `ptti-fit`. 
+The available data for the UK COVID-19 epidemic presents several challenges. The
+central government releases data about deaths in the whole of the UK as well as
+Scotland, Wales and Northern Ireland on the [data.gov.uk coronavirus web site]
+as well as the number of cases reported in England and Wales.
+
+The availability of tests both in hospital settings and among different groups
+of workers and individuals has changed over time and varies by location, and the
+supply and provision of continues to be constrained. Because the reported cases
+depend on testing, these data are difficult to interpret reliably. Due to the
+lack of seroprevalence testing we also do not know the true number of cases in
+the population. Attempting to fit a model that produces a definite number of
+instantaneous or cumulative cases to such data is a fool's errand. We therefore
+disregard this data.
+
+Mortality data is better but also suffers problems. Reporting of
+coronavirus-related deaths in hospitals is thought to be relatively consistent
+across the UK. The criterion for reporting of deaths outwith hospitals as
+coronavirus-related has changed in time and has differed by region. We
+nevertheless attempt to calibrate our model to this mortality data, estimating
+that it is not as severely defective as the case data.
+
+Calibration of our model to mortality data involves some facts and some
+assumptions.
+
+### Fact: lock-down throughout the UK began on the 26th of March
+
+Although we suspect a slowing of activity and reduction in contact for several
+weeks before lockdown was ordered, we are only certain that it was ordered
+effective the 26th of March. The effect of this is a reduction of the average
+contact rate as of that date.
+
+### Fact: lock-down was eased in England on the 13th of May
+
+Although we cannot say by how much contact increased on the 13th of May, some
+economic activity resumed in England on that day. Data that reflects this is, at
+the time of writing sparse and very recent.
+
+### Assumption: british people have, on average, 13 contacts per day
+
+This value, represented in our model as *c*, comes from the literature
+[citation] and reflects normal life. The main effect of distancing measures is
+to change this value.
+
+### Assumption: the latent and infectious periods are 5 and 7 days, respectively
+
+We know from clinical studies [citation] that the incubation/latent period when
+infected individuals are not yet infectious is about 5 days. We likewise know
+that the infectious phase of the disease lasts approximately a week, after which
+the individuals either recover or become severely ill.
+
+### Assumption: severely ill individuals are removed through hospitalisation
+
+We assume that all severely ill individuals are hospitalised, and that
+conditions within hospitals are such as prevent onward transmission. This has
+consequences because the reciprocal of the parameter *γ* appears in the model as
+the duration of infectiousness and is fixed at one week.
+
+*Justification:*
+
+### Assumption: the overall infection fatality rate (IFR) is 0.008
+
+The model does not explicitly produce a time-series for the number of dead.
+Rather, it produces the number of individuals removed through recovery or death.
+To calibrate against mortality data it is necessary to count the dead. To do
+this, we need to know what fraction of infections result in death. Estimates
+vary and reflection in the model as the probability of infection (and
+consequently the overall force of the epidemic) depends strongly on this value.
+
+*Justification:* scientific consensus appears to be converging on an IFR of
+around 1% or slightly lower [citation]. However we conduct sensitivity analysis 
+
+## Fitting the data
+
+Our strategy is not to find which model parameters are *determined by* the data,
+but to find those that are *consistent with* the data and also with the broader
+scientific consensus. The [PTTI software] includes a tool, `ptti-fit`, for
+calibrating the model to mortality data. The fitting is conducted using the
+[fitting scenario] that includes three interventions:
+
+  * on the 12th of February
+  * on the 26th of March
+  * on the 13th of May
+
+The first intervention represents a notional start to the epidemic implied by
+the UK government figures. However, we do not believe this to be the true
+date as discussed below
+
+The number of contacts per unit time, *c*, was fixed at 1, and the
+infectiousness, *β*, was allowed to vary. No testing or contact tracing was
+included in the model for fitting purposes. Without contact tracing, the
+effects of *β* and *c* are indistinguishable so no information is lost by
+simply fixing *c* to 1.
+
+To compute the difference between the model output and the mortality data we
+used the *L2 norm* or Euclidean distance, as is standard practice for nonlinear
+optimisation. We minimised this distance using the [Nelder-Mead simplex algorithm],
+allowing infectiousness to vary independently in each time-period.
+
+The result of this fitting exercise is shown below,
+
+<image src="https://github.com/ptti/ptti/raw/master/examples/scenarios/fitting-ukbest.png" width="400" />
+
+The vertical lines indicate the interventions and the case data begins on the
+6th of March. The values for *β* that were discovered by the optimisation
+process are,
+
+  * 0.175 (equivalent to R = 1.2) from the first of January to the 12th of February
+  * 1.15  (equivalent to R = 8) from the 12th of February until lock-down
+  * 0.144 (equivalent to R = 1) during lock-down
+
+Of these, only the third is meaningful. The first may be disregarded as it is
+before the notional start of the epidemic implied by the UK government mortality
+data.
+
+The second figure of 1.15 (R = 8) during the initial phase of the epidemic is
+conspicuously high and this bears explanation. It is, nevertheless, implied by
+the data as can be clearly seen from the figure when presented with a
+logarithmic scale. This value can be revised downwards easily by moving the
+notional start of the epidemic earlier and a value close to the scientific
+consensus value is obtained towards the end of December or beginning of January,
+the specific date not being very influential. The resulting curve, however, no
+longer matches the initial data.
+
+The final figure of 0.144 (R = 1) during lock-down appears to be robust against
+all efforts to vary the starting date and intervention timing, varying from
+slightly below to slightly above. Whilst the initial UK government data is
+suspect, the later data appears more reliable.
+
+On this basis, then, we can infer that *if* it is correct that lock-down reduces
+contact by 70% [citation] *then* the initial value for the infectiousness should
+be 0.476, implying R0 of 3.3, within the range of scientific consensus. By
+adjusting the notional start of the epidemic to be in late December or early
+January, we obtain such an initial value without perturbing the fit or value of
+infectiousness during the lock-down period.
+
+We therefore conclude that the following are *consistent with* the data:
+
+  1. The COVID-19 epidemic in the UK was probably seeded at the end of December
+     or beginning of January.
+  2. The reproduction number for a completely susceptible population in the
+     absence of any interventions is about 3.3, implying an appropriate value
+     for *β* in our full model (*c* equal to 13 without interventions) of 0.036.
+
+Acknowledging the uncertainty in the data, and inherent in our reasoning above,
+we also conduct a sensitivity analysis, exploring scenarios where infectiousness
+is slightly below, and slightly above this value to ascertain the effectiveness
+of the measures that we propose here.
 
 [Sridhar and Majumder]: https://www.bmj.com/content/369/bmj.m1567
 [SEIR-TTI ODE model]: https://github.com/ptti/ptti/raw/master/docs/tti.pdf
 [contact tracing approximation]: https://github.com/ptti/ptti/raw/master/docs/tti.pdf
 [PTTI software]: http://github.com/ptti/ptti
 [implemented]: https://github.com/ptti/ptti/blob/master/ptti/seirct_ode.py#L35
+[data.gov.uk coronavirus web site]: https://coronavirus.data.gov.uk/
+[fitting scenario]: https://github.com/ptti/ptti/blob/master/examples/fitting.yaml
+[Broyden-Fletcher-Goldfarb-Shanno]: https://www.encyclopediaofmath.org/index.php/Broyden-Fletcher-Goldfarb-Shanno_method
+[Nelder-Mead simplex algorithm]: http://www.scholarpedia.org/article/Nelder-Mead_algorithm
