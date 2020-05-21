@@ -253,6 +253,14 @@ we also conduct a sensitivity analysis, exploring scenarios where infectiousness
 is slightly below, and slightly above this value to ascertain the effectiveness
 of the measures that we propose here.
 
+Fitting can be verified by downloading the mortality data from the
+[data.gov.uk coronavirus web site] and running the command,
+```sh
+ptti-fit -y fitting.yaml --dgu coronavirus-deaths_latest.csv --mask c theta --ifr 0.008
+```
+where `fitting.yaml` is the [fitting scenario] in the `examples/` subdirectory
+of the [PTTI software] distribution.
+
 [Sridhar and Majumder]: https://www.bmj.com/content/369/bmj.m1567
 [SEIR-TTI ODE model]: https://github.com/ptti/ptti/raw/master/docs/tti.pdf
 [contact tracing approximation]: https://github.com/ptti/ptti/raw/master/docs/tti.pdf
