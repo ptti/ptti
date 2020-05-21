@@ -20,7 +20,7 @@ recognise in order to understand what can, and cannot, be learned from a model.
 ## Structural assumptions
 
 We refer specifically to the [SEIR-TTI ODE model] with economic extensions as
-[implemented] in the [PTTI software]. This is fundamentally a SEIR a
+[implemented] in the [PTTI software]. This is fundamentally a SEIR
 compartmental model simulated with ordinary differential equations (ODE)s.
 The extensions to include testing, tracing and isolation (TTI) are based on
 a careful probabilistic argument that we discuss in detail in that paper.
@@ -62,7 +62,8 @@ a single outbreak.
 major outbreaks in the most populous cities are separated in time by only a
 couple of generations. We argue that this is close enough that, to a first
 approximation, the differences can be disregarded and valid insights gained by
-considering the ensemble as one large outbreak.
+considering the ensemble as one large outbreak. Furthermore, it is possible to
+use the same model to study individual outbreaks.
 
 ### The population is homogeneous
 
@@ -99,7 +100,7 @@ to the number of infectious contacts: if one has had two infectious contacts,
 then perhaps one is twice is likely to be traced.
 
 *Justification:* this is a conservative assumption. It may underestimate the
-effectiveness of contact tracing for outbreaks suppression. For policy purposes,
+effectiveness of contact tracing for outbreak suppression. For policy purposes,
 it is better to under-promise and over-deliver than the reverse.
 
 ## Assumptions about the data
