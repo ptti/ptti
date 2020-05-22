@@ -3,6 +3,7 @@
 import yaml
 import argparse
 import numpy as np
+from datetime import datetime, timedelta
 
 parser = argparse.ArgumentParser('round_event_times')
 
@@ -19,7 +20,8 @@ for seed in args.seeds:
     with open(seed + '.yaml') as f:
         data = yaml.safe_load(f)
         params = data['parameters']
-        tmax = data['meta']['tmax']
+        t0 = datetime.strptime(data["meta"]["start"], '%Y/%M/%d')        
+        tmax = t0 + timedelta(days=data['meta']['tmax'])
     param_history.append((0, params))
     with open(seed + '-out-0-events.yaml') as f:
         events = yaml.safe_load(f)
@@ -35,8 +37,8 @@ for seed in args.seeds:
         param_history.append((t, params))
 
     # Now extract the values we care for
-    times, _ = zip(*param_history)
-    times = list(times) + [tmax]
+    times, _ = zip(*param_history)    
+    times = [t0 + timedelta(days=t) for t in times] + [tmax]
     phist = np.array([[p['c'] for t, p in param_history],
                       [p['theta'] for t, p in param_history],
                       [p['eta']*p['chi'] for t, p in param_history]])
@@ -44,7 +46,7 @@ for seed in args.seeds:
     # Ranges?
     pranges = np.amin(phist, axis=1), np.amax(phist, axis=1)
     
-    graph_Ymin = 0.5
+    graph_Ymin = 0.25
     graph_Yh = 0.1
     graph_maxa = 0.5
     graph_colors = ['#aa3366', '#0066aa', '#00aa66']
@@ -52,7 +54,7 @@ for seed in args.seeds:
 
     gpfname = seed + '-events.gp'
     with open(gpfname, 'w') as f:
-        f.write('set xrange [0:{0}]\n'.format(tmax))
+        f.write('set xrange ["{0}":"{1}"]\n'.format(t0, tmax))
         for i in range(3):
             if pranges[1][i]-pranges[0][i] == 0:
                 continue # Skip 0 range
@@ -65,7 +67,7 @@ for seed in args.seeds:
                 t1 = times[j+1]
                 pnorm = p/pranges[1][i]
                 f.write('set style rect fc rgb "{0}" fs solid {1} noborder lw 0\n'.format(graph_colors[i], pnorm*graph_maxa))
-                f.write('set obj rect from {0}, graph {1} to {2}, graph {3}\n'.format(t0,y0, t1, y1))
+                f.write('set obj rect from "{0}", graph {1} to "{2}", graph {3}\n'.format(t0,y0, t1, y1))
 
 
     # if fname[-12:] != '-events.yaml':

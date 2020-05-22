@@ -10,17 +10,17 @@ all: plot
 ${SCENARIOS:=-out-0.tsv}: %-out-0.tsv : %.yaml
 	TARG=$@; \
 	SEED=$${TARG%-out-0.tsv}; \
-	ptti -y $$SEED.yaml -m SEIRCTODEMem -o $${TARG%-0.tsv} -e; \
+	ptti -y $$SEED.yaml -m SEIRCTODEMem -o $${TARG%-0.tsv} -e -d; \
 	find . -name $$SEED'-out-0.yaml' -delete
 
 run-ode: ${SCENARIOS:=-out-0.tsv}
 	@echo 'Running all ODE models'
 
-${SCENARIOS:=.pdf}: %.pdf : %-out-0.tsv plots_template.gp get_trigger_times.py
+${SCENARIOS:=.pdf}: %.pdf : %-out-0.tsv fourpanels.gp get_trigger_times.py
 	TARG=$@; \
 	SEED=$${TARG%.pdf}; \
 	python get_trigger_times.py $$SEED; \
-	sed 's/@/'$$SEED'/g' plots_template.gp | gnuplot
+	sed 's/@/'$$SEED'/g' fourpanels.gp | gnuplot
 	
 ## specific rule for fitting plot
 fitting-ukbest-out-0.tsv: fitting-ukbest.yaml

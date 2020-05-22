@@ -3,32 +3,26 @@ Economic:
     Benefit_over_Shutdown: 369407405926.90625
     Projected: 4531157405926.906
     Reduction_from_Baseline: 0.1834281121054413
-  Total_Costs: 186836244.59949043
+  Total_Costs: 186849103.69064748
 Medical:
-  Cases: 60466836.61258869
-  Deaths: 483734.6929007095
-  Hospital_Cases: 517174.741529127
-  ICU_Cases: 87919.7060599516
-  NHS_Costs: 4073589147.7025805
-  Productivity_Loss: 11835355132.343555
+  Cases: 60466836.61258866
+  Deaths: 483734.6929007093
+  Hospital_Cases: 517174.7415291267
+  ICU_Cases: 87919.70605995155
+  NHS_Costs: 4073589147.702578
+  Productivity_Loss: 11835355132.343548
 Test_Outputs:
   Max_Labs: 0.0
   Max_Total_Staff: 0.0
   Total_Tests: 0.0
 Trace_Outputs:
   Period_Lengths:
-  - 89.0
-  - 5.833333333333329
-  - 49.980000000000004
-  - 17.944444444444457
-  - 31.96875
-  - 694.9985611510791
+  - 395.2820143884892
+  - 364.5237410071942
+  - 133.19136690647485
   Tracers_Needed_Per_Hiring_Window:
   - 0.0
   - 0.0
   - 0.0
-  - 0.0
-  - 0.0
-  - 0.0
-  Tracers_cost: 3051757.055025979
+  Tracers_cost: 3062980.1294964026
   Tracers_fixed_cost: 93839625.0
