@@ -1,11 +1,10 @@
-SAMPLES?= 10
 SCENARIOS?= ptti-scenario-1 ptti-scenario-1-Trig \
 ptti-scenario-2a ptti-scenario-2b \
 ptti-scenario-3a ptti-scenario-3a-Trig ptti-scenario-3b ptti-scenario-3b-Trig \
 ptti-scenario-4a ptti-scenario-4b ptti-scenario-4c ptti-scenario-4d \
 ptti-scenario-4a-Trig ptti-scenario-4b-Trig ptti-scenario-4c-Trig ptti-scenario-4d-Trig \
 
-all: benchmark compare plot
+all: plot
 
 ${SCENARIOS:=-out-0.tsv}: %-out-0.tsv : %.yaml
 	TARG=$@; \
