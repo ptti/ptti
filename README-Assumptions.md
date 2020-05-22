@@ -225,13 +225,15 @@ start of the epidemic. That this was found automatically through fitting is
 a sanity check for identifying the 12th of February as the key date.
 
 The second figure of 1.59 (R = 11) during the initial phase of the epidemic is
-conspicuously high and this bears explanation. It is, nevertheless, implied by
-the data as can be clearly seen from the figure when presented with a
-logarithmic scale. This value can be revised downwards easily by moving the
-notional start of the epidemic earlier and a value close to the scientific
-consensus value is obtained towards the end of December or the beginning of
-January, the specific date not being very influential for obtaining this value.
-The resulting curve, however, no longer matches the initial data. 
+conspicuously high and this bears explanation. Firstly, there is a large degree
+of uncertainty here: a fit of comparable quality equivalent to R = 8 is also
+possible. Nevertheless, the early UK government data implies a much larger value
+than we believe to be correct. This can be clearly seen from the figure
+presented on a logarithmic scale. This value can be revised downwards easily by
+moving the notional start of the epidemic earlier and a value close to the
+scientific consensus value is obtained towards the end of December or the
+beginning of January, the specific date not being very influential for obtaining
+this value. The resulting curve, however, no longer matches the initial data.
 
 The final figure of 0.1529 (R = 1) during lock-down appears to be robust against
 all efforts to vary the starting date and intervention timing, varying from
