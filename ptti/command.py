@@ -75,6 +75,8 @@ def command():
                         help="Set variables / parameters")
     parser.add_argument("-e", "--econ", action="store_true", default=False,
                         help="Perform economic analysis")
+    parser.add_argument("-d", "--date", action="store_true", default=False,
+                        help="Store time axis as dates")
 
     args = parser.parse_args()
 
@@ -131,7 +133,20 @@ def command():
     for s, (traj, events) in zip(samples, results):
         i, cfg = s
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
-        np.savetxt(outfile, traj, delimiter="\t")
+        if not args.date:
+            np.savetxt(outfile, traj, delimiter="\t")
+        else:
+            # We need to store these as dates
+            from datetime import datetime, timedelta
+
+            t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d')
+            timeaxis = [t0 + timedelta(days=t) for t in traj[:, 0]]
+
+            with open(outfile, 'w') as f:
+                for j, t in enumerate(timeaxis):
+                    f.write('{0}\t{1}\n'.format(t, '\t'.join(map(str,
+                                                                 traj[j, 1:])
+                                                             )))
 
         cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
         config_save(cfg, cfgout)
@@ -298,11 +313,11 @@ def runSample(arg):
     cfg["meta"]["seed"] = i
 
     # for indexed samples, select the right parameter:
-    for k,v in cfg["parameters"].copy().items():
+    for k, v in cfg["parameters"].copy().items():
         if isinstance(v, list):
             cfg["parameters"][k] = v[i]
     for iv in cfg["interventions"]:
-        for k,v in iv.copy().items():
+        for k, v in iv.copy().items():
             if isinstance(v, list):
                 iv[k] = v[i]
 
@@ -357,6 +372,7 @@ def mpiwork():
     result = list(map(runSample, chunk))
     comm.gather(result, root=0)
     log.info("done")
+
 
 if __name__ == '__main__':
     command()
