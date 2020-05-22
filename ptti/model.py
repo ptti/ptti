@@ -271,9 +271,11 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
     for iv in [i for i in interventions if "condition" in i]:
         _add_condition(m, iv, events)
 
+    t00 = t0 ## save actual start time because interventions are relative to it
     ts = t0
     for iv in [i for i in interventions if "time" in i]:
         ti, pi = iv["time"], iv["parameters"]
+        ti = ti - t00 ## interventions relative to start time
 
         ## end time for this segment
         te = min(tmax, ti)
@@ -286,6 +288,7 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
 
         ## run the simulation
         log.info("Running from {} to {} in {} tsteps".format(ts, te, tsteps))
+        if tsteps == 0: continue
         t, traj, state = m.run(ts, te, tsteps, state)
 
         ## save the trajectory
@@ -307,11 +310,12 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
     if ts < tmax:
         tsteps = int((tmax - ts) * steps / (tmax - t0))
         log.info("Running from {} to {} in {} tsteps".format(ts, tmax, tsteps))
-        t, traj, state = m.run(ts, tmax, tsteps, state)
+        if tsteps > 0: ## can be 0 if the step is smaller than the step size
+            t, traj, state = m.run(ts, tmax, tsteps, state)
 
-        ## save the trajectory
-        times.append(t)
-        trajs.append(traj)
+            ## save the trajectory
+            times.append(t)
+            trajs.append(traj)
 
     t    = np.hstack(times)
     traj = np.vstack(trajs)

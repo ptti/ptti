@@ -1,0 +1,31 @@
+##
+## Best fit to coronavirus.data.gov.uk death data
+##
+meta:
+  title:  UK Mortality Fit
+  output: fitting-ukbest-out
+  tmax: 140
+  steps: 140
+initial:
+   N:  67886011
+   IU: 1
+parameters:
+    beta: 0.1529452106579659 ## R ~ 1
+    c: 1
+    gamma: 0.1429
+    theta: 0
+    eta: 0
+    chi: 0
+interventions:
+  ## nominal start of the epidemic
+  - time: 49
+    parameters:
+      beta: 1.588803141407416 ## R ~ 11.1
+  ## lockdown 23 march
+  - time: 82
+    parameters:
+      beta: 0.15291161785698615 ## R ~ 1
+  ## slight relaxation 54 days later
+  - time: 136
+    parameters:
+      beta: 0.013466588069457427 ## bad data
