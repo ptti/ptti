@@ -92,3 +92,6 @@ interventions:
   - time: 199
     parameters:
       c: 11   # assume contacts per day won't go back up to pre-pandemic level of 13
+periods:
+  - 2021/05/31
+  - 2022/05/31

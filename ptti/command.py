@@ -5,6 +5,7 @@ from ptti.model import runModel
 from ptti.plotting import plot
 from ptti.economic import calcEconOutputs
 from multiprocessing import Pool
+from datetime import datetime, timedelta
 import logging as log
 import os
 import sys
@@ -133,20 +134,32 @@ def command():
     for s, (traj, events) in zip(samples, results):
         i, cfg = s
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
+
+        t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d')
+        timeaxis = [t0 + timedelta(days=t) for t in traj[:, 0]]
+
         if not args.date:
             np.savetxt(outfile, traj, delimiter="\t")
         else:
             # We need to store these as dates
-            from datetime import datetime, timedelta
-
-            t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d')
-            timeaxis = [t0 + timedelta(days=t) for t in traj[:, 0]]
-
             with open(outfile, 'w') as f:
                 for j, t in enumerate(timeaxis):
                     f.write('{0}\t{1}\n'.format(t, '\t'.join(map(str,
                                                                  traj[j, 1:])
                                                              )))
+
+        # Period history
+        period_history = np.zeros(len(timeaxis)).astype(int)
+        if "periods" in cfg:
+            periodtimes = [datetime.strptime(p, '%Y/%M/%d')
+                           for p in cfg["periods"]]
+            for j, t in enumerate(timeaxis):
+                p_i = 0
+                while p_i < len(periodtimes):
+                    if t < periodtimes[p_i]:
+                        break
+                    p_i += 1
+                period_history[j] = p_i
 
         cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
         config_save(cfg, cfgout)
@@ -159,9 +172,6 @@ def command():
         # Parameter history
         params_current = dict(cfg['parameters'])
         param_history = {k: [v] for k, v in params_current.items()}
-        # Add something to keep track of the periods
-        curr_period = 0
-        param_history['period'] = [curr_period]
         events_queue = list(allevents)  # Copy
 
         for t in traj[1:, 0]:
@@ -170,12 +180,14 @@ def command():
                 # Update
                 ev = events_queue.pop(0)
                 params_current.update(ev['parameters'])
-            if len(events_queue) < l0:
-                curr_period += 1
-            param_history['period'].append(curr_period)
+            # if len(events_queue) < l0:
+            #     curr_period += 1
+            # param_history['period'].append(curr_period)
             for k, v in params_current.items():
                 if k in param_history:
                     param_history[k].append(v)
+
+        param_history['period'] = period_history
 
         if args.econ:
             # Economic analysis
