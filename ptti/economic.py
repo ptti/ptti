@@ -54,9 +54,7 @@ def calcEconOutputs(time, trajectory, parameters, scenario):
     eta = np.array(Output['variables']['eta'])
     IU = np.array(Output['compartments'][:, 4])
 
-    Output['Economic']['trace'] = c*theta/(gamma+theta*(1+eta*chi))*IU
-
-    To_Trace = Output['Economic']['trace']
+    To_Trace = Output['compartments'][:,-2] ## note - brittle
 
     # Now we need to find the number of tracers needed in each window.
     Tracers_Needed_Per_Hiring_Window = []
