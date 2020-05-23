@@ -1,7 +1,6 @@
 __all__ = ['SEIRCTKappa']
 
 import numpy as np
-import kappy
 import logging
 import yaml
 import pkg_resources
@@ -92,6 +91,7 @@ class SEIRCTKappa(Model):
         """
         stepsize = (tmax - t0) / steps
 
+        import kappy
         client = kappy.KappaStd()
         client.add_model_string(kappa_text)
         client.project_parse()

@@ -51,7 +51,6 @@ setup(name='ptti',
       install_requires=[
           'compyrtment>=0.5.6',
           'gitpython',
-          'kappy',
           'matplotlib',
           'numba',
           'numpy',
