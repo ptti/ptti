@@ -200,8 +200,11 @@ def command():
                 k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
             }
             # Remove time series data
-            del(econ['Economic']['tests'])
-            del(econ['Economic']['trace'])
+            if 'Economic' in  econ.keys():
+                if "tests" in econ['Economic'].keys():
+                    del(econ['Economic']['tests'])
+                if "trace" in econ['Economic'].keys():
+                    del(econ['Economic']['trace'])
             config_save(econ, econout, True)
 
     if args.statistics:
