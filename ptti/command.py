@@ -135,7 +135,7 @@ def command():
         i, cfg = s
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
 
-        t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d').date()
+        t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d')
         timeaxis = [t0 + timedelta(days=t) for t in traj[:, 0]]
 
         if not cfg["meta"]["date"]:
@@ -151,7 +151,7 @@ def command():
         # Period history
         period_history = np.zeros(len(timeaxis)).astype(int)
         if "periods" in cfg:
-            periodtimes = [datetime.strptime(p, '%Y/%M/%d').date()
+            periodtimes = [datetime.strptime(p, '%Y/%M/%d')
                            for p in cfg["periods"]]
             for j, t in enumerate(timeaxis):
                 p_i = 0
