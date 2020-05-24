@@ -52,7 +52,13 @@ python setup.py develop
 
 For rule-based simulations, the [KaSim] kappa-language simulator
 should also be installed. It is a separate program that is used
-through python bindings.
+through python bindings. The python bindings are also not installed
+by default because some Windows users have trouble installing them.
+They should be installed separately with,
+
+```sh
+pip install kappy
+```
 
 ## Basic usage
 
