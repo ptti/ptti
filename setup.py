@@ -64,10 +64,10 @@ setup(name='ptti',
               'ptti-compare = ptti.command:compare'
           ],
           'models': [
-              'SEIRODE      = ptti.seirct_ode:SEIRODE',
-              'SEIRCTABM    = ptti.seirct_abm:SEIRCTABM',
-              'SEIRCTODEMem = ptti.seirct_ode:SEIRCTODEMem',
-              'SEIRCTKappa  = ptti.seirct_kappa:SEIRCTKappa',
+              'SEIRODE      = ptti.mshim:SEIRODE',
+              'SEIRCTABM    = ptti.mshim:SEIRCTABM',
+              'SEIRCTODEMem = ptti.mshim:SEIRCTODEMem',
+              'SEIRCTKappa  = ptti.mshim:SEIRCTKappa',
           ]
       },
       package_data={
