@@ -151,7 +151,7 @@ def command():
         # Period history
         period_history = np.zeros(len(timeaxis)).astype(int)
         if "periods" in cfg:
-            periodtimes = [datetime.strptime(p, '%Y/%M/%d')
+            periodtimes = [datetime.strptime(p, '%Y/%M/%d').date()
                            for p in cfg["periods"]]
             for j, t in enumerate(timeaxis):
                 p_i = 0
