@@ -320,6 +320,10 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
     t    = np.hstack(times)
     traj = np.vstack(trajs)
 
+    if "beta" not in parameters:
+        parameters["beta"] = getattr(m, "beta")
+    if "c" not in parameters:
+        parameters["c"] = getattr(m, "c")
     if rseries:
         ## compute the simulation segments where beta and c change because we need
         ## them to calculate R.
