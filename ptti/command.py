@@ -87,7 +87,7 @@ def command():
     def mkcfg(sample):
         cfg = config_load(args.yaml, sample)
 
-        for meta in ("model", "tmax", "steps", "samples", "output"):
+        for meta in ("model", "tmax", "steps", "samples", "output", "date"):
             arg = getattr(args, meta)
             if arg is not None:
                 cfg["meta"][meta] = arg
@@ -135,10 +135,10 @@ def command():
         i, cfg = s
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
 
-        t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d')
+        t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d').date()
         timeaxis = [t0 + timedelta(days=t) for t in traj[:, 0]]
 
-        if not args.date:
+        if not cfg["meta"]["date"]:
             np.savetxt(outfile, traj, delimiter="\t")
         else:
             # We need to store these as dates
