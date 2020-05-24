@@ -23,8 +23,13 @@ try:
     from ptti.seirct_abm import SEIRCTABM
 except:
     SEIRCTABM = None
+
 try:
     from ptti.seirct_kappa import SEIRCTKappa
 except:
     SEIRCTKappa = None
 
+try:
+    from ptti.seirct_eon import SEIRCTNet
+except:
+    SEIRCTNet = None

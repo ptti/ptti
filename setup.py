@@ -50,6 +50,7 @@ setup(name='ptti',
       packages=find_packages(),
       install_requires=[
           'compyrtment>=0.5.6',
+          'EoN',
           'gitpython',
           'matplotlib',
           'numba',
@@ -68,6 +69,7 @@ setup(name='ptti',
               'SEIRCTABM    = ptti.mshim:SEIRCTABM',
               'SEIRCTODEMem = ptti.mshim:SEIRCTODEMem',
               'SEIRCTKappa  = ptti.mshim:SEIRCTKappa',
+              'SEIRCTNet    = ptti.mshim:SEIRCTNet',
           ]
       },
       package_data={

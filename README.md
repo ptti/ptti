@@ -11,7 +11,8 @@ tracing and Isolation. The underlying principles are described in our
   * SEIRCTODEMem an ODE implementation of a compartmental model with
     extra memory states
   * SEIRODE a plain SEIR model for comparison
-  * SEIRCTKappa a rule-based model
+  * SEIRCTKappa a rule-based model in the [Kappa Language]
+  * SEIRCTNet a network model using [Epidemics on Networks]
 
 The software has a variety of useful features:
 
@@ -276,3 +277,5 @@ properties:
 [examples/ukfitting.py]: https://github.com/ptti/ptti/blob/master/examples/ukfitting.py
 [SEIR-TTI paper]: https://github.com/ptti/ptti/raw/master/docs/tti.pdf
 [GNU Make]: https://www.gnu.org/software/make/
+[Kappa Language]: http://kappalanguage.org/
+[Epidemics on Networks]: https://epidemicsonnetworks.readthedocs.io/
