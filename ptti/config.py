@@ -88,6 +88,8 @@ def config_load(filename=None, sample=0):
     cfg["meta"].setdefault("rseries", True)
     cfg["meta"].setdefault("plots", plot_defaults)
     cfg["meta"].setdefault("title", "PTTI Simulation")
+    cfg["meta"].setdefault("start", "2020/01/01")
+    cfg["meta"].setdefault("date", False)
 
     if cfg["meta"].setdefault("platform", platform) != platform:
         log.warning("Config platform ({}) differs from {}".format(
