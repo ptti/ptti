@@ -140,8 +140,9 @@ econ_inputs['Test']['Lab_Peaktest_Ratio'] = 1.0/(econ_inputs['Test']['Tests_per_
 econ_inputs['Test']['Techs_Per_Lab'] = (econ_inputs['Test']['PCR_Machines_Per_Lab'] * econ_inputs['Test']['Shifts_per_Day'] * 
                                                econ_inputs['Test']['Lab_Techs_Per_Machine_Per_Shift'])
 econ_inputs['Test']['Lab_Techs_Daily_Cost'] = (econ_inputs['Test']['Techs_Per_Lab'] * econ_inputs['Test']['Lab_Tech_Salary'])
-econ_inputs['Test']['Lab_Total_Daily_Cost'] = (econ_inputs['Test']['Lab_Overhead_Cost_Daily'] + 
+econ_inputs['Test']['Lab_NonTechs_Daily_Cost'] = (econ_inputs['Test']['Lab_Overhead_Cost_Daily'] + 
                                                econ_inputs['Test']['Lab_Supervisor_Salary'] + 
-                                               econ_inputs['Test']['Lab_Techs_Daily_Cost'] + 
                                                econ_inputs['Test']['PCR_Machines_Per_Lab']*econ_inputs['Test']['PCR_Machine_Daily_Maintenance'])
-econ_inputs['Test']['Lab_Startup_Cost'] = ((econ_inputs['Test']['Techs_Per_Lab'] + 1)*econ_inputs['Test']['Staff_Training_Cost'])
+econ_inputs['Test']['Lab_Total_Daily_Cost'] = econ_inputs['Test']['Lab_Techs_Daily_Cost']+econ_inputs['Test']['Lab_NonTechs_Daily_Cost']
+econ_inputs['Test']['Lab_Startup_Cost'] = ((econ_inputs['Test']['Techs_Per_Lab'] + 1)*(econ_inputs['Trace']['Hiring_Cost']+econ_inputs['Test']['Staff_Training_Cost']) +
+                                            econ_inputs['Test']['PCR_Machines_Cost']*econ_inputs['Test']['PCR_Machines_Per_Lab'])

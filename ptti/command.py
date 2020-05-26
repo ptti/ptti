@@ -3,7 +3,7 @@ import pkg_resources
 from ptti.config import config_load, config_save, save_human
 from ptti.model import runModel
 from ptti.plotting import plot
-from ptti.economic import calcEconOutputs
+from ptti.economic import calcEconOutputs, calcArgumentsODE
 from multiprocessing import Pool
 from datetime import datetime, timedelta
 import logging as log
@@ -200,19 +200,21 @@ def command():
             # Economic analysis
             t, vals = traj[:, 0], traj[:, 1:]
 
-            econ = calcEconOutputs(t, vals, paramtraj, cfg)
+            econ_args = calcArgumentsODE(traj, paramtraj, cfg)
+
+            econ = calcEconOutputs(**econ_args)
             econout = "{}-{}-econ.yaml".format(cfg["meta"]["output"], i)
             # Just keep the useful stuff...
-            econ = {
-                k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
-            }
-            # Remove time series data
-            if 'Economic' in econ.keys():
-                if "tests" in econ['Economic'].keys():
-                    del(econ['Economic']['tests'])
-                if "trace" in econ['Economic'].keys():
-                    del(econ['Economic']['trace'])
-            config_save(econ, econout, True)
+            # econ = {
+            #     k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
+            # }
+            # # Remove time series data
+            # if 'Economic' in econ.keys():
+            #     if "tests" in econ['Economic'].keys():
+            #         del(econ['Economic']['tests'])
+            #     if "trace" in econ['Economic'].keys():
+            #         del(econ['Economic']['trace'])
+            save_human(econ, econout)
 
     if args.statistics:
         # Average trajectory?

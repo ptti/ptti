@@ -73,44 +73,83 @@ def calcEconOutputs(time, infected, recovered, tested, traced):
     # Tracing
     bw = int(econ_inputs['Trace']['Tracer_Contract_Length'])
     # Split by blocks
-    tracers = []
     tracing_blocks = []
     for i0 in range(0, days, bw):
         tblock = traced[i0:i0+bw]
         # Tracers needed?
         maxt = max(tblock)*econ_inputs['Trace']['Time_to_Trace_Contact']
-        tracers.append(int(np.ceil(maxt)))
-        tracing_blocks.append((i0, len(tblock)))
+        tracing_blocks.append((i0, len(tblock), int(np.ceil(maxt))))
 
-    max_tracers = max(tracers)
-    supervisors = int(
-        np.ceil(max_tracers/econ_inputs['Trace']['Tracers_Per_Supervisor']))
-    max_tracing_workers = max_tracers+supervisors + \
-        econ_inputs['Trace']['Number_of_Tracing_Team_Leads']
+    max_supervisors = 0
+    max_tracers = 0
 
-    tracing_startcost = max_tracing_workers*econ_inputs['Trace']['Tracer_Initial_Cost']
-    tracing_base_daycost = (supervisors*econ_inputs['Trace']['Supervisor_Daily_Cost'] +
-                       econ_inputs['Trace']['Total_Team_Lead_Daily_Cost'] +
-                       econ_inputs['Trace']['Tracing_Daily_Public_Communications_Costs'])
-
-    # Now the block-by-block cost
     tracing_costs = []
-    for (i0, n), tn in zip(tracing_blocks, tracers):
-        tracing_costs.append((tracing_base_daycost+tn*econ_inputs['Trace']['Tracer_Daily_Cost'])*n)
-    tracing_costs[0] += tracing_startcost
+    for i0, n, tracers in tracing_blocks:
+        supervisors = int(np.ceil(tracers/econ_inputs['Trace']['Tracers_Per_Supervisor']))
+        new_supervisors = max(supervisors-max_supervisors, 0)
+        max_supervisors += new_supervisors
 
+        new_tracers = max(tracers-max_tracers, 0)
+        max_tracers += new_tracers
+
+        # Hiring costs
+        costs = (new_tracers+new_supervisors)*econ_inputs['Trace']['Tracer_Initial_Cost']
+        # Daily costs
+        costs += (max_supervisors*econ_inputs['Trace']['Supervisor_Daily_Cost'] +
+                  tracers*econ_inputs['Trace']['Tracer_Daily_Cost'] + 
+                  econ_inputs['Trace']['Total_Team_Lead_Daily_Cost'] +
+                  econ_inputs['Trace']['Tracing_Daily_Public_Communications_Costs'])*n
+
+        tracing_costs.append(costs)
+
+    # Add the startup cost for team leads
+    tracing_costs[0] += econ_inputs['Trace']['Number_of_Tracing_Team_Leads']*econ_inputs['Trace']['Tracer_Initial_Cost']
+    # And tracing app
+    tracing_costs[0] += econ_inputs['Trace']['Tracing_App_Development_Deployment']
+
+    # All of this only applies if we have tracing at all...
+    if max(traced) == 0:
+        tracing_costs = [0 for tc in tracing_costs]
+
+    output['Tracing'] = {}
+    output['Tracing']['Tracing_Block_Lengths'] = [tb[1] for tb in tracing_blocks]
+    output['Tracing']['Tracing_Costs'] = tracing_costs
+    output['Tracing']['Tracing_Total_Costs'] = sum(tracing_costs)
 
     # Testing
     bw = int(econ_inputs['Test']['Tester_Contract_Length'])
     # Split by blocks
-    testers = []
     testing_blocks = []
     for i0 in range(0, days, bw):
         tblock = tested[i0:i0+bw]
-        # Testers needed?
-        # maxt = max(tblock)*econ_inputs['Trace']['Time_to_Trace_Contact']
-        # testers.append(int(np.ceil(maxt)))
-        # testing_blocks.append((i0, len(tblock)))    
+        # Laboratories needed?
+        labs = max(tblock)*econ_inputs['Test']['Lab_Peaktest_Ratio']
+        testing_blocks.append((i0, len(tblock), int(np.ceil(labs))))
+
+    max_labs = 0
+
+    testing_costs = []
+    for i0, n, labs in testing_blocks:
+        new_labs = max(labs-max_labs, 0)
+        max_labs += new_labs
+
+        # Startup costs
+        costs = new_labs*econ_inputs['Test']['Lab_Startup_Cost']
+        # Daily costs
+        costs += (max_labs*econ_inputs['Test']['Lab_NonTechs_Daily_Cost'] + 
+                  labs*econ_inputs['Test']['Lab_Techs_Daily_Cost'])*n
+        
+        testing_costs.append(costs)
+
+    if max(tested) == 0:
+        testing_costs = [0 for tc in testing_costs]
+
+    output['Testing'] = {}
+    output['Testing']['Testing_Block_Lengths'] = [tb[1] for tb in testing_blocks]
+    output['Testing']['Testing_Costs'] = testing_costs
+    output['Testing']['Testing_Total_Costs'] = sum(testing_costs)
+
+    # For now we leave the rest not implemented
 
     return output
 
@@ -354,7 +393,9 @@ def calcEconOutputsOld(time, trajectory, parameters, scenario):
     Testing_fixed_Costs = Total_Required_PCR_Machines * \
         econ_inputs['Test']['PCR_Machines_Cost']  # Buy Machines
     # Hire and Train Staff. One Time Cost.
-    Testing_fixed_Costs += Max_Lab_Staff * (econ_inputs['Trace']['Hiring_Cost'] + econ_inputs['Test']['Staff_Training_Cost'])
+    Testing_fixed_Costs += Max_Lab_Staff * \
+        (econ_inputs['Trace']['Hiring_Cost'] +
+         econ_inputs['Test']['Staff_Training_Cost'])
 
     Testing_Costs_TimeSeries[0] += Testing_fixed_Costs
     Testing_Costs += Testing_fixed_Costs
