@@ -1,7 +1,7 @@
-#set terminal pdfcairo color enhanced dashed font "cmr10,14" size 8,6
-set terminal png
+set terminal pdfcairo color enhanced dashed size 8,6
+#set terminal pngcairo
 seed="fitting-ukbest"
-set output sprintf("%s.png", seed)
+set output sprintf("%s.pdf", seed)
 odefile=sprintf("%s-out-0.tsv", seed)
 ukfile="fitting-inferred-cases.tsv"
 etimesfile=sprintf("%s-events.gp", seed)
@@ -20,8 +20,6 @@ color_D = '#eba134'
 
 color_RU = '#0055aa'
 color_RD = '#002277'
-
-load etimesfile
 
 set key top left
 set logscale y

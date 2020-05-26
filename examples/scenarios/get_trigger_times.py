@@ -3,6 +3,7 @@
 import yaml
 import argparse
 import numpy as np
+from ptti.config import config_load
 from datetime import datetime, timedelta
 
 parser = argparse.ArgumentParser('round_event_times')
@@ -21,7 +22,7 @@ for seed in args.seeds:
     # Open the original parameter file
     param_history = []
     with open(seed + '.yaml') as f:
-        data = yaml.safe_load(f)
+        data = config_load(seed + '.yaml')
         params = data['parameters']
         t0 = datetime.strptime(data["meta"]["start"], '%Y/%M/%d')
         tmax = t0 + timedelta(days=data['meta']['tmax'])
