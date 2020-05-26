@@ -332,11 +332,6 @@ def calcEconOutputsOld(time, trajectory, parameters, scenario):
             econ_inputs['Test']['Lab_Tech_Salary'] * \
             Curr_Period_Days/len(TSHW_Indices)
 
-        Testing_Costs += econ_inputs['Test']['Staff_Training_Cost'] * \
-            (Daily_Lab_Workers + Supervisors)  # Once Per Period
-        Testing_Costs_TimeSeries[TSHW_Start] += econ_inputs['Test']['Staff_Training_Cost'] * \
-            (Daily_Lab_Workers + Supervisors)
-
         Testing_Costs += Machines_In_Window * Curr_Period_Days * \
             econ_inputs['Test']['PCR_Machine_Daily_Maintenance']
         Testing_Costs_TimeSeries[TSHW_Indices] += Machines_In_Window * \
@@ -355,10 +350,11 @@ def calcEconOutputsOld(time, trajectory, parameters, scenario):
     Max_Lab_Staff += Total_Required_PCR_Machines / \
         (econ_inputs['Test']['Shifts_per_Day'] *
          econ_inputs['Test']['Lab_Techs_Per_Machine_Per_Shift'])
+
     Testing_fixed_Costs = Total_Required_PCR_Machines * \
         econ_inputs['Test']['PCR_Machines_Cost']  # Buy Machines
-    # Hire Staff. One Time Cost.
-    Testing_fixed_Costs += Max_Lab_Staff * econ_inputs['Trace']['Hiring_Cost']
+    # Hire and Train Staff. One Time Cost.
+    Testing_fixed_Costs += Max_Lab_Staff * (econ_inputs['Trace']['Hiring_Cost'] + econ_inputs['Test']['Staff_Training_Cost'])
 
     Testing_Costs_TimeSeries[0] += Testing_fixed_Costs
     Testing_Costs += Testing_fixed_Costs
