@@ -19,6 +19,16 @@ except ImportError:
     MPI = None
 
 
+def _save_datetime(fname, timeaxis, columns, delimiter='\t'):
+    with open(fname, 'w') as f:
+        for j, t in enumerate(timeaxis):
+            f.write('{0}\t{1}\n'.format(t, delimiter.join(map(str,
+                                                              columns[j])
+                                                          )
+                                        )
+                    )
+
+
 def inmpi():
     return "PMIX_RANK" in os.environ
 
@@ -78,6 +88,8 @@ def command():
                         help="Perform economic analysis")
     parser.add_argument("-d", "--date", action="store_true", default=False,
                         help="Store time axis as dates")
+    parser.add_argument("-sp", "--save-param", type=str, nargs="+", default=[],
+                        help="Parameters to save a time series of")
 
     args = parser.parse_args()
 
@@ -137,30 +149,44 @@ def command():
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
 
         t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d')
-        timeaxis = [t0 + timedelta(days=t) for t in traj[:, 0]]        
+        timeaxis = [t0 + timedelta(days=t) for t in traj[:, 0]]
 
         if not cfg["meta"]["date"]:
             np.savetxt(outfile, traj, delimiter="\t")
         else:
             # We need to store these as dates
-            with open(outfile, 'w') as f:
-                for j, t in enumerate(timeaxis):
-                    f.write('{0}\t{1}\n'.format(t, '\t'.join(map(str,
-                                                                 traj[j, 1:])
-                                                             )))
+            _save_datetime(outfile, timeaxis, traj[:, 1:])
 
-        # Period history
-        period_history = np.zeros(len(timeaxis)).astype(int)
-        if "periods" in cfg:
-            periodtimes = [datetime.strptime(p, '%Y/%M/%d')
-                           for p in cfg["periods"]]
-            for j, t in enumerate(timeaxis):
-                p_i = 0
-                while p_i < len(periodtimes):
-                    if t < periodtimes[p_i]:
-                        break
-                    p_i += 1
-                period_history[j] = p_i
+        # Save the parameters
+        for sp in args.save_param:
+            if sp not in paramtraj:
+                print(
+                    'Parameter {0} does not exist for chosen model'.format(sp))
+                continue
+
+            outfile = "{}-{}-{}.tsv".format(cfg["meta"]["output"], i, sp)
+
+            if not cfg["meta"]["date"]:
+                np.savetxt(outfile, np.concatenate([traj[:, 0:1],
+                                                    paramtraj[sp][:, None]], 
+                                                    axis=1), 
+                delimiter="\t")
+            else:
+                # We need to store these as dates
+                _save_datetime(outfile, timeaxis, paramtraj[sp][:, None])
+
+            # # Period history
+            # period_history = np.zeros(len(timeaxis)).astype(int)
+            # if "periods" in cfg:
+            #     periodtimes = [datetime.strptime(p, '%Y/%M/%d')
+            #                    for p in cfg["periods"]]
+            #     for j, t in enumerate(timeaxis):
+            #         p_i = 0
+            #         while p_i < len(periodtimes):
+            #             if t < periodtimes[p_i]:
+            #                 break
+            #             p_i += 1
+            #         period_history[j] = p_i
 
         cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
         config_save(cfg, cfgout)
@@ -181,7 +207,7 @@ def command():
                 k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
             }
             # Remove time series data
-            if 'Economic' in  econ.keys():
+            if 'Economic' in econ.keys():
                 if "tests" in econ['Economic'].keys():
                     del(econ['Economic']['tests'])
                 if "trace" in econ['Economic'].keys():
