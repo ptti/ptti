@@ -131,12 +131,13 @@ def command():
     samples = [(i, mkcfg(i)) for i in range(cfg["meta"]["samples"])]
     results = pmap(runSample, samples)
 
-    for s, (traj, events) in zip(samples, results):
+    for s, (traj, events, paramtraj) in zip(samples, results):
+
         i, cfg = s
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
 
         t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d')
-        timeaxis = [t0 + timedelta(days=t) for t in traj[:, 0]]
+        timeaxis = [t0 + timedelta(days=t) for t in traj[:, 0]]        
 
         if not cfg["meta"]["date"]:
             np.savetxt(outfile, traj, delimiter="\t")
@@ -169,31 +170,11 @@ def command():
         eout = "{}-{}-events.yaml".format(cfg["meta"]["output"], i)
         save_human(allevents, eout)
 
-        # Parameter history
-        params_current = dict(cfg['parameters'])
-        param_history = {k: [v] for k, v in params_current.items()}
-        events_queue = list(allevents)  # Copy
-
-        for t in traj[1:, 0]:
-            l0 = len(events_queue)
-            while len(events_queue) > 0 and events_queue[0]['time'] < t:
-                # Update
-                ev = events_queue.pop(0)
-                params_current.update(ev['parameters'])
-            # if len(events_queue) < l0:
-            #     curr_period += 1
-            # param_history['period'].append(curr_period)
-            for k, v in params_current.items():
-                if k in param_history:
-                    param_history[k].append(v)
-
-        param_history['period'] = period_history
-
         if args.econ:
             # Economic analysis
             t, vals = traj[:, 0], traj[:, 1:]
 
-            econ = calcEconOutputs(t, vals, param_history, cfg)
+            econ = calcEconOutputs(t, vals, paramtraj, cfg)
             econout = "{}-{}-econ.yaml".format(cfg["meta"]["output"], i)
             # Just keep the useful stuff...
             econ = {
@@ -336,11 +317,11 @@ def runSample(arg):
             if isinstance(v, list):
                 iv[k] = v[i]
 
-    t, traj, events = runModel(**cfg["meta"], **cfg)
+    t, traj, events, paramtraj = runModel(**cfg["meta"], **cfg)
 
     tseries = np.concatenate([t[:, None], traj], axis=1)
 
-    return tseries, events
+    return tseries, events, paramtraj
 
 
 def mpimap(f, v):
