@@ -118,3 +118,30 @@ econ_inputs['Medical']['Productivity_ICU_Cost'] = 2509
 econ_inputs['Medical']['Productivity_Hospital_Cost'] = 1195
 econ_inputs['Medical']['Productivity_Symptomatic_Cost'] = 358
 econ_inputs['Medical']['Pct_Symptomatic'] = 0.5
+
+################ DERIVED QUANTITIES - Do not touch these ###########
+
+econ_inputs['Trace']['Supervisor_Daily_Cost'] = (econ_inputs['Trace']['Tracing_Supervisor_Salary'] +
+                                                 econ_inputs['Trace']['Phone_Credit_Costs'] +
+                                                 econ_inputs['Trace']['Daily_Travel_Cost'])
+econ_inputs['Trace']['Total_Team_Lead_Daily_Cost'] = (econ_inputs['Trace']['Number_of_Tracing_Team_Leads'] *
+                                                      (econ_inputs['Trace']['Team_Lead_Salary'] +
+                                                       econ_inputs['Trace']['Phone_Credit_Costs'] +
+                                                       econ_inputs['Trace']['Daily_Travel_Cost']))
+econ_inputs['Trace']['Tracer_Daily_Cost'] = (econ_inputs['Trace']['Tracer_Salary'] +
+                                             econ_inputs['Trace']['Phone_Credit_Costs'] +
+                                             econ_inputs['Trace']['Daily_Travel_Cost'] * econ_inputs['Trace']['Rural_Pct'])
+econ_inputs['Trace']['Tracer_Initial_Cost'] = (econ_inputs['Trace']['Hiring_Cost'] +
+                                               econ_inputs['Trace']['Tracer_Training_Course_Cost'] +
+                                               econ_inputs['Trace']['Cost_Per_Extra_Phones_for_Tracers'])
+
+
+econ_inputs['Test']['Lab_Peaktest_Ratio'] = 1.0/(econ_inputs['Test']['Tests_per_Machine_per_Day']*econ_inputs['Test']['PCR_Machines_Per_Lab'])
+econ_inputs['Test']['Techs_Per_Lab'] = (econ_inputs['Test']['PCR_Machines_Per_Lab'] * econ_inputs['Test']['Shifts_per_Day'] * 
+                                               econ_inputs['Test']['Lab_Techs_Per_Machine_Per_Shift'])
+econ_inputs['Test']['Lab_Techs_Daily_Cost'] = (econ_inputs['Test']['Techs_Per_Lab'] * econ_inputs['Test']['Lab_Tech_Salary'])
+econ_inputs['Test']['Lab_Total_Daily_Cost'] = (econ_inputs['Test']['Lab_Overhead_Cost_Daily'] + 
+                                               econ_inputs['Test']['Lab_Supervisor_Salary'] + 
+                                               econ_inputs['Test']['Lab_Techs_Daily_Cost'] + 
+                                               econ_inputs['Test']['PCR_Machines_Per_Lab']*econ_inputs['Test']['PCR_Machine_Daily_Maintenance'])
+econ_inputs['Test']['Lab_Startup_Cost'] = ((econ_inputs['Test']['Techs_Per_Lab'] + 1)*econ_inputs['Test']['Staff_Training_Cost'])
