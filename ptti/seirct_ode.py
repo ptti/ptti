@@ -30,8 +30,6 @@ yaml_seirct_obs = """
   descr: traceable and susceptible
 - name:  CIR
   descr: traceable and exposed
-- name:  T
-  descr: traced
 """
 
 class SEIRCTODEMem(Model):
@@ -94,13 +92,7 @@ class SEIRCTODEMem(Model):
 
             ## trace
             ('CIS:SU=>SD', chi*eta*theta),
-            ('CIR:RU=>RD', chi*eta*theta),
-
-            ## keep track of tracing
-            ('EU:=>T', eta*chi*theta),
-            ('IU:=>T', eta*chi*theta),
-            ('CIS:=>T', eta*chi*theta),
-            ('CIR:=>T', eta*chi*theta),
+            ('CIR:RU=>RD', chi*eta*theta)
         )
 
     def reset_parameters(self, **params):
@@ -207,3 +199,8 @@ class SEIRODE(Model):
         beta = fit.C["SU*IU:SU=>EU"] * N / self.c
 
         return (beta, fit)
+
+    def tt_rates(self, t, traj):
+        # Return testing and tracing rates, computed from a trajectory
+        pass        
+        
