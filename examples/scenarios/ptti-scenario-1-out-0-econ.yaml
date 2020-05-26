@@ -1,28 +1,63 @@
 Economic:
-  GDP:
-    Benefit_over_Shutdown: 369407405926.90625
-    Projected: 4531157405926.906
-    Reduction_from_Baseline: 0.1834281121054413
-  Total_Costs: 186849103.69064748
+  Total_NHS_Costs: 4073589147.7025785
+  Total_Productivity_Loss: 11835355132.343548
 Medical:
-  Cases: 60466836.61258866
   Deaths: 483734.6929007093
-  Hospital_Cases: 517174.7415291267
-  ICU_Cases: 87919.70605995155
-  NHS_Costs: 4073589147.702578
-  Productivity_Loss: 11835355132.343548
-Test_Outputs:
-  Max_Labs: 0.0
-  Max_Total_Staff: 0.0
-  Total_Tests: 0.0
-Trace_Outputs:
-  Period_Lengths:
-  - 395.2820143884892
-  - 364.5237410071942
-  - 133.19136690647485
-  Tracers_Needed_Per_Hiring_Window:
-  - 0.0
-  - 0.0
-  - 0.0
-  Tracers_cost: 3062980.1294964026
-  Tracers_fixed_cost: 93839625.0
+Testing:
+  Laboratories:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  Max_Laboratories: 0
+  Testing_Block_Lengths:
+  - 180
+  - 180
+  - 180
+  - 180
+  - 176
+  Testing_Costs:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  Testing_Total_Costs: 0
+Tracing:
+  Max_Supervisors: 0
+  Max_Tracers: 0
+  Tracers:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  Tracing_Block_Lengths:
+  - 90
+  - 90
+  - 90
+  - 90
+  - 90
+  - 90
+  - 90
+  - 90
+  - 90
+  - 86
+  Tracing_Costs:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  Tracing_Total_Costs: 0
