@@ -1,9 +1,9 @@
 # PTTI: Population-wide Testing, Tracing and Isolation
 
 This repository contains software for simulating epidemiological models
-of various kinds: compartmental models, agent-based models, and rule-based
-models. It is intended for studying the effects of testing and contact
-tracing for containing disease outbreaks. We call this TTI - Testing, 
+of various kinds: compartmental models, agent-based models, network models
+and rule-based models. It is intended for studying the effects of testing
+and contact tracing for containing disease outbreaks. We call this TTI - Testing, 
 tracing and Isolation. The underlying principles are described in our
 [SEIR-TTI paper]. This software contains the following models:
 
@@ -19,7 +19,7 @@ The software has a variety of useful features:
   * Formalism-agnostic: we believe in checking models against each other,
     as it's the best way to understand which models work best in what 
     circumstances. So we have ordinary differential equation models,
-    agent-based models, and rule-based models.
+    agent-based models, network, and rule-based models.
   * Simple configuration: simulations are described in a user-friendly
     YAML file (though there is nothing to prevent running them directly
     in [Python] if you wish).
