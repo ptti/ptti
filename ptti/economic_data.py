@@ -146,3 +146,20 @@ econ_inputs['Test']['Lab_NonTechs_Daily_Cost'] = (econ_inputs['Test']['Lab_Overh
 econ_inputs['Test']['Lab_Total_Daily_Cost'] = econ_inputs['Test']['Lab_Techs_Daily_Cost']+econ_inputs['Test']['Lab_NonTechs_Daily_Cost']
 econ_inputs['Test']['Lab_Startup_Cost'] = ((econ_inputs['Test']['Techs_Per_Lab'] + 1)*(econ_inputs['Trace']['Hiring_Cost']+econ_inputs['Test']['Staff_Training_Cost']) +
                                             econ_inputs['Test']['PCR_Machines_Cost']*econ_inputs['Test']['PCR_Machines_Per_Lab'])
+
+econ_inputs['Medical']['Hospitalised_Fraction'] = (econ_inputs['Medical']['Hospitalized_Pct_Deaths']*econ_inputs['Medical']['IFR'] / 
+                                                    (econ_inputs['Medical']['ICU_Pct']*econ_inputs['Medical']['ICU_Fatality'] +
+                                                    (1-econ_inputs['Medical']['ICU_Pct']) * econ_inputs['Medical']['Non_ICU_Fatality'])
+                                                   )
+econ_inputs['Medical']['ICU_Fraction'] = econ_inputs['Medical']['Hospitalised_Fraction']*econ_inputs['Medical']['ICU_Pct']
+
+econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered'] = (econ_inputs['Medical']['IFR']*econ_inputs['Medical']['NHS_Death_Cost'] + 
+                                                          econ_inputs['Medical']['ICU_Fraction']*econ_inputs['Medical']['NHS_ICU_Cost'] +
+                                                          econ_inputs['Medical']['Hospitalised_Fraction']*econ_inputs['Medical']['NHS_Hospital_Cost'])
+
+
+econ_inputs['Medical']['Total_Productivity_Loss_Per_Recovered'] = (econ_inputs['Medical']['IFR']* econ_inputs['Medical']['Productivity_Death_Cost'] + 
+                                                                   econ_inputs['Medical']['ICU_Fraction']*econ_inputs['Medical']['Productivity_ICU_Cost'] + 
+                                                                   econ_inputs['Medical']['Hospitalised_Fraction']*econ_inputs['Medical']['Productivity_Hospital_Cost'] + 
+                                                                   econ_inputs['Medical']['Pct_Symptomatic'] * econ_inputs['Medical']['Productivity_Symptomatic_Cost'])
+

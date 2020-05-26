@@ -149,7 +149,17 @@ def calcEconOutputs(time, infected, recovered, tested, traced):
     output['Testing']['Testing_Costs'] = testing_costs
     output['Testing']['Testing_Total_Costs'] = sum(testing_costs)
 
-    # For now we leave the rest not implemented
+    # Deaths and other outcomes
+    deaths = recovered[-1]*econ_inputs['Medical']['IFR']
+    nhs_costs = recovered[-1]*econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered']
+    prod_costs = recovered[-1]*econ_inputs['Medical']['Total_Productivity_Loss_Per_Recovered']
+
+    output['Medical'] = {}
+    output['Medical']['Deaths'] = deaths
+
+    output['Economic'] = {}
+    output['Economic']['Total_NHS_Costs'] = nhs_costs
+    output['Economic']['Total_Productivity_Loss'] = prod_costs
 
     return output
 
