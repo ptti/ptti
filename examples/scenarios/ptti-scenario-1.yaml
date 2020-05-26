@@ -9,7 +9,7 @@
 meta:
   title: PTTI Scenario 1
   output: ptti-scenario-1
-  start: 2020/01/01
+  start: 2019/12/18
   envelope: false
   tmax: 895
   steps: 895
@@ -92,3 +92,6 @@ interventions:
   - time: 199
     parameters:
       c: 11   # assume contacts per day won't go back up to pre-pandemic level of 13
+periods:
+  - 2021/05/31
+  - 2022/05/31

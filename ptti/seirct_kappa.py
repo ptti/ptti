@@ -1,8 +1,8 @@
 __all__ = ['SEIRCTKappa']
 
 import numpy as np
-import kappy
 import logging
+import kappy
 import yaml
 import pkg_resources
 from ptti.model import Model

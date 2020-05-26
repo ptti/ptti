@@ -7,7 +7,7 @@ import numpy as np
 
 log = logging.getLogger(__name__)
 
-## default parameters
+# default parameters
 yaml_params = """
 c:
   descr:   contact rate
@@ -35,11 +35,13 @@ chi:
   default: 0.25
 """
 
+
 class Unimplemented(Exception):
     """
     Exception raised when a subclass of model fails to implement
     a required method.
     """
+
 
 class Model(object):
     """
@@ -52,20 +54,20 @@ class Model(object):
     >>> state = m.initial_conditions(N=1000, I=10, ...)
     >>> t, obs, state = m.run(t0, tmax, tsteps, state)
     """
-    ## name of this model
+    # name of this model
     name = "ChangeMe: set model.name"
 
-    ## dictionary of parameter names to descriptions and default
-    ## values, e.g.
+    # dictionary of parameter names to descriptions and default
+    # values, e.g.
     ##
     ## parameters = { 'a': { 'descr': 'a parameter', 'default': 1 } }
     parameters = yaml.load(yaml_params, yaml.FullLoader)
 
-    ## list of observable metadata (dictionary of names, and descriptions
-    ## etc in the order that they appear in model output
+    # list of observable metadata (dictionary of names, and descriptions
+    # etc in the order that they appear in model output
     ##
     ##
-    ## observables = [{ 'name': 'I', 'descr': 'infectious }]
+    # observables = [{ 'name': 'I', 'descr': 'infectious }]
     observables = []
 
     conditions = None
@@ -118,9 +120,9 @@ class Model(object):
         Return the index in the columns of the trajectory for
         the named observable.
         """
-        ## this enables uniform use of colindex mainly for the
-        ## benefit of plotting, so that computed columns like
-        ## R can be specified numerically
+        # this enables uniform use of colindex mainly for the
+        # benefit of plotting, so that computed columns like
+        # R can be specified numerically
         if isinstance(c, int):
             return c
         for i, o in enumerate(cls.observables):
@@ -149,6 +151,7 @@ class Model(object):
         representing individuals. These should sum to N.
         """
         return tuple(self.colindex(c) for c in ("SU", "SD", "EU", "ED", "IU", "ID", "RU", "RD"))
+
     @property
     def sucols(self):
         """
@@ -156,6 +159,7 @@ class Model(object):
         for susceptibles subject to infection (e.g. not quarantined)
         """
         return (self.colindex("SU"),)
+
     @property
     def iucols(self):
         """
@@ -163,6 +167,7 @@ class Model(object):
         for active infectious individuals (e.g. not quarantined)
         """
         return (self.colindex("IU"),)
+
     @property
     def icols(self):
         """
@@ -192,12 +197,12 @@ class Model(object):
 
         n = len(t)
 
-        ## could alternatively require that subclasses just populate self.N
-        N  = np.sum(traj[0,i] for i in self.pcols)
-        ## but these are model-specific anyways
-        SU = np.sum(traj[:,i] for i in self.sucols)
-        IU = np.sum(traj[:,i] for i in self.iucols)
-        I  = np.sum(traj[:,i] for i in self.icols)
+        # could alternatively require that subclasses just populate self.N
+        N = np.sum(traj[0, i] for i in self.pcols)
+        # but these are model-specific anyways
+        SU = np.sum(traj[:, i] for i in self.sucols)
+        IU = np.sum(traj[:, i] for i in self.iucols)
+        I = np.sum(traj[:, i] for i in self.icols)
 
         X = np.zeros(len(I))
         np.true_divide(SU*IU, I, out=X, where=I != 0)
@@ -210,6 +215,7 @@ class Model(object):
             s = np.pad(bcs, (n-i-1, 0), mode="edge")
             Rs.append(np.trapz(s[:n]*ker[::-1]/N, t))
         return np.array(Rs)
+
 
 def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[], rseries=True, seed=0, **unused):
     """
@@ -263,7 +269,7 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
     log.info("Initial conditions: {}".format(initial))
     log.info("Interventions: {}".format(len(interventions)))
 
-    ## piece-wise simulation segments
+    # piece-wise simulation segments
     times = []
     trajs = []
 
@@ -271,91 +277,86 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
     for iv in [i for i in interventions if "condition" in i]:
         _add_condition(m, iv, events)
 
-    t00 = t0 ## save actual start time because interventions are relative to it
+    t00 = t0  # save actual start time because interventions are relative to it
     ts = t0
     for iv in [i for i in interventions if "time" in i]:
         ti, pi = iv["time"], iv["parameters"]
-        ti = ti - t00 ## interventions relative to start time
+        ti = ti - t00  # interventions relative to start time
 
-        ## end time for this segment
+        # end time for this segment
         te = min(tmax, ti)
 
-        ## how many time-tsteps in this segment?
+        # how many time-tsteps in this segment?
         tsteps = floor((te - ts) * steps / (tmax - t0))
 
-        ## end time in integral number of tsteps
+        # end time in integral number of tsteps
         te = ts + (tsteps * (tmax - t0) / steps)
 
-        ## run the simulation
+        # run the simulation
         log.info("Running from {} to {} in {} tsteps".format(ts, te, tsteps))
-        if tsteps == 0: continue
+        if tsteps == 0:
+            continue
         t, traj, state = m.run(ts, te, tsteps, state)
 
-        ## save the trajectory
+        # save the trajectory
         times.append(t)
         trajs.append(traj)
 
-        ## update the parameters
+        # update the parameters
         log.info("Intervention: {}".format(pi))
         m.set_parameters(**pi)
 
         ts = ti
 
-        ## stop running if we are past the 
+        # stop running if we are past the
         if te >= tmax:
             break
 
-    ## if we have more time to run, run for the required
-    ## number of tsteps
+    # if we have more time to run, run for the required
+    # number of tsteps
     if ts < tmax:
         tsteps = int((tmax - ts) * steps / (tmax - t0))
         log.info("Running from {} to {} in {} tsteps".format(ts, tmax, tsteps))
-        if tsteps > 0: ## can be 0 if the step is smaller than the step size
+        if tsteps > 0:  # can be 0 if the step is smaller than the step size
             t, traj, state = m.run(ts, tmax, tsteps, state)
 
-            ## save the trajectory
+            # save the trajectory
             times.append(t)
             trajs.append(traj)
 
-    t    = np.hstack(times)
+    t = np.hstack(times)
     traj = np.vstack(trajs)
 
+    if "beta" not in parameters:
+        parameters["beta"] = getattr(m, "beta")
+    if "c" not in parameters:
+        parameters["c"] = getattr(m, "c")
+
+    # For all parameters, compute their time evolution with interventions
+    ivs = sorted(events + [i for i in interventions if "time" in i],
+                 key=lambda x: x["time"])
+    paramtraj = {k: t*0+p for k, p in parameters.items()}
+    for i in ivs:
+        for k, p in i['parameters'].items():
+            if k in paramtraj:
+                paramtraj[k][np.where(t >= i['time'])] = p
+
     if rseries:
-        ## compute the simulation segments where beta and c change because we need
-        ## them to calculate R.
-        ivs = sorted(events + [i for i in interventions if "time" in i], key=lambda x: x["time"])
+        # compute the simulation segments where beta and c change because we need
+        # them to calculate R.
+        betas = paramtraj['beta']
+        cs = paramtraj['c']
 
-        betapieces = [(i["time"], i["parameters"]["beta"]) for i in ivs if "beta" in i["parameters"]]
-        betapieces.insert(0, (0, parameters["beta"]))
+        rs = m.R(t, traj, betas, cs)
+        traj = np.vstack((traj.T, rs)).T
 
-        cpieces = [(i["time"], i["parameters"]["c"]) for i in ivs if "c" in i["parameters"]]
-        cpieces.insert(0, (0, parameters["c"]))
-
-        ## project the values onto the right segment
-        def _project(pieces):
-            segments = []
-            for i in range(len(pieces)):
-                start, v = pieces[i]
-                if i < len(pieces)-1:
-                    end, _ = pieces[i+1]
-                    seg = v * (t >= start)*(t < end)
-                else:
-                    seg = v * (t >= start)
-                segments.append(seg)
-            return np.sum(segments, axis=0)
-
-        betas = _project(betapieces)
-        cs    = _project(cpieces)
-
-        rs    = m.R(t, traj, betas, cs)
-        traj  = np.vstack((traj.T, rs)).T
-
-    return t, traj, events
+    return t, traj, events, paramtraj
 
 
 def _add_condition(m, iv, events):
-    g = { col: m.colindex(col) for col in [o["name"] for o in m.observables] }
+    g = {col: m.colindex(col) for col in [o["name"] for o in m.observables]}
     cond = iv["condition"]
+
     def e(t, x):
         g.update(m.__dict__)
         root = eval(cond, g, {"t": t, "x": x})

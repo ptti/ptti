@@ -67,7 +67,7 @@
         - - software
           - ptti 0.1
         - - revision
-          - 1e568efc00faa206bb716eac20c5e25b4a9155ac
+          - 52af091e54e9bfc2de6194ffe0cbf7a3873dba0f
         - - python
           - "3.6.10 |Anaconda, Inc.| (default, Mar 23 2020, 23:13:11) \n[GCC 7.3.0]"
   - - initial
@@ -180,3 +180,6 @@
             - !!python/object/apply:collections.OrderedDict
               - - - c
                   - 11
+  - - periods
+    - - 2021/05/31
+      - 2022/05/31

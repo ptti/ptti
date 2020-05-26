@@ -30,6 +30,8 @@ yaml_seirct_obs = """
   descr: traceable and susceptible
 - name:  CIR
   descr: traceable and exposed
+- name:  T
+  descr: traced
 """
 
 class SEIRCTODEMem(Model):
@@ -77,6 +79,7 @@ class SEIRCTODEMem(Model):
 
             ('RD:RD=>RU', kappa),
 
+            ## trace
             ('EU:EU=>ED', eta*chi*theta),
             ('IU:IU=>ID', theta*(1+eta*chi)),
 
@@ -84,29 +87,20 @@ class SEIRCTODEMem(Model):
             ('IU*SU:=>CIS', c*(1-beta)/N),
             ('IU*CIS:CIS=>', c*beta/N),
             ('CIS:CIS=>', gamma+theta*eta*chi),
-            # ('IU*CIS:CIS=>CIE', c*beta/N),
-            # Quadratic terms currently removed. It's a bit hard to justify them
-            # theoretically even though heuristically they make sense
-            # ('CIS*CIS:CIS=>', chi*(1-(1-eta)**2)*theta/N),
-
-            # ('IU*SU:=>CIE', c*beta/N),
-            # ('IU*EU:=>CIE', c/N),
-            # ('CIE:CIE=>CII', alpha),
-            # ('CIE:CIE=>', gamma+theta*eta*chi),
-
-            # ('IU*IU:=>CII', c/N),
-            # ('CII:CII=>CIR', gamma),
-            # ('CII:CII=>', gamma+theta*(1+eta*chi)),
 
             ('IU*RU:=>CIR', c/N),
             ('IU:=>CIR', gamma),
             ('CIR:CIR=>', gamma+theta*eta*chi),
-            # ('CIR*CIR:CIR=>', chi*(1-(1-eta)**2)*theta/N),
 
+            ## trace
             ('CIS:SU=>SD', chi*eta*theta),
-            # ('CIS*CIS:SU=>SD', chi*(1-(1-eta)**2)*theta/N),
             ('CIR:RU=>RD', chi*eta*theta),
-            # ('CIR*CIR:RU=>RD', chi*(1-(1-eta)**2)*theta/N),
+
+            ## keep track of tracing
+            ('EU:=>T', eta*chi*theta),
+            ('IU:=>T', eta*chi*theta),
+            ('CIS:=>T', eta*chi*theta),
+            ('CIR:=>T', eta*chi*theta),
         )
 
     def reset_parameters(self, **params):

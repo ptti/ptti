@@ -7,6 +7,8 @@
           - ptti-scenario-1
         - - start
           - 2019/12/18
+        - - envelope
+          - false
         - - tmax
           - 895
         - - steps
@@ -67,7 +69,7 @@
         - - software
           - ptti 0.1
         - - revision
-          - fccbe6ea622dd0aebf0129d96db39b83ae9eb8a5
+          - 80bbb0cb1e63269f64d2b60d5bf07e2f1293e258
         - - python
           - "3.6.10 |Anaconda, Inc.| (default, Mar 23 2020, 23:13:11) \n[GCC 7.3.0]"
   - - initial
@@ -79,7 +81,7 @@
   - - parameters
     - !!python/object/apply:collections.OrderedDict
       - - - beta
-          - 0.0375
+          - 0.033
         - - c
           - 13.0
         - - alpha
@@ -130,3 +132,6 @@
             - !!python/object/apply:collections.OrderedDict
               - - - c
                   - 11
+  - - periods
+    - - 2021/05/31
+      - 2022/05/31

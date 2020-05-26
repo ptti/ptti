@@ -31,7 +31,6 @@ econ_inputs['Trace']['Cost_per_Tracer'] += econ_inputs['Trace']['Tracer_Salary']
 # We need to add the *daily* cost for other factors
 econ_inputs['Trace']['Cost_per_Tracer'] += econ_inputs['Trace']['Phone_Credit_Costs'] # Add phone costs
 
-
 # Number_of_Tracing_Supervisors = Max_Number_of_Tracers/50
 econ_inputs['Trace']['Tracing_Supervisor_Salary'] = 160  # Daily
 econ_inputs['Trace']['Tracers_Per_Supervisor'] = 50  # Daily
@@ -41,6 +40,7 @@ econ_inputs['Trace']['Team_Lead_Salary'] = 300  # Daily
 econ_inputs['Trace']['Hiring_Cost'] = 200  # £200 per recruitment for advertisements, phone interviews, salary of recruiters
 
 econ_inputs['Trace']['Tracer_Training_Course_Cost'] = 72000  # Three training courses (including refreshers) one for each staff cadre
+econ_inputs['Trace']['Tracer_Contract_Length'] = 30*3 # Length of window over which tracers are hired
 
 
 # Tracers_Day_N = Max_Number_of_Tracers # This can vary. Set to max for now. (This is overridden in the econ model now.)
@@ -75,6 +75,7 @@ econ_inputs['Test']['Tests_per_Machine_per_Shift'] = econ_inputs['Test']['Tests_
 econ_inputs['Test']['Tests_per_Machine_per_Day'] = econ_inputs['Test']['Tests_per_Machine_per_Shift'] * econ_inputs['Test']['Shifts_per_Day']
 
 econ_inputs['Test']['Lab_Techs_Per_Machine_Per_Shift'] = 2 # One to run the test, one to fill the wells.
+econ_inputs['Test']['Tester_Contract_Length'] = 30*6 # Length of window over which lab technicians are hired
 
 
 #Personnel Costs

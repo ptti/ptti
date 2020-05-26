@@ -50,8 +50,8 @@ setup(name='ptti',
       packages=find_packages(),
       install_requires=[
           'compyrtment>=0.5.6',
+          'EoN',
           'gitpython',
-          'kappy',
           'matplotlib',
           'numba',
           'numpy',
@@ -65,10 +65,11 @@ setup(name='ptti',
               'ptti-compare = ptti.command:compare'
           ],
           'models': [
-              'SEIRODE      = ptti.seirct_ode:SEIRODE',
-              'SEIRCTABM    = ptti.seirct_abm:SEIRCTABM',
-              'SEIRCTODEMem = ptti.seirct_ode:SEIRCTODEMem',
-              'SEIRCTKappa  = ptti.seirct_kappa:SEIRCTKappa',
+              'SEIRODE      = ptti.mshim:SEIRODE',
+              'SEIRCTABM    = ptti.mshim:SEIRCTABM',
+              'SEIRCTODEMem = ptti.mshim:SEIRCTODEMem',
+              'SEIRCTKappa  = ptti.mshim:SEIRCTKappa',
+              'SEIRCTNet    = ptti.mshim:SEIRCTNet',
           ]
       },
       package_data={
