@@ -1,6 +1,7 @@
 import yaml
 import numpy as np
 from math import ceil, exp
+from scipy.interpolate import interp1d
 from ptti.economic_data import econ_inputs
 
 # def _calcTT(data):
@@ -25,7 +26,145 @@ from ptti.economic_data import econ_inputs
 #     # Compute daily amount of testing and tracing
 #     Tested_TimeSeries, Traced_TimeSeries = _calcTraced(Output)
 
-def calcEconOutputs(time, trajectory, parameters, scenario):
+# Calculate the arguments of calcEconOutputs for the SEIRCT_ODE model
+
+
+def calcArgumentsODE(traj, paramtraj, cfg):
+
+    # First, get the time
+    time = traj[:, 0]
+    traj = traj[:, 1:]
+
+    # Make it an integer time axis
+    min_day = int(np.ceil(time[0]))
+    max_day = int(np.floor(time[-1]))
+
+    days = np.arange(min_day, max_day+1)
+
+    # Now get the relevant bits of trajectory
+    model = cfg['meta']['model']
+
+    cpm = {}
+    par = {}
+    for c in ('IU', 'ID', 'RU', 'RD'):
+        i = model.colindex(c)
+        cpm[c] = interp1d(time, traj[:, i], kind='nearest')(days)
+    for p in ('theta', 'c', 'eta', 'gamma', 'chi'):
+        par[p] = interp1d(time, paramtraj[p], kind='nearest')(days)
+
+    # Some useful compound quantities
+    avg_inftime = 1.0/(par['gamma']+par['theta']*(1+par['eta']*par['chi']))
+
+    # Now derive the relevant quantities
+    args = {'time': days}
+    args['tested'] = cpm['IU']*par['theta']
+    args['traced'] = cpm['IU']*par['theta']*par['c']*avg_inftime
+    args['recovered'] = cpm['RU']+cpm['RD']
+    args['infected'] = cpm['IU']+cpm['ID']
+
+    return args
+
+
+def calcEconOutputs(time, infected, recovered, tested, traced):
+
+    output = {}
+    days = len(time)
+
+    # Tracing
+    bw = int(econ_inputs['Trace']['Tracer_Contract_Length'])
+    # Split by blocks
+    tracing_blocks = []
+    for i0 in range(0, days, bw):
+        tblock = traced[i0:i0+bw]
+        # Tracers needed?
+        maxt = max(tblock)*econ_inputs['Trace']['Time_to_Trace_Contact']
+        tracing_blocks.append((i0, len(tblock), int(np.ceil(maxt))))
+
+    max_supervisors = 0
+    max_tracers = 0
+
+    tracing_costs = []
+    for i0, n, tracers in tracing_blocks:
+        supervisors = int(np.ceil(tracers/econ_inputs['Trace']['Tracers_Per_Supervisor']))
+        new_supervisors = max(supervisors-max_supervisors, 0)
+        max_supervisors += new_supervisors
+
+        new_tracers = max(tracers-max_tracers, 0)
+        max_tracers += new_tracers
+
+        # Hiring costs
+        costs = (new_tracers+new_supervisors)*econ_inputs['Trace']['Tracer_Initial_Cost']
+        # Daily costs
+        costs += (max_supervisors*econ_inputs['Trace']['Supervisor_Daily_Cost'] +
+                  tracers*econ_inputs['Trace']['Tracer_Daily_Cost'] + 
+                  econ_inputs['Trace']['Total_Team_Lead_Daily_Cost'] +
+                  econ_inputs['Trace']['Tracing_Daily_Public_Communications_Costs'])*n
+
+        tracing_costs.append(costs)
+
+    # Add the startup cost for team leads
+    tracing_costs[0] += econ_inputs['Trace']['Number_of_Tracing_Team_Leads']*econ_inputs['Trace']['Tracer_Initial_Cost']
+    # And tracing app
+    tracing_costs[0] += econ_inputs['Trace']['Tracing_App_Development_Deployment']
+
+    # All of this only applies if we have tracing at all...
+    if max(traced) == 0:
+        tracing_costs = [0 for tc in tracing_costs]
+
+    output['Tracing'] = {}
+    output['Tracing']['Tracing_Block_Lengths'] = [tb[1] for tb in tracing_blocks]
+    output['Tracing']['Tracing_Costs'] = tracing_costs
+    output['Tracing']['Tracing_Total_Costs'] = sum(tracing_costs)
+
+    # Testing
+    bw = int(econ_inputs['Test']['Tester_Contract_Length'])
+    # Split by blocks
+    testing_blocks = []
+    for i0 in range(0, days, bw):
+        tblock = tested[i0:i0+bw]
+        # Laboratories needed?
+        labs = max(tblock)*econ_inputs['Test']['Lab_Peaktest_Ratio']
+        testing_blocks.append((i0, len(tblock), int(np.ceil(labs))))
+
+    max_labs = 0
+
+    testing_costs = []
+    for i0, n, labs in testing_blocks:
+        new_labs = max(labs-max_labs, 0)
+        max_labs += new_labs
+
+        # Startup costs
+        costs = new_labs*econ_inputs['Test']['Lab_Startup_Cost']
+        # Daily costs
+        costs += (max_labs*econ_inputs['Test']['Lab_NonTechs_Daily_Cost'] + 
+                  labs*econ_inputs['Test']['Lab_Techs_Daily_Cost'])*n
+        
+        testing_costs.append(costs)
+
+    if max(tested) == 0:
+        testing_costs = [0 for tc in testing_costs]
+
+    output['Testing'] = {}
+    output['Testing']['Testing_Block_Lengths'] = [tb[1] for tb in testing_blocks]
+    output['Testing']['Testing_Costs'] = testing_costs
+    output['Testing']['Testing_Total_Costs'] = sum(testing_costs)
+
+    # Deaths and other outcomes
+    deaths = recovered[-1]*econ_inputs['Medical']['IFR']
+    nhs_costs = recovered[-1]*econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered']
+    prod_costs = recovered[-1]*econ_inputs['Medical']['Total_Productivity_Loss_Per_Recovered']
+
+    output['Medical'] = {}
+    output['Medical']['Deaths'] = deaths
+
+    output['Economic'] = {}
+    output['Economic']['Total_NHS_Costs'] = nhs_costs
+    output['Economic']['Total_Productivity_Loss'] = prod_costs
+
+    return output
+
+
+def calcEconOutputsOld(time, trajectory, parameters, scenario):
 
     locals().update(econ_inputs['Shutdown'])
     locals().update(econ_inputs['Test'])
@@ -54,7 +193,7 @@ def calcEconOutputs(time, trajectory, parameters, scenario):
     eta = np.array(Output['variables']['eta'])
     IU = np.array(Output['compartments'][:, 4])
 
-    To_Trace = Output['compartments'][:,-2] ## note - brittle
+    To_Trace = Output['compartments'][:, -2]  # note - brittle
 
     # Now we need to find the number of tracers needed in each window.
     Tracers_Needed_Per_Hiring_Window = []
@@ -140,7 +279,8 @@ def calcEconOutputs(time, trajectory, parameters, scenario):
         Tracing_Costs_TimeSeries[ts:te+1] += Tracer_Costs_Daily*tn*tl/(te-ts+1)
         Tracers_Cost += Tracer_Costs_Daily*tn*tl
 
-    Uses_Tracing = bool(Max_Tracers > 0)  # If zero, means there's no tracing at all!
+    # If zero, means there's no tracing at all!
+    Uses_Tracing = bool(Max_Tracers > 0)
 
     Costs += Tracers_fixed_cost*Uses_Tracing
     Costs += Tracers_Cost*Uses_Tracing
@@ -202,7 +342,7 @@ def calcEconOutputs(time, trajectory, parameters, scenario):
 
         Window_Tests_max = max(Daily_tests[TSHW_Start:TSHW_End+1])
         Max_Tests_In_Hiring_Window.append(Window_Tests_max)
-        Machines_Needed_In_Window = Window_Tests_max/  \
+        Machines_Needed_In_Window = Window_Tests_max /  \
             econ_inputs['Test']['Tests_per_Machine_per_Day']
         Labs_Per_Window.append(Machines_Needed_In_Window /
                                econ_inputs['Test']['PCR_Machines_Per_Lab'])
@@ -219,7 +359,8 @@ def calcEconOutputs(time, trajectory, parameters, scenario):
 
         Testing_Costs += econ_inputs['Test']['Lab_Overhead_Cost_Daily'] * Labs_In_Window * \
             Curr_Period_Days
-        Testing_Costs_TimeSeries[TSHW_Indices] += econ_inputs['Test']['Lab_Overhead_Cost_Daily'] * Labs_In_Window * Curr_Period_Days/len(TSHW_Indices)
+        Testing_Costs_TimeSeries[TSHW_Indices] += econ_inputs['Test']['Lab_Overhead_Cost_Daily'] * \
+            Labs_In_Window * Curr_Period_Days/len(TSHW_Indices)
 
         # Labs in use are all fully staffed.
         # Staff Costs
@@ -228,24 +369,23 @@ def calcEconOutputs(time, trajectory, parameters, scenario):
             econ_inputs['Test']['Lab_Supervisor_Salary'] * Curr_Period_Days
 
         Testing_Costs_TimeSeries[TSHW_Indices] += Supervisors * \
-            econ_inputs['Test']['Lab_Supervisor_Salary']*Curr_Period_Days/len(TSHW_Indices)
+            econ_inputs['Test']['Lab_Supervisor_Salary'] * \
+            Curr_Period_Days/len(TSHW_Indices)
 
         Daily_Lab_Workers = Labs_In_Window * econ_inputs['Test']['PCR_Machines_Per_Lab'] * econ_inputs['Test']['Shifts_per_Day'] * \
             econ_inputs['Test']['Lab_Techs_Per_Machine_Per_Shift']
 
         Testing_Costs += Daily_Lab_Workers * \
             econ_inputs['Test']['Lab_Tech_Salary']*Curr_Period_Days
-        Testing_Costs_TimeSeries[TSHW_Indices] += Daily_Lab_Workers*econ_inputs['Test']['Lab_Tech_Salary']*Curr_Period_Days/len(TSHW_Indices)
-
-        Testing_Costs += econ_inputs['Test']['Staff_Training_Cost'] * \
-            (Daily_Lab_Workers + Supervisors)  # Once Per Period
-        Testing_Costs_TimeSeries[TSHW_Start] += econ_inputs['Test']['Staff_Training_Cost'] * \
-            (Daily_Lab_Workers + Supervisors)
+        Testing_Costs_TimeSeries[TSHW_Indices] += Daily_Lab_Workers * \
+            econ_inputs['Test']['Lab_Tech_Salary'] * \
+            Curr_Period_Days/len(TSHW_Indices)
 
         Testing_Costs += Machines_In_Window * Curr_Period_Days * \
             econ_inputs['Test']['PCR_Machine_Daily_Maintenance']
-        Testing_Costs_TimeSeries[TSHW_Indices] += Machines_In_Window  * \
-            econ_inputs['Test']['PCR_Machine_Daily_Maintenance']*Curr_Period_Days/len(TSHW_Indices)
+        Testing_Costs_TimeSeries[TSHW_Indices] += Machines_In_Window * \
+            econ_inputs['Test']['PCR_Machine_Daily_Maintenance'] * \
+            Curr_Period_Days/len(TSHW_Indices)
 
         Testing_Labs_Per_Window.append(float(Labs_In_Window))
         Testing_Workers_Per_Window.append(float(Daily_Lab_Workers))
@@ -259,17 +399,21 @@ def calcEconOutputs(time, trajectory, parameters, scenario):
     Max_Lab_Staff += Total_Required_PCR_Machines / \
         (econ_inputs['Test']['Shifts_per_Day'] *
          econ_inputs['Test']['Lab_Techs_Per_Machine_Per_Shift'])
+
     Testing_fixed_Costs = Total_Required_PCR_Machines * \
         econ_inputs['Test']['PCR_Machines_Cost']  # Buy Machines
-    # Hire Staff. One Time Cost.
-    Testing_fixed_Costs += Max_Lab_Staff * econ_inputs['Trace']['Hiring_Cost']
+    # Hire and Train Staff. One Time Cost.
+    Testing_fixed_Costs += Max_Lab_Staff * \
+        (econ_inputs['Trace']['Hiring_Cost'] +
+         econ_inputs['Test']['Staff_Training_Cost'])
 
     Testing_Costs_TimeSeries[0] += Testing_fixed_Costs
     Testing_Costs += Testing_fixed_Costs
 
     Total_Required_Tests = np.trapz(Daily_tests, time)
 
-    Testing_Costs_TimeSeries += Total_Required_Tests*econ_inputs['Test']['Cost_Per_PCR_Test']/len(time)
+    Testing_Costs_TimeSeries += Total_Required_Tests * \
+        econ_inputs['Test']['Cost_Per_PCR_Test']/len(time)
     Testing_Costs += Total_Required_Tests * \
         econ_inputs['Test']['Cost_Per_PCR_Test']
 

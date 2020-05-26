@@ -117,7 +117,7 @@ def optimise(cfg, getr, setp, p0, times, removed, interventions):
       setp(cfg, x[1:])
 
       ## run the model
-      t, traj, _ = runModel(**cfg["meta"], **cfg)
+      t, traj, _, _ = runModel(**cfg["meta"], **cfg)
       R = interp1d(t, getr(traj), kind="previous",  bounds_error=False,
                    fill_value=0)(times)
 
@@ -204,7 +204,7 @@ def command():
 
    save_human(cfg, "{}-fit.yaml".format(cfg["meta"]["output"]))
 
-   t, traj, _ = runModel(**cfg["meta"], **cfg)
+   t, traj, _, _ = runModel(**cfg["meta"], **cfg)
    RU = getr(traj)
 
    fig, (ax1, ax2) = plt.subplots(2, 1)

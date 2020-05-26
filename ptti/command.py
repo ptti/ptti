@@ -3,7 +3,7 @@ import pkg_resources
 from ptti.config import config_load, config_save, save_human
 from ptti.model import runModel
 from ptti.plotting import plot
-from ptti.economic import calcEconOutputs
+from ptti.economic import calcEconOutputs, calcArgumentsODE
 from multiprocessing import Pool
 from datetime import datetime, timedelta
 import logging as log
@@ -17,6 +17,16 @@ try:
     from mpi4py import MPI
 except ImportError:
     MPI = None
+
+
+def _save_datetime(fname, timeaxis, columns, delimiter='\t'):
+    with open(fname, 'w') as f:
+        for j, t in enumerate(timeaxis):
+            f.write('{0}\t{1}\n'.format(t, delimiter.join(map(str,
+                                                              columns[j])
+                                                          )
+                                        )
+                    )
 
 
 def inmpi():
@@ -78,6 +88,8 @@ def command():
                         help="Perform economic analysis")
     parser.add_argument("-d", "--date", action="store_true", default=False,
                         help="Store time axis as dates")
+    parser.add_argument("-sp", "--save-param", type=str, nargs="+", default=[],
+                        help="Parameters to save a time series of")
 
     args = parser.parse_args()
 
@@ -131,7 +143,8 @@ def command():
     samples = [(i, mkcfg(i)) for i in range(cfg["meta"]["samples"])]
     results = pmap(runSample, samples)
 
-    for s, (traj, events) in zip(samples, results):
+    for s, (traj, events, paramtraj) in zip(samples, results):
+
         i, cfg = s
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
 
@@ -142,24 +155,38 @@ def command():
             np.savetxt(outfile, traj, delimiter="\t")
         else:
             # We need to store these as dates
-            with open(outfile, 'w') as f:
-                for j, t in enumerate(timeaxis):
-                    f.write('{0}\t{1}\n'.format(t, '\t'.join(map(str,
-                                                                 traj[j, 1:])
-                                                             )))
+            _save_datetime(outfile, timeaxis, traj[:, 1:])
 
-        # Period history
-        period_history = np.zeros(len(timeaxis)).astype(int)
-        if "periods" in cfg:
-            periodtimes = [datetime.strptime(p, '%Y/%M/%d')
-                           for p in cfg["periods"]]
-            for j, t in enumerate(timeaxis):
-                p_i = 0
-                while p_i < len(periodtimes):
-                    if t < periodtimes[p_i]:
-                        break
-                    p_i += 1
-                period_history[j] = p_i
+        # Save the parameters
+        for sp in args.save_param:
+            if sp not in paramtraj:
+                print(
+                    'Parameter {0} does not exist for chosen model'.format(sp))
+                continue
+
+            outfile = "{}-{}-{}.tsv".format(cfg["meta"]["output"], i, sp)
+
+            if not cfg["meta"]["date"]:
+                np.savetxt(outfile, np.concatenate([traj[:, 0:1],
+                                                    paramtraj[sp][:, None]], 
+                                                    axis=1), 
+                delimiter="\t")
+            else:
+                # We need to store these as dates
+                _save_datetime(outfile, timeaxis, paramtraj[sp][:, None])
+
+            # # Period history
+            # period_history = np.zeros(len(timeaxis)).astype(int)
+            # if "periods" in cfg:
+            #     periodtimes = [datetime.strptime(p, '%Y/%M/%d')
+            #                    for p in cfg["periods"]]
+            #     for j, t in enumerate(timeaxis):
+            #         p_i = 0
+            #         while p_i < len(periodtimes):
+            #             if t < periodtimes[p_i]:
+            #                 break
+            #             p_i += 1
+            #         period_history[j] = p_i
 
         cfgout = "{}-{}.yaml".format(cfg["meta"]["output"], i)
         config_save(cfg, cfgout)
@@ -169,43 +196,25 @@ def command():
         eout = "{}-{}-events.yaml".format(cfg["meta"]["output"], i)
         save_human(allevents, eout)
 
-        # Parameter history
-        params_current = dict(cfg['parameters'])
-        param_history = {k: [v] for k, v in params_current.items()}
-        events_queue = list(allevents)  # Copy
-
-        for t in traj[1:, 0]:
-            l0 = len(events_queue)
-            while len(events_queue) > 0 and events_queue[0]['time'] < t:
-                # Update
-                ev = events_queue.pop(0)
-                params_current.update(ev['parameters'])
-            # if len(events_queue) < l0:
-            #     curr_period += 1
-            # param_history['period'].append(curr_period)
-            for k, v in params_current.items():
-                if k in param_history:
-                    param_history[k].append(v)
-
-        param_history['period'] = period_history
-
         if args.econ:
             # Economic analysis
             t, vals = traj[:, 0], traj[:, 1:]
 
-            econ = calcEconOutputs(t, vals, param_history, cfg)
+            econ_args = calcArgumentsODE(traj, paramtraj, cfg)
+
+            econ = calcEconOutputs(**econ_args)
             econout = "{}-{}-econ.yaml".format(cfg["meta"]["output"], i)
             # Just keep the useful stuff...
-            econ = {
-                k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
-            }
-            # Remove time series data
-            if 'Economic' in  econ.keys():
-                if "tests" in econ['Economic'].keys():
-                    del(econ['Economic']['tests'])
-                if "trace" in econ['Economic'].keys():
-                    del(econ['Economic']['trace'])
-            config_save(econ, econout, True)
+            # econ = {
+            #     k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
+            # }
+            # # Remove time series data
+            # if 'Economic' in econ.keys():
+            #     if "tests" in econ['Economic'].keys():
+            #         del(econ['Economic']['tests'])
+            #     if "trace" in econ['Economic'].keys():
+            #         del(econ['Economic']['trace'])
+            save_human(econ, econout)
 
     if args.statistics:
         # Average trajectory?
@@ -336,11 +345,11 @@ def runSample(arg):
             if isinstance(v, list):
                 iv[k] = v[i]
 
-    t, traj, events = runModel(**cfg["meta"], **cfg)
+    t, traj, events, paramtraj = runModel(**cfg["meta"], **cfg)
 
     tseries = np.concatenate([t[:, None], traj], axis=1)
 
-    return tseries, events
+    return tseries, events, paramtraj
 
 
 def mpimap(f, v):
