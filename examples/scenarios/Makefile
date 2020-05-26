@@ -4,6 +4,8 @@ ptti-scenario-3a ptti-scenario-3a-Trig ptti-scenario-3b ptti-scenario-3b-Trig \
 ptti-scenario-4a ptti-scenario-4b ptti-scenario-4c ptti-scenario-4d \
 ptti-scenario-4a-Trig ptti-scenario-4b-Trig ptti-scenario-4c-Trig ptti-scenario-4d-Trig
 
+all: plot fitting-ukbest.pdf
+
 ${SCENARIOS:=-out-0.tsv}: %-out-0.tsv : %.yaml
 	TARG=$@; \
 	SEED=$${TARG%-out-0.tsv}; \
