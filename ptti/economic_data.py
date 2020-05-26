@@ -97,10 +97,10 @@ econ_inputs['Test']['PCR_Machines_Cost'] = 27000 #  Roche COBAS 8800 Machines, a
 econ_inputs['Test']['PCR_Machine_Daily_Maintenance'] = 10  # assume maintenance costs averaging £10 per day
 
 
-econ_inputs['Medical'] = dict() #Based on 16,759 Cases - https://www.medrxiv.org/content/10.1101/2020.04.23.20076042v1
-econ_inputs['Medical']['ICU_Pct'] = 0.17
-econ_inputs['Medical']['ICU_Fatality'] = 0.59
-econ_inputs['Medical']['Non_ICU_Fatality'] = 0.375  # 1781 deaths in 4752 non-ongoing no-ICU hospital cases
+econ_inputs['Medical'] = dict() #Based on 20,133 Cases - Docherty et al BMJ 2020 https://www.bmj.com/content/bmj/369/bmj.m1985.full.pdf
+econ_inputs['Medical']['ICU_Pct'] = 0.15
+econ_inputs['Medical']['ICU_Fatality'] = 0.537
+econ_inputs['Medical']['Non_ICU_Fatality'] = 0.363  # 4207 deaths out of 11580 non-ongoing no-ICU hospital cases
 
 econ_inputs['Medical']['Hospitalized_Pct_Deaths'] = 0.44  # The percentage of deaths that occur in hospitals
 
