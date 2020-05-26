@@ -113,6 +113,9 @@ def calcEconOutputs(time, infected, recovered, tested, traced):
 
     output['Tracing'] = {}
     output['Tracing']['Tracing_Block_Lengths'] = [tb[1] for tb in tracing_blocks]
+    output['Tracing']['Tracers'] = [tb[2] for tb in tracing_blocks]
+    output['Tracing']['Max_Tracers'] = max_tracers
+    output['Tracing']['Max_Supervisors'] = max_supervisors    
     output['Tracing']['Tracing_Costs'] = tracing_costs
     output['Tracing']['Tracing_Total_Costs'] = sum(tracing_costs)
 
@@ -146,6 +149,8 @@ def calcEconOutputs(time, infected, recovered, tested, traced):
 
     output['Testing'] = {}
     output['Testing']['Testing_Block_Lengths'] = [tb[1] for tb in testing_blocks]
+    output['Testing']['Laboratories'] = [tb[2] for tb in testing_blocks]
+    output['Testing']['Max_Laboratories'] = max_labs
     output['Testing']['Testing_Costs'] = testing_costs
     output['Testing']['Testing_Total_Costs'] = sum(testing_costs)
 

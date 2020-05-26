@@ -168,9 +168,9 @@ def command():
 
             if not cfg["meta"]["date"]:
                 np.savetxt(outfile, np.concatenate([traj[:, 0:1],
-                                                    paramtraj[sp][:, None]], 
-                                                    axis=1), 
-                delimiter="\t")
+                                                    paramtraj[sp][:, None]],
+                                                   axis=1),
+                           delimiter="\t")
             else:
                 # We need to store these as dates
                 _save_datetime(outfile, timeaxis, paramtraj[sp][:, None])
@@ -204,17 +204,20 @@ def command():
 
             econ = calcEconOutputs(**econ_args)
             econout = "{}-{}-econ.yaml".format(cfg["meta"]["output"], i)
-            # Just keep the useful stuff...
-            # econ = {
-            #     k: econ[k] for k in ('Medical', 'Trace_Outputs', 'Test_Outputs', 'Economic')
-            # }
-            # # Remove time series data
-            # if 'Economic' in econ.keys():
-            #     if "tests" in econ['Economic'].keys():
-            #         del(econ['Economic']['tests'])
-            #     if "trace" in econ['Economic'].keys():
-            #         del(econ['Economic']['trace'])
             save_human(econ, econout)
+
+            # Also, time series stuff
+            ttout = "{}-{}-testtrace.tsv".format(cfg["meta"]["output"], i)
+
+            ttdata = np.concatenate([econ_args['time'][:,None], 
+                                     econ_args['tested'][:, None],
+                                     econ_args['traced'][:, None]], axis=1)
+            if not cfg["meta"]["date"]:
+                np.savetxt(ttout, ttdata, delimiter="\t")
+            else:
+                # We need to store these as dates
+                ttaxis = [t0 + timedelta(days=t) for t in ttdata[:, 0]]
+                _save_datetime(ttout, ttaxis, ttdata[:,1:])
 
     if args.statistics:
         # Average trajectory?
