@@ -22,12 +22,7 @@ except ImportError:
 def _save_datetime(fname, timeaxis, columns, delimiter='\t'):
     with open(fname, 'w') as f:
         for j, t in enumerate(timeaxis):
-            f.write('{0}\t{1}\n'.format(t, delimiter.join(map(str,
-                                                              columns[j])
-                                                          )
-                                        )
-                    )
-
+            f.write('{0}\t{1}\n'.format(t, delimiter.join(map(str, columns[j]))))
 
 def inmpi():
     return "PMIX_RANK" in os.environ
@@ -148,7 +143,7 @@ def command():
         i, cfg = s
         outfile = "{}-{}.tsv".format(cfg["meta"]["output"], i)
 
-        t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d')
+        t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%m/%d')
         timeaxis = [t0 + timedelta(days=t) for t in traj[:, 0]]
 
         if not cfg["meta"]["date"]:

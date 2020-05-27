@@ -24,7 +24,7 @@ for seed in args.seeds:
     with open(seed + '.yaml') as f:
         data = config_load(seed + '.yaml')
         params = data['parameters']
-        t0 = datetime.strptime(data["meta"]["start"], '%Y/%M/%d')
+        t0 = datetime.strptime(data["meta"]["start"], '%Y/%m/%d')
         tmax = t0 + timedelta(days=data['meta']['tmax'])
     param_history.append((0, params))
     with open(seed + '-out-0-events.yaml') as f:

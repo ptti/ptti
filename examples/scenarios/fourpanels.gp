@@ -1,8 +1,11 @@
-set terminal pdfcairo color enhanced dashed font "cmr10,14" size 8,6
+set terminal pdfcairo color enhanced dashed font "cmr10,14" size 8,9
 seed="@"
 set output sprintf("%s.pdf", seed)
-set multiplot layout 2,2
+set multiplot layout 3,2
 odefile=sprintf("%s-out-0.tsv", seed)
+ttfile=sprintf("%s-out-0-testtrace.tsv", seed)
+trfile=sprintf("%s-out-0-trcosts.tsv", seed)
+tefile=sprintf("%s-out-0-tecosts.tsv", seed)
 etimesfile=sprintf("%s-events.gp", seed)
 
 set tics nomirror
@@ -63,6 +66,21 @@ set key top right
 plot odefile u 1:7 w l lw 1.5 lc rgb color_IU ti "I_U", odefile u 1:8 w l lw 1.5 lc rgb color_ID ti "I_D", \
      odefile u 1:4 w l lw 1.5 lc rgb color_SD ti "S_D", odefile u 1:6 w l lw 1.5 lc rgb color_ED ti "E_D", \
      odefile u 1:10 w l lw 1.5 lc rgb color_RD ti "R_D"#, odefile u 1:13 w l axis x1y2 lc 0 ti "R"
+
+
+plot ttfile u 1:2 w l lw 1.5 lc rgb color_IU ti "Tests", ttfile u 1:3 w l lw 1.5 lc rgb color_ID ti "Traced"
+
+unset log y
+unset yrange
+set autoscale y
+set style fill empty
+
+set ylabel "Staff"
+plot trfile u 1:5 w boxes ti "Tracers"
+
+set ylabel "Cost (Millions £)"
+plot tefile u 1:($5/1000000) w boxes ti "Testing"
+plot trfile u 1:($6/1000000) w boxes ti "Tracing"
 
 unset multiplot
 set output
