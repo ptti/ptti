@@ -78,7 +78,7 @@ set style fill empty
 set ylabel "Staff"
 plot trfile u 1:5 w boxes ti "Tracers"
 
-set ylabel "Cost (Millions £)"
+set ylabel "Cost (Millions GBP)"
 plot tefile u 1:($5/1000000) w boxes ti "Testing"
 plot trfile u 1:($6/1000000) w boxes ti "Tracing"
 
