@@ -28,7 +28,7 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta:  0.0375   # this based on fitting in ukfitting.py
+  beta:  0.036   # this based on ptti-fit fitting
 
   ## c is the contact rate per day. 13 is an accepted
   ## value on average under normal circumstances.
@@ -101,7 +101,7 @@ interventions:
   - time: 152
     parameters:
           ## Face coverings
-      beta: 0.023 # 30% reduction in Beta 
+      beta: 0.0252 # 30% reduction in Beta
           ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
       tested: 0.1       # proportion of symptomatic who are tested (this is the same for 

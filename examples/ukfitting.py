@@ -9,19 +9,20 @@ from ptti.model import runModel
 def uk_mortality(fn):
     def read_csv():
         with open(fn) as fp:
-            for date, cases, deaths in csv.reader(fp, delimiter=','):
+            for date, deaths_Economist, deaths_Excess in csv.reader(fp, delimiter=','):
                 if date == "date": ## header
                     continue
                 date = time.strptime(date, "%d/%m/%Y")
-                cases, deaths = int(cases), int(deaths)
-                yield (date.tm_yday, cases, deaths)
+                deaths_Economist, deaths_Excess = int(deaths_Economist), int(deaths_Excess)
+                yield (date.tm_yday, deaths_Economist, deaths_Excess)
     return np.array(list(read_csv()))
 
-# uk_mortality data starts on 15th Feb 2020,
-#   first cases 23rd Feb (t=53), first deaths 5th March (t=64)
+# uk_mortality data starts on 1st Jan 2020,
+# deaths_Economist first deaths 7th March (t=66)
+# deaths_Excess first deaths 5th March (t=64)
 
 t0, tmax, steps = -14, 127, 141  # Day 0 is 1st Jan 2020, -14 is 18th Dec 2019
-    # simulation runs from 1st Jan to 7th May (t=127)
+    # simulation runs from 1st Jan to 8th May (t=128)
 ifr = 0.008
 offset = 0 ## date offset for uk case data
 
@@ -53,8 +54,8 @@ deaths = ifr * cases
 
 ukm = uk_mortality("uk_mortality.csv")
 ukt = ukm[:,0]
-ukcases = ukm[:,1]
-ukdeaths = ukm[:,2]*1.6
+ukdeaths_Economist = ukm[:,1]
+ukdeaths_Excess = ukm[:,2]
 
 fig, (ax1, ax2) = plt.subplots(2, 1)
 
@@ -69,9 +70,10 @@ ax1.legend()
 ax2.set_xlabel("Days since outbreak start")
 ax2.set_ylabel("Deaths")
 ax2.set_xlim(t0, tmax)
-ax2.set_yscale("log")
+#ax2.set_yscale("log")
 ax2.plot(t, deaths, label="Simulated")
-ax2.plot(ukt, ukdeaths, label="UK data")
+ax2.plot(ukt, ukdeaths_Economist, label="UK deaths - Economist")
+ax2.plot(ukt, ukdeaths_Excess, label="UK deaths - Excess")
 ax2.legend()
 
 fig.show()

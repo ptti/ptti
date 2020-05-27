@@ -79,7 +79,7 @@
   - - parameters
     - !!python/object/apply:collections.OrderedDict
       - - - beta
-          - 0.0375
+          - 0.036
         - - c
           - 13.0
         - - alpha
