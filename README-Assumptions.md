@@ -164,7 +164,7 @@ the duration of infectiousness and is fixed at one week.
 
 *Justification:*
 
-### Assumption: the overall infection fatality rate (IFR) is 0.01
+### Assumption: the overall infection fatality rate (IFR) is 0.008
 
 The model does not explicitly produce a time-series for the number of dead.
 Rather, it produces the number of individuals removed through recovery or death.
@@ -174,9 +174,12 @@ vary and reflection in the model as the probability of infection (and
 consequently the overall force of the epidemic) depends strongly on this value.
 
 *Justification:* scientific consensus appears to be converging on an IFR of
-around 1% [citation]. However we conduct sensitivity analysis on the resulting
-infectiousness parameter to understand how this affects the behaviour of the
-model.
+around 0.8% for the UK, justified by the IFR in China being estimated as [0.66%] 
+and the UK population being older, as well as by a recent large scale seroprevalence 
+survey of 70,000 people in Spain showing 5.0% infected to date (2.35m people) meaning
+an IFR there of 1.15% given the 27,100 Covid-19 deaths there. However we conduct 
+sensitivity analysis on the resulting infectiousness parameter to understand how 
+this affects the behaviour of the model.
 
 ## Fitting the data
 
@@ -286,6 +289,7 @@ of the [PTTI software] distribution.
 [Sridhar and Majumder]: https://www.bmj.com/content/369/bmj.m1567
 [SEIR-TTI ODE model]: https://github.com/ptti/ptti/raw/master/docs/tti.pdf
 [contact tracing approximation]: https://github.com/ptti/ptti/raw/master/docs/tti.pdf
+[0.66%]: https://www.thelancet.com/journals/laninf/article/PIIS1473-3099(20)30243-7/fulltext
 [PTTI software]: http://github.com/ptti/ptti
 [implemented]: https://github.com/ptti/ptti/blob/master/ptti/seirct_ode.py#L35
 [data.gov.uk coronavirus web site]: https://coronavirus.data.gov.uk/
