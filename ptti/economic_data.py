@@ -50,7 +50,7 @@ econ_inputs['Trace']['Tracing_App_Development_Deployment'] = 10000000  # ball pa
 
 econ_inputs['Trace']['Cost_Per_Extra_Phones_for_Tracers'] = 200  # For any tracers without phones / replacements.
 econ_inputs['Trace']['Tracer_Percentage_Needing_Phones'] = 0.1  # Fairly small percentage.
-econ_inputs['Trace']['Tracers_Per_Infected_Person'] = 58.0/8 # See report - 58 hours, tracers work 8 hour days.
+#econ_inputs['Trace']['Tracers_Per_Infected_Person'] = 58.0/8 # See report - 58 hours, tracers work 8 hour days.
 
 econ_inputs['Trace']['Rural_Pct'] = 0.17
 econ_inputs['Trace']['Daily_Travel_Cost'] = 10
@@ -102,21 +102,21 @@ econ_inputs['Medical']['ICU_Pct'] = 0.15
 econ_inputs['Medical']['ICU_Fatality'] = 0.537
 econ_inputs['Medical']['Non_ICU_Fatality'] = 0.363  # 4207 deaths out of 11580 non-ongoing no-ICU hospital cases
 
-econ_inputs['Medical']['Hospitalized_Pct_Deaths'] = 0.44  # The percentage of deaths that occur in hospitals
+econ_inputs['Medical']['Hospitalized_Pct_Deaths'] = 0.60  # The percentage of deaths that occur in hospitals 
 
 econ_inputs['Medical']['IFR'] = 0.008
 
 # Based on Spreadsheet from v1.
 econ_inputs['Medical']['NHS_Death_Cost'] = 500
-econ_inputs['Medical']['NHS_ICU_Cost'] = 29335
+econ_inputs['Medical']['NHS_ICU_Cost'] = 16760 # 8 days median stay in ICU (ICNARC data) at £2095 per day
 econ_inputs['Medical']['NHS_Hospital_Cost'] = 2422
 
 
 econ_inputs['Medical']['Productivity_Not_Working_Cost'] = 119
-econ_inputs['Medical']['Productivity_Death_Cost'] = 358
-econ_inputs['Medical']['Productivity_ICU_Cost'] = 2509
-econ_inputs['Medical']['Productivity_Hospital_Cost'] = 1195
-econ_inputs['Medical']['Productivity_Symptomatic_Cost'] = 358
+econ_inputs['Medical']['Productivity_Death_Cost'] = 357 # 3 days at £119 per day
+econ_inputs['Medical']['Productivity_ICU_Cost'] = 2499  # 21 days at £119 per day
+econ_inputs['Medical']['Productivity_Hospital_Cost'] = 1190 # 10 days at £119 per day
+econ_inputs['Medical']['Productivity_Symptomatic_Cost'] = 357 # 3 days at £119 per day
 econ_inputs['Medical']['Pct_Symptomatic'] = 0.5
 
 ################ DERIVED QUANTITIES - Do not touch these ###########
@@ -144,8 +144,8 @@ econ_inputs['Test']['Lab_NonTechs_Daily_Cost'] = (econ_inputs['Test']['Lab_Overh
                                                econ_inputs['Test']['Lab_Supervisor_Salary'] + 
                                                econ_inputs['Test']['PCR_Machines_Per_Lab']*econ_inputs['Test']['PCR_Machine_Daily_Maintenance'])
 econ_inputs['Test']['Lab_Total_Daily_Cost'] = econ_inputs['Test']['Lab_Techs_Daily_Cost']+econ_inputs['Test']['Lab_NonTechs_Daily_Cost']
-econ_inputs['Test']['Lab_Startup_Cost'] = ((econ_inputs['Test']['Techs_Per_Lab'] + 1)*(econ_inputs['Trace']['Hiring_Cost']+econ_inputs['Test']['Staff_Training_Cost']) +
-                                            econ_inputs['Test']['PCR_Machines_Cost']*econ_inputs['Test']['PCR_Machines_Per_Lab'])
+econ_inputs['Test']['Lab_Startup_Cost'] = ((econ_inputs['Test']['Techs_Per_Lab'] + 2)*(econ_inputs['Trace']['Hiring_Cost']+econ_inputs['Test']['Staff_Training_Cost']) +
+                                            econ_inputs['Test']['PCR_Machines_Cost']*econ_inputs['Test']['PCR_Machines_Per_Lab'])   # +2 is for two supervisors per lab, one for each 9hr shift
 
 econ_inputs['Medical']['Hospitalised_Fraction'] = (econ_inputs['Medical']['Hospitalized_Pct_Deaths']*econ_inputs['Medical']['IFR'] / 
                                                     (econ_inputs['Medical']['ICU_Pct']*econ_inputs['Medical']['ICU_Fatality'] +
