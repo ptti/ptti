@@ -8,7 +8,7 @@
     c: 6
   time: 147
 - parameters:
-    beta: 0.023
+    beta: 0.0252
     chi: 0.8
     coldflu: 0.02
     eta: 0.8

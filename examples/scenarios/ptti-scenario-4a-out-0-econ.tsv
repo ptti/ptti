@@ -1,9 +1,9 @@
 PTTI Scenario 4a											
 Economic											
-	Total_NHS_Costs	1562212769.5342314									
-	Total_Productivity_Loss	4830756204.5831995									
+	Total_NHS_Costs	1481516756.0280738									
+	Total_Productivity_Loss	4581223762.18342									
 Medical											
-	Deaths	192594.45483445635									
+	Deaths	182645.9990084513									
 Testing											
 	Laboratories	1	1	1	1	1					
 	Max_Laboratories	1									
@@ -11,9 +11,9 @@ Testing
 	Testing_Costs	1888800	1602000	1602000	1602000	1566400					
 	Testing_Total_Costs	8261200									
 Tracing											
-	Max_Supervisors	11906									
-	Max_Tracers	595275									
-	Tracers	0	265201	200006	16312	89245	367973	595275	585078	322032	132170
+	Max_Supervisors	18010									
+	Max_Tracers	900498									
+	Tracers	0	152933	128740	25818	237058	862201	900498	613639	240256	85836
 	Tracing_Block_Lengths	90	90	90	90	90	90	90	90	90	86
-	Tracing_Costs	53557250.0	21756275603.0	1662924618.0	229560336.00000003	798656535.0	10595412169.0	21636969575.0	4771607184.0	2719059246.0	1182563124.0
-	Tracing_Total_Costs	65406585640.0									
+	Tracing_Costs	53557250.0	12554060299.0	1071461520.0	268361154.0	8155673324.0	53183657603.0	10157056244.0	5090606667.0	2177099118.0	928952753.1999999
+	Tracing_Total_Costs	93640485932.2									

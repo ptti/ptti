@@ -1,8 +1,8 @@
 Economic:
-  Total_NHS_Costs: 135583678.94740963
-  Total_Productivity_Loss: 419258958.2472131
+  Total_NHS_Costs: 111266577.4552528
+  Total_Productivity_Loss: 344064342.5062733
 Medical:
-  Deaths: 16715.178137426003
+  Deaths: 13717.290143953509
 Testing:
   Laboratories:
   - 1
@@ -25,15 +25,15 @@ Testing:
   - 1566400
   Testing_Total_Costs: 8261200
 Tracing:
-  Max_Supervisors: 873
-  Max_Tracers: 43642
+  Max_Supervisors: 671
+  Max_Tracers: 33544
   Tracers:
   - 0
-  - 43642
-  - 21141
-  - 3168
-  - 37
-  - 1
+  - 33544
+  - 20529
+  - 6258
+  - 165
+  - 4
   - 1
   - 1
   - 1
@@ -51,13 +51,13 @@ Tracing:
   - 86
   Tracing_Costs:
   - 53557250.0
-  - 3595898326.0
-  - 197437023.00000003
-  - 57193704.00000001
-  - 32762511.000000004
-  - 32481603.0
-  - 32481603.0
-  - 32481603.0
-  - 32481603.0
-  - 31037976.2
-  Tracing_Total_Costs: 4097813202.2
+  - 2768202132.0
+  - 189480086.99999997
+  - 78123474.0
+  - 30579795.0
+  - 29323512.0
+  - 29300103.0
+  - 29300103.0
+  - 29300103.0
+  - 27997876.2
+  Tracing_Total_Costs: 3265164435.2

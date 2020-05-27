@@ -3,13 +3,13 @@
   parameters:
     c: 3.9
     locked: true
-  time: 73.96987312838799
+  time: 77.37904224850101
 - condition: x[IU] + x[ID] - 40000
   direction: 1.0
   parameters:
     c: 3.9
     locked: true
-  time: 73.96989672555482
+  time: 77.37904225254515
 - parameters:
     c: 10
   time: 89
@@ -17,7 +17,7 @@
     c: 4
   time: 96
 - parameters:
-    beta: 0.02625
+    beta: 0.0252
     chi: 0.8
     eta: 0.8
     theta: 0.0014730575346369962
@@ -37,13 +37,13 @@
   parameters:
     c: 8
     locked: false
-  time: 220.59434591235345
+  time: 209.28756064982102
 - condition: x[IU] + x[ID] - 20000
   direction: -1.0
   parameters:
     c: 8
     locked: false
-  time: 220.59438468372306
+  time: 209.28756457481435
 - parameters:
     chi: 0.8
     eta: 0.8
