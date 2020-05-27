@@ -45,6 +45,9 @@ def flatten_json(d):
 rows = flatten_json(econ)
 maxlen = max(map(len, rows))
 with open(slug + "-out-0-econ.tsv", "w+") as fp:
+    padded = [cfg["meta"]["title"]] + [""]*(maxlen-1)
+    fp.write("\t".join(map(str, padded)))
+    fp.write("\n")
     for row in rows:
         padded = row + [""]*(maxlen-len(row))
         fp.write("\t".join(map(str, padded)))
