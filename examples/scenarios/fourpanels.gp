@@ -68,7 +68,7 @@ plot odefile u 1:7 w l lw 1.5 lc rgb color_IU ti "I_U", odefile u 1:8 w l lw 1.5
      odefile u 1:10 w l lw 1.5 lc rgb color_RD ti "R_D"#, odefile u 1:13 w l axis x1y2 lc 0 ti "R"
 
 
-plot ttfile u 1:2 w l lw 1.5 lc rgb color_IU ti "Tests", ttfile u 1:3 w l lw 1.5 lc rgb color_ID ti "Traced"
+plot ttfile u 1:3 w l lw 1.5 lc rgb color_IU ti "Tests", ttfile u 1:4 w l lw 1.5 lc rgb color_ID ti "Traced"
 
 unset log y
 unset yrange
