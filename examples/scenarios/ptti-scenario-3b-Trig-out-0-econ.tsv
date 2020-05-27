@@ -1,15 +1,15 @@
 PTTI Scenario 3b Trig											
 Economic											
-	Total_NHS_Costs	151411794.5442463									
-	Total_Productivity_Loss	451761906.8310269									
+	Total_NHS_Costs	149507979.54874104									
+	Total_Productivity_Loss	462316410.366503									
 Medical											
 	Deaths	18431.80927472241									
 Testing											
 	Laboratories	1	1	1	1	1					
 	Max_Laboratories	1									
 	Testing_Block_Lengths	180	180	180	180	176					
-	Testing_Costs	1888400	1602000	1602000	1602000	1566400					
-	Testing_Total_Costs	8260800									
+	Testing_Costs	1888800	1602000	1602000	1602000	1566400					
+	Testing_Total_Costs	8261200									
 Tracing											
 	Max_Supervisors	621									
 	Max_Tracers	31007									
