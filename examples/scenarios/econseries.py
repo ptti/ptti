@@ -10,7 +10,7 @@ with open(slug + "-out-0-econ.yaml") as fp:
     econ = yaml.safe_load(fp)
 
 cfg = config_load(slug + ".yaml")
-t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%M/%d')
+t0 = datetime.strptime(cfg["meta"]["start"], '%Y/%m/%d')
 
 tracers = np.array(econ["Tracing"]["Tracers"])
 trcosts  = np.array(econ["Tracing"]["Tracing_Costs"])
