@@ -17,11 +17,15 @@ ${SCENARIOS:=-out-0.tsv}: %-out-0.tsv : %.yaml
 run-ode: ${SCENARIOS:=-out-0.tsv}
 	@echo 'Running all ODE models'
 
-${SCENARIOS:=.pdf}: %.pdf : %-out-0.tsv fourpanels.gp get_trigger_times.py
+${SCENARIOS:=.pdf}: %.pdf : %.gp
+	gnuplot $<
+
+${SCENARIOS:=.gp}: %.gp : %-out-0.tsv fourpanels.gp get_trigger_times.py
 	TARG=$@; \
-	SEED=$${TARG%.pdf}; \
+	SEED=$${TARG%.gp}; \
 	${PYTHON} get_trigger_times.py $$SEED; \
-	sed 's/@/'$$SEED'/g' fourpanels.gp | gnuplot
+	${PYTHON} econseries.py $$SEED; \
+	sed 's/@/'$$SEED'/g' fourpanels.gp > $@
 	
 ## specific rule for fitting plot
 fitting-ukbest-out-0.tsv: fitting-ukbest.yaml
