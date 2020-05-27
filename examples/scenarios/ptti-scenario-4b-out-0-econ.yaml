@@ -1,6 +1,6 @@
 Economic:
-  Total_NHS_Costs: 2243379406.435796
-  Total_Productivity_Loss: 6693490169.953242
+  Total_NHS_Costs: 2215171700.639587
+  Total_Productivity_Loss: 6849870034.202996
 Medical:
   Deaths: 273093.26512328733
 Testing:
@@ -18,12 +18,12 @@ Testing:
   - 180
   - 176
   Testing_Costs:
-  - 1888400
-  - 3490400
+  - 1888800
+  - 3490800
   - 1764000
   - 1764000
   - 1724800
-  Testing_Total_Costs: 10631600
+  Testing_Total_Costs: 10632400
 Tracing:
   Max_Supervisors: 78177
   Max_Tracers: 3908826
