@@ -1,0 +1,18 @@
+Economic											
+	Total_NHS_Costs	2243379406.435796									
+	Total_Productivity_Loss	6693490169.953242									
+Medical											
+	Deaths	273093.26512328733									
+Testing											
+	Laboratories	1	2	1	1	1					
+	Max_Laboratories	2									
+	Testing_Block_Lengths	180	180	180	180	176					
+	Testing_Costs	1888400	3490400	1764000	1764000	1724800					
+	Testing_Total_Costs	10631600									
+Tracing											
+	Max_Supervisors	78177									
+	Max_Tracers	3908826									
+	Tracers	0	1282084	3908826	517864	13801	480	19	1	1	1
+	Tracing_Block_Lengths	90	90	90	90	90	90	90	90	90	86
+	Tracing_Costs	53557250.0	105106049402.0	225730235878.0	5290904592.0	1357701003.0	1253757240.0	1250160057.0	1250019603.0	1250019603.0	1194463176.2
+	Tracing_Total_Costs	343736867804.2									
