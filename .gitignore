@@ -140,3 +140,4 @@ cython_debug/
 # Benchmark output files
 benchmarks/*-out-*
 !benchmarks/*-out-abm-*
+/economics/
