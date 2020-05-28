@@ -28,13 +28,26 @@
     theta: 0.02902857142857143
   time: 194
 - parameters:
-    c: 11
     coldflu: 0.01
     duration: 7
     symptomatic: 0.5
     tested: 0.6
     theta: 0.043457142857142854
   time: 222
+- after: 96
+  condition: x[IU] + x[ID] - 20000
+  direction: -1.0
+  parameters:
+    c: 8
+    locked: false
+  time: 248.44124775372708
+- after: 96
+  condition: x[IU] + x[ID] - 20000
+  direction: -1.0
+  parameters:
+    c: 8
+    locked: false
+  time: 248.44128087923335
 - parameters:
     coldflu: 0.02
     duration: 7
@@ -80,20 +93,6 @@
     coldflu: 0.03
     theta: 0.05920000000000001
   time: 653
-- after: 96
-  condition: x[IU] + x[ID] - 20000
-  direction: -1.0
-  parameters:
-    c: 8
-    locked: false
-  time: 707.9952436603111
-- after: 96
-  condition: x[IU] + x[ID] - 20000
-  direction: -1.0
-  parameters:
-    c: 8
-    locked: false
-  time: 707.9962440602144
 - parameters:
     coldflu: 0.04
     theta: 0.0598857142857143
