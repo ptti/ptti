@@ -356,9 +356,12 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
 def _add_condition(m, iv, events):
     g = {col: m.colindex(col) for col in [o["name"] for o in m.observables]}
     cond = iv["condition"]
+    after = iv.get("after")
 
     def e(t, x):
         g.update(m.__dict__)
+        if after is not None and not t >= after:
+            return -1*e.direction*np.inf
         root = eval(cond, g, {"t": t, "x": x})
         if 0 <= root*e.direction < 1:
             log.info("Condition '{}' met at t = {}".format(cond, t))
