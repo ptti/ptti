@@ -58,6 +58,7 @@ def calcArgumentsODE(traj, paramtraj, cfg):
 
     # Now derive the relevant quantities
     args = {'time': days}
+    args['contacts'] = par['c']
     args['tested'] = cpm['IU']*par['theta']
     # traced are: the number of contacts of infectives that have been tested
     args['traced'] = cpm['IU']*par['theta']*par['c']*avg_inftime
@@ -67,7 +68,7 @@ def calcArgumentsODE(traj, paramtraj, cfg):
     return args
 
 
-def calcEconOutputs(time, infected, recovered, tested, traced):
+def calcEconOutputs(time, contacts, infected, recovered, tested, traced):
 
     output = {}
     days = len(time)
@@ -164,9 +165,25 @@ def calcEconOutputs(time, infected, recovered, tested, traced):
     output['Medical'] = {}
     output['Medical']['Deaths'] = deaths
 
+    # Economy Scales with contacts
+    # Economy minimum is: econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'], with econ_inputs['Shutdown']['UK_Shutdown_Contacts']
+    # Full strength is 0 penalty at econ_inputs['Shutdown']['UK_Open_Contacts']
+    Daily_GDP = []
+    Economy_Fraction_Daily = []
+    Daily_GDP_Base = econ_inputs['Shutdown']['UK_GDP_Monthly'] / 30
+    Shutdown_Fraction = (contacts-econ_inputs['Shutdown']['UK_Shutdown_Contacts'])/(
+        econ_inputs['Shutdown']['UK_Open_Contacts'] - econ_inputs['Shutdown']['UK_Shutdown_Contacts'])
+    Economy_Fraction_Daily = 1-Shutdown_Fraction
+    Daily_GDP = (1-Shutdown_Fraction *
+                 econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'])*Daily_GDP_Base
+    No_Pandemic_GDP = days * Daily_GDP_Base
+
+    total_GDP = sum(Daily_GDP)
+    counterfactual_GDP = sum(No_Pandemic_GDP)
+
     output['Economic'] = {}
     output['Economic']['Total_NHS_Costs'] = nhs_costs
-    output['Economic']['Total_Productivity_Loss'] = prod_costs
+    output['Economic']['Total_Productivity_Loss'] = prod_costs + (counterfactual_GDP-total_GDP)
 
     return output
 
