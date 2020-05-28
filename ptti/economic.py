@@ -52,12 +52,14 @@ def calcArgumentsODE(traj, paramtraj, cfg):
     for p in ('theta', 'c', 'eta', 'gamma', 'chi'):
         par[p] = interp1d(time, paramtraj[p], kind='nearest')(days)
 
-    # Some useful compound quantities
+    ## Some useful compound quantities
+    # average infectious time, used to work out how many contacts are traced
     avg_inftime = 1.0/(par['gamma']+par['theta']*(1+par['eta']*par['chi']))
 
     # Now derive the relevant quantities
     args = {'time': days}
     args['tested'] = cpm['IU']*par['theta']
+    # traced are: the number of contacts of infectives that have been tested
     args['traced'] = cpm['IU']*par['theta']*par['c']*avg_inftime
     args['recovered'] = cpm['RU']+cpm['RD']
     args['infected'] = cpm['IU']+cpm['ID']
