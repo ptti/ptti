@@ -83,12 +83,14 @@ interventions:
  
  ## Release lockdown gradually when below 20k cases
   - condition: x[IU] + x[ID] - 20000
+    after: 96
     direction: -1.0
     parameters:
       c: 8
       locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
+    after: 96
     direction: 1.0
     parameters:
       c: 3.9
