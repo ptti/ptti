@@ -1,12 +1,12 @@
-PTTI Scenario 4c											
+PTTI Scenario 4c Trig											
 Economic											
-	Total_NHS_Costs	133446956.72418265									
-	Total_Productivity_Loss	612441223102.3094									
+	Total_NHS_Costs	667811640.4706823									
+	Total_Productivity_Loss	160914492705.54913									
 Medical											
-	Cases	2010843.5108189944									
-	Deaths	16451.756368163577									
-	Hospital	25368.93811590374									
-	ICU	3805.3407173855608									
+	Cases	10081953.066173425									
+	Deaths	82329.89854954374									
+	Hospital	107911.20087449835									
+	ICU	19043.153095499707									
 Testing											
 	Laboratories	1	1	1	1	1					
 	Max_Laboratories	1									
@@ -14,9 +14,9 @@ Testing
 	Testing_Costs	1888800	1602000	1602000	1602000	1566400					
 	Testing_Total_Costs	8261200									
 Tracing											
-	Max_Supervisors	848									
-	Max_Tracers	42399									
-	Tracers	0	42399	20238	2326	19	1	1	1	1	1
+	Max_Supervisors	3771									
+	Max_Tracers	188502									
+	Tracers	0	188502	76328	51	1	1	1	1	1	1
 	Tracing_Block_Lengths	90	90	90	90	90	90	90	90	90	86
-	Tracing_Costs	53557250.0	3494002247.0	189997164.0	50229827.99999999	32228307.0	32087853.0	32087853.0	32087853.0	32087853.0	30661726.2
-	Tracing_Total_Costs	3979027934.2									
+	Tracing_Costs	53557250.0	15469563606.0	673704684.0	78515253.0	78125103.0	78125103.0	78125103.0	78125103.0	78125103.0	74652876.2
+	Tracing_Total_Costs	16740619184.2									

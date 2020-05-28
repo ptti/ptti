@@ -2,9 +2,9 @@ Economic:
   Total_NHS_Costs: 387291150.8182806
   Total_Productivity_Loss: 893316283314.0016
 Medical:
-  Cases: 5835891.027700241
+  Cases: 5846934.927253065
   Deaths: 47746.4590667088
-  Hospital: 73625.99701882621
+  Hospital: 62582.09746600228
   ICU: 11043.89955282393
 Testing:
   Laboratories:

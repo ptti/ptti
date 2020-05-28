@@ -1,15 +1,3 @@
-- condition: x[IU] + x[ID] - 40000
-  direction: 1.0
-  parameters:
-    c: 3.9
-    locked: true
-  time: 77.37904224850101
-- condition: x[IU] + x[ID] - 40000
-  direction: 1.0
-  parameters:
-    c: 3.9
-    locked: true
-  time: 77.37904225254515
 - parameters:
     c: 10
   time: 89
@@ -38,18 +26,6 @@
     tested: 0.6
     theta: 0.043457142857142854
   time: 222
-- condition: x[IU] + x[ID] - 20000
-  direction: -1.0
-  parameters:
-    c: 8
-    locked: false
-  time: 233.62417181404209
-- condition: x[IU] + x[ID] - 20000
-  direction: -1.0
-  parameters:
-    c: 8
-    locked: false
-  time: 233.6241927217147
 - parameters:
     coldflu: 0.02
     tested: 0.8
@@ -65,18 +41,6 @@
     tested: 0.8
     theta: 0.05920000000000001
   time: 313
-- condition: x[IU] + x[ID] - 20000
-  direction: -1.0
-  parameters:
-    c: 8
-    locked: false
-  time: 322.1248925076369
-- condition: x[IU] + x[ID] - 20000
-  direction: -1.0
-  parameters:
-    c: 8
-    locked: false
-  time: 322.1250169393584
 - parameters:
     coldflu: 0.04
     theta: 0.0598857142857143

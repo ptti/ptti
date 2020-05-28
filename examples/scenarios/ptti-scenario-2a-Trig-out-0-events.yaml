@@ -29,14 +29,14 @@
     eta: 0.8
     theta: 0.13257517811732966
   time: 257
-- after: 96
+- after: 257
   condition: x[IU] + x[ID] - 20000
   direction: -1.0
   parameters:
     c: 8
     locked: false
   time: 263.35938029812775
-- after: 96
+- after: 257
   condition: x[IU] + x[ID] - 20000
   direction: -1.0
   parameters:
