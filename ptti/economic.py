@@ -159,11 +159,17 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced):
 
     # Deaths and other outcomes
     deaths = recovered[-1]*econ_inputs['Medical']['IFR']
+    icu = recovered[-1]*econ_inputs['Medical']['ICU_Fraction']
+    hospital = recovered[-1]*econ_inputs['Medical']['Hospitalised_Fraction'
+    cases = recovered[-1] - deaths - hospital - icu
     nhs_costs = recovered[-1]*econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered']
     prod_costs = recovered[-1]*econ_inputs['Medical']['Total_Productivity_Loss_Per_Recovered']
 
     output['Medical'] = {}
     output['Medical']['Deaths'] = deaths
+    output['Medical']['ICU'] = icu
+    output['Medical']['Hospital'] = hospital
+    output['Medical']['Cases'] = cases
 
     # Economy Scales with contacts
     # Economy minimum is: econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'], with econ_inputs['Shutdown']['UK_Shutdown_Contacts']
