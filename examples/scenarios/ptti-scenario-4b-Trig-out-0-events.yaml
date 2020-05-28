@@ -86,21 +86,14 @@
   parameters:
     c: 8
     locked: false
-  time: 679.5689454384882
+  time: 707.9952436603111
 - after: 96
   condition: x[IU] + x[ID] - 20000
   direction: -1.0
   parameters:
     c: 8
     locked: false
-  time: 679.5689468623734
-- after: 96
-  condition: x[IU] + x[ID] - 20000
-  direction: -1.0
-  parameters:
-    c: 8
-    locked: false
-  time: 679.5699407555862
+  time: 707.9962440602144
 - parameters:
     coldflu: 0.04
     theta: 0.0598857142857143
