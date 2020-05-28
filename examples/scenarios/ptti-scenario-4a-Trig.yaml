@@ -4,7 +4,7 @@
 ##  clinically (by bespoke clinical reporting system) as per 'Numbers T & T' sheet of Test calcs sheets:
 ##  https://docs.google.com/spreadsheets/d/136_sukzkrMrjtpRccAmoUoXn8Ue4GGUY3RRj4VWj7LU/edit?usp=sharing
 ##  with 80% of contacts traced per case (all on one day). ]
-##    with lockdown on 23rd March as happened then
+##    with lockdown on 23rd March as happened then after testing scaled up (as per scenario 2a):
 ##    Lockdown released when there are less than 20,000 cases per day
 ##    Lockdown triggered when there are more than 40,000 cases per day
 
@@ -80,22 +80,6 @@ interventions:
   - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
     parameters:
       c: 4
-
-## Release lockdown gradually when below 20k cases
-  - condition: x[IU] + x[ID] - 20000
-    after: 96
-    direction: -1.0
-    parameters:
-      c: 8
-      locked: False
-## Lockdown trigger on 40k cases
-  - condition: x[IU] + x[ID] - 40000
-    after: 96
-    direction: 1.0
-    parameters:
-      c: 3.9
-      locked: True
-
 
   ## On 18th May, start contact tracing
   ##  Targetted Testing - initial proportion of symptomatics tested
@@ -173,6 +157,21 @@ interventions:
                         # it is divided by duration of symptoms so as to only test each sympomatic
                         # person once during their illness
 
+  ## Release lockdown gradually when below 20k cases
+  - condition: x[IU] + x[ID] - 20000
+    after: 257
+    direction: -1.0
+    parameters:
+      c: 8
+      locked: False
+  ## Lockdown trigger on 40k cases
+  - condition: x[IU] + x[ID] - 40000
+    after: 257
+    direction: 1.0
+    parameters:
+      c: 3.9
+      locked: True
+  
   ## On 28th September,
     ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
   - time: 285
