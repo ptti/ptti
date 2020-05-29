@@ -91,6 +91,10 @@ progression, or faster.
 they have recovered from the disease or died would be useful for contact
 tracing.
 
+### Testing applies only to undiagnosed people
+
+When computing costs, in some scenarios we consider the possibility of widespread testing that only identifies infectious people. This testing, for costing purposes, is considered applied only to people who are undiagnosed - identified neither by previous tests nor by contact tracing as potentially infected. The ones who are already diagnosed are considered as not being tested, since it would be redundant to do so.
+
 ### Contact tracing is proportional to having at least one contact
 
 Our [contact tracing approximation] is formulated such that contacts are traced
