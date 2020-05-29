@@ -47,8 +47,6 @@ parameters:
   ## We agree with WHO and think isolation should last for 14 symptom free days
   kappa: 0.0714
 
-  ## theta governs testing, and we start with none
-  theta: 0.0
 
   ## chi is the rate at which contacts are traced.
   ## Tracing is triggered by testing. Starts at none.
@@ -58,12 +56,18 @@ parameters:
   eta:   0.0
 
   ## below parameters are used in calculation of theta below
-    ## default testing rate (proportion of symptomatics)
+
+
+  ## default testing rate (proportion of symptomatics)
+  testedBase: 0    
   tested: 0.8   
     ## 50% of SARS-Cov-2 infected (IU) have symptoms
   symptomatic: 0.5 
     ## average duration of symptomatic illness(coldflu or Covid combined)
   duration: 7
+
+  ## theta governs testing, and we start with none
+  theta: 0.0
 
 ## Exogenous interventions. The time is given in
 ## simulation days.
@@ -86,11 +90,12 @@ interventions:
       ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
       tested: 0.1       # ramp up testing
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
                         # proportion targetted for testing each day - the third term is to 
                         #   correct for double counting of those who have both
                         # it is divided by duration of symptoms so as to only test each sympomatic 
                         # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
               
       ## Tracing
       chi: 0.8  # 80% of the those who test positive per day have contacts traced
@@ -106,11 +111,12 @@ interventions:
       ## Targetted Testing
       coldflu: 0.01     # prevalence of symptomatic cold & flu in June
       tested: 0.2       # ramp up testing more
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
                         # proportion targetted for testing each day - the third term is to 
                         #   correct for double counting of those who have both
                         # it is divided by duration of symptoms so as to only test each sympomatic 
                         # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
                 
   ## On 29th June, scale up testing, and contact tracing further
   ##  Targetted Testing - scale up tested further (proportion of symptomatics tested)
@@ -119,11 +125,12 @@ interventions:
       ## Targetted Testing
       coldflu: 0.01     # prevalence of symptomatic cold & flu in July
       tested: 0.4       # yet more testing
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
                         # proportion targetted for testing each day - the third term is to 
                         #   correct for double counting of those who have both
                         # it is divided by duration of symptoms so as to only test each sympomatic 
                         # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
                 
   ## On 27th July, scale up testing, and contact tracing further still
    ##  Targetted Testing - scale up tested further still (proportion of symptomatics tested)
@@ -132,11 +139,12 @@ interventions:
       ## Targetted Testing
       coldflu: 0.01     # prevalence of symptomatic cold & flu in July
       tested: 0.6       # nearly there...
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
                         # proportion targetted for testing each day - the third term is to 
                         #   correct for double counting of those who have both
                         # it is divided by duration of symptoms so as to only test each sympomatic 
                         # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
                 
   ## On 31st August, scale up testing, and contact tracing to maximum
   ##  start to relax lockdown, phase one
@@ -147,11 +155,12 @@ interventions:
       ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in September
       tested: 0.8       # done! leave this here for clarity, but don't mention it anymore
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
                         # proportion targetted for testing each day - the third term is to 
                         #   correct for double counting of those who have both
                         # it is divided by duration of symptoms so as to only test each sympomatic 
                         # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
 
   ## On 28th September, relax lockdown more, phase two
   ## Contacts per day increse from 7 to 9
@@ -161,11 +170,12 @@ interventions:
       c: 9  
       ## Targetted Testing
       coldflu: 0.03     # prevalence of symptomatic cold & flu in October
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
                         # proportion targetted for testing each day - the third term is to 
                         #   correct for double counting of those who have both
                         # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness            
+                        # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
       
   ## On 26th October, relax lockdown more, phase three
   ## Contacts per day increse from 9 to 11
@@ -175,73 +185,110 @@ interventions:
       c: 11   # assume contacts per day won't go back up to pre-pandemic level of 13
       ## Targetted Testing
       coldflu: 0.03     # prevalence of symptomatic cold & flu in October
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
                         # proportion targetted for testing each day - the third term is to 
                         #   correct for double counting of those who have both
                         # it is divided by duration of symptoms so as to only test each sympomatic 
                         # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
 
   ## 1st December - increase in cold&flu prevalence
   ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
   - time: 349
     parameters:
       coldflu: 0.04     # prevalence of symptomatic cold & flu in December-Feb
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day - the third term is to 
+                        #   correct for double counting of those who have both
+                        # it is divided by duration of symptoms so as to only test each sympomatic 
+                        # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
   
   ## 1st March 2021 - decrease in cold&flu prevalence
   ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
   - time: 439
     parameters:
       coldflu: 0.03     # prevalence of symptomatic cold & flu in March-April
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day - the third term is to 
+                        #   correct for double counting of those who have both
+                        # it is divided by duration of symptoms so as to only test each sympomatic 
+                        # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
                         
   ## 1st May 2021 - decrease in cold&flu prevalence
   - time: 500
     parameters:
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day - the third term is to 
+                        #   correct for double counting of those who have both
+                        # it is divided by duration of symptoms so as to only test each sympomatic 
+                        # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
 
   ## 1st June 2021 - decrease in cold&flu prevalence
   - time: 531
     parameters:
       coldflu: 0.01     # prevalence of symptomatic cold & flu in June-August
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day - the third term is to 
+                        #   correct for double counting of those who have both
+                        # it is divided by duration of symptoms so as to only test each sympomatic 
+                        # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
   
   ## 1st Sep 2021 - increase in cold&flu prevalence
   - time: 623
     parameters:
       coldflu: 0.02     # prevalence of symptomatic cold & flu in Sep
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
-  
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day - the third term is to 
+                        #   correct for double counting of those who have both
+                        # it is divided by duration of symptoms so as to only test each sympomatic 
+                        # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
+
   ## 1st Oct 2021 - increase in cold&flu prevalence
   - time: 653
     parameters:
       coldflu: 0.03     # prevalence of symptomatic cold & flu in Oct & Nov
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day - the third term is to 
+                        #   correct for double counting of those who have both
+                        # it is divided by duration of symptoms so as to only test each sympomatic 
+                        # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
   
   ## 1st Dec 2021 - increase in cold&flu prevalence
   - time: 714
     parameters:
       coldflu: 0.04     # prevalence of symptomatic cold & flu in Dec-Feb
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day - the third term is to 
+                        #   correct for double counting of those who have both
+                        # it is divided by duration of symptoms so as to only test each sympomatic 
+                        # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
                                            
   ## 1st Mar 2022 - decrease in cold&flu prevalence
   - time: 804
     parameters:
       coldflu: 0.03     # prevalence of symptomatic cold & flu in Mar-Apr
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day - the third term is to 
+                        #   correct for double counting of those who have both
+                        # it is divided by duration of symptoms so as to only test each sympomatic 
+                        # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
 
 ## 1st May 2022 - decrease in cold&flu prevalence
   - time: 865
     parameters:
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
-      theta: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
+                        # proportion targetted for testing each day - the third term is to 
+                        #   correct for double counting of those who have both
+                        # it is divided by duration of symptoms so as to only test each sympomatic 
+                        # person once during their illness
+      theta: testedBase + (1-testedBase)*thetaI
