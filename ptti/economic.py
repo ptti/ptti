@@ -44,13 +44,19 @@ def calcArgumentsODE(traj, paramtraj, cfg):
     # Now get the relevant bits of trajectory
     model = cfg['meta']['model']
 
+    N = np.sum(traj[0,:8])
+
     cpm = {}
     par = {}
     for c in ('IU', 'ID', 'RU', 'RD'):
         i = model.colindex(c)
         cpm[c] = interp1d(time, traj[:, i], kind='nearest')(days)
-    for p in ('theta', 'c', 'eta', 'gamma', 'chi'):
-        par[p] = interp1d(time, paramtraj[p], kind='nearest')(days)
+    for p in ('theta', 'c', 'eta', 'gamma', 'chi', 'testedBase'):
+        traj = paramtraj.get(p)
+        if traj is not None:
+            par[p] = interp1d(time, traj, kind='nearest')(days)
+        else:
+            par[p] = np.zeros(len(days))
 
     ## Some useful compound quantities
     # average infectious time, used to work out how many contacts are traced
@@ -59,7 +65,7 @@ def calcArgumentsODE(traj, paramtraj, cfg):
     # Now derive the relevant quantities
     args = {'time': days}
     args['contacts'] = par['c']
-    args['tested'] = cpm['IU']*par['theta']
+    args['tested'] = cpm['IU']*par['theta'] + (N-cpm['IU'])*par['testedBase']
     # traced are: the number of contacts of infectives that have been tested
     args['traced'] = cpm['IU']*par['theta']*par['c']*avg_inftime
     args['recovered'] = cpm['RU']+cpm['RD']
