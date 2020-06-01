@@ -10,18 +10,21 @@
 - parameters:
     chi: 0.8
     eta: 0.8
+    testedBase: 0.0014730575346369962
     theta: 0.0014730575346369962
   time: 152
 - parameters:
     c: 8
     chi: 0.8
     eta: 0.8
+    testedBase: 0.004419172603910989
     theta: 0.004419172603910989
   time: 166
 - parameters:
     c: 9
     chi: 0.8
     eta: 0.8
+    testedBase: 0.013257517811732965
     theta: 0.013257517811732965
   time: 194
 - parameters:
@@ -30,10 +33,12 @@
 - parameters:
     chi: 0.8
     eta: 0.8
+    testedBase: 0.04419172603910988
     theta: 0.04419172603910988
   time: 222
 - parameters:
     chi: 0.8
     eta: 0.8
+    testedBase: 0.13257517811732966
     theta: 0.13257517811732966
   time: 257

@@ -8,12 +8,12 @@ Medical:
   ICU: 14708.994924770383
 Testing:
   Laboratories:
-  - 1
-  - 1
-  - 1
-  - 1
-  - 1
-  Max_Laboratories: 1
+  - 9
+  - 261
+  - 261
+  - 261
+  - 261
+  Max_Laboratories: 261
   Testing_Block_Lengths:
   - 180
   - 180
@@ -21,12 +21,12 @@ Testing:
   - 180
   - 176
   Testing_Costs:
-  - 1888800
-  - 1602000
-  - 1602000
-  - 1602000
-  - 1566400
-  Testing_Total_Costs: 8261200
+  - 16999200
+  - 490395600
+  - 418122000
+  - 418122000
+  - 408830400
+  Testing_Total_Costs: 1752469200
 Tracing:
   Max_Supervisors: 2699
   Max_Tracers: 134947

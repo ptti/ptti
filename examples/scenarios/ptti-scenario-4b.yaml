@@ -185,7 +185,7 @@ interventions:
                         #    symptomatic Covid and coldflu because they are indistinguishable)
       thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
                         # proportion targetted for testing each day
-      theta: testedBase + (1-testedBase)*ThetaI
+      theta: testedBase + (1-testedBase)*thetaI
             ## Tracing - as above           
             
   ## 1st November - increase in cold&flu prevalence
