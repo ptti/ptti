@@ -48,6 +48,9 @@ parameters:
   ## We agree with WHO and think isolation should last for 14 symptom free days
   kappa: 0.0714
 
+  ## testedBase is the rate of testing at random in the population
+  testedBase: 0.0
+
   ## theta governs testing, and we start with none
   theta: 0.0
 
