@@ -44,8 +44,10 @@ parameters:
   ## We agree with WHO and think isolation should last for 14 symptom free days
   kappa: 0.0714
 
-  ## theta governs testing, and we start with none
-  theta: 0.0
+  ## testedBase is background testing in the population
+  testedBase: 0.0
+  ## theta governs testing of infectious individuals
+  theta: testedBase
 
   ## chi is the rate at which contacts are traced.
   ## Tracing is triggered by testing. Starts at none.
@@ -72,7 +74,8 @@ interventions:
   ##  start cloth face covering (mask) wearing in public
   - time: 152
     parameters:
-      theta: 100000/N   # 100,000 people tested per day in the UK
+      testedBase: 100000/N   # 100,000 people tested per day in the UK
+      theta: testedBase
       chi: 0.8  # 80% of the ~3000 cases per day (1% of tested) have contacts traced
                 # 18,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
@@ -84,7 +87,8 @@ interventions:
   ## On 1st June, scale up testing, and contact tracing
   - time: 166
     parameters:
-      theta: 300000/N   # 300,000 people tested per day in the UK
+      testedBase: 300000/N   # 300,000 people tested per day in the UK
+      theta: testedBase
       chi: 0.8  # 80% of the ~6000 cases per day (2% of tested) have contacts traced
                 # 36,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
@@ -94,7 +98,8 @@ interventions:
   ## On 29th June, scale up testing, and contact tracing further
   - time: 194
     parameters:
-      theta: 900000/N   # 900,000 people tested per day in the UK
+      testedBase: 900000/N   # 900,000 people tested per day in the UK
+      theta: testedBase
       chi: 0.8  # 80% of the ~9000 cases per day (1% of tested) have contacts traced
                 # 54,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
@@ -104,7 +109,8 @@ interventions:
   ## On 27th July, scale up testing, and contact tracing further still
   - time: 222
     parameters:
-      theta: 3000000/N   # 3,000,000 people tested per day in the UK
+      testedBase: 3000000/N   # 3,000,000 people tested per day in the UK
+      theta: testedBase
       chi: 0.8  # 80% of the ~11667 cases per day (0.39% of tested) have contacts traced
                 # 70,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
@@ -114,7 +120,8 @@ interventions:
   ## On 31st August, scale up testing, and contact tracing to maximum
   - time: 257
     parameters:
-      theta: 9000000/N   # 9,000,000 people tested per day in the UK (
+      testedBase: 9000000/N   # 9,000,000 people tested per day in the UK (
+      theta: testedBase
       chi: 0.8  # 80% of the ~11667 cases per day (0.13% of tested) have contacts traced
                 # 70,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case

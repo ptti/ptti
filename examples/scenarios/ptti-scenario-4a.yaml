@@ -57,9 +57,9 @@ parameters:
 
   ## below parameters are used in calculation of theta below
 
-
+  ## rate of testing at random in the general population
+  testedBase: 0
   ## default testing rate (proportion of symptomatics)
-  testedBase: 0    
   tested: 0.8   
     ## 50% of SARS-Cov-2 infected (IU) have symptoms
   symptomatic: 0.5 
