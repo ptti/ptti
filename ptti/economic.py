@@ -183,10 +183,9 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced):
     Daily_GDP = []
     Economy_Fraction_Daily = []
     Daily_GDP_Base = econ_inputs['Shutdown']['UK_GDP_Monthly'] / 30
-    Shutdown_Fraction = (contacts-econ_inputs['Shutdown']['UK_Shutdown_Contacts'])/(
+    Shutdown_Fraction = 1 - (contacts-econ_inputs['Shutdown']['UK_Shutdown_Contacts'])/(
         econ_inputs['Shutdown']['UK_Open_Contacts'] - econ_inputs['Shutdown']['UK_Shutdown_Contacts'])
-    Economy_Fraction_Daily = 1-Shutdown_Fraction
-    Daily_GDP = (1-Shutdown_Fraction *
+    Daily_GDP = (1 - Shutdown_Fraction *
                  econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'])*Daily_GDP_Base
     No_Pandemic_GDP = days * Daily_GDP_Base
 
