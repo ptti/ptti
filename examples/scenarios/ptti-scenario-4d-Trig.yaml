@@ -11,7 +11,7 @@
 
 meta:
   title: PTTI Scenario 4d Trig
-  output: ptti-scenario-4d Trig
+  output: ptti-scenario-4d-Trig-out
   start: 2019/12/18
   tmax: 895
   steps: 895

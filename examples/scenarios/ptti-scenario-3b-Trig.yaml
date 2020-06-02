@@ -5,7 +5,7 @@
 
 meta:
   title: PTTI Scenario 3b Trig
-  output: ptti-scenario-3b Trig
+  output: ptti-scenario-3b-Trig-out
   start: 2019/12/18
   tmax: 895
   steps: 895
