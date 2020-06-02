@@ -95,15 +95,10 @@ interventions:
                   # conservative assumption based on DELVE 4th May review
        ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
-      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
-      tested: 0.1       # proportion of symptomatic who are tested (this is the same for 
+      tested: 0.1       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
-      duration: 7       # average duration of symptomatic illness (coldflu or Covid combined)
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day - the third term is to 
-                        #   correct for double counting of those who have both
-                        # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
        ## Tracing
       chi: 0.8  # 80% of the those who test positive per day have contacts traced
@@ -119,16 +114,12 @@ interventions:
     parameters:
       ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in June
-      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
-      tested: 0.2       # proportion of symptomatic who are tested (this is the same for 
+      tested: 0.2       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
-      duration: 7       # average duration of symptomatic illness (coldflu or Covid combined)
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day - the third term is to 
-                        #   correct for double counting of those who have both
-                        # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
                 
   ## On 29th June, scale up testing, and contact tracing further
   ##  Targetted Testing - scale up tested further (proportion of symptomatics tested)
@@ -136,16 +127,12 @@ interventions:
     parameters:
       ## Targetted Testing
       coldflu: 0.01     # prevalence of symptomatic cold & flu in July
-      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
-      tested: 0.4       # proportion of symptomatic who are tested (this is the same for 
+      tested: 0.4       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
-      duration: 7       # average duration of symptomatic illness (coldflu or Covid combined)
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day - the third term is to 
-                        #   correct for double counting of those who have both
-                        # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
                 
   ## On 27th July, scale up testing, and contact tracing further still
   ##  Targetted Testing - scale up tested further still (proportion of symptomatics tested)
@@ -153,16 +140,12 @@ interventions:
     parameters:
       ## Targetted Testing
       coldflu: 0.01     # prevalence of symptomatic cold & flu in July
-      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
-      tested: 0.6       # proportion of symptomatic who are tested (this is the same for 
+      tested: 0.6       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
-      duration: 7       # average duration of symptomatic illness (coldflu or Covid combined)
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day - the third term is to 
-                        #   correct for double counting of those who have both
-                        # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
                 
   ## On 31st August, scale up testing, and contact tracing to maximum
   ##  Lockdown released as per less than 20,000 cases trigger (and reinstated with more than
@@ -172,16 +155,12 @@ interventions:
     parameters:
       ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in September
-      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
-      tested: 0.8       # proportion of symptomatic who are tested (this is the same for 
+      tested: 0.8       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
-      duration: 7       # average duration of symptomatic illness (coldflu or Covid combined)
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day - the third term is to 
-                        #   correct for double counting of those who have both
-                        # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
 ## Release lockdown gradually when below 20k cases
   - condition: x[IU] + x[ID] - 20000
     after: 257
@@ -202,103 +181,104 @@ interventions:
     parameters:
       ## Targetted Testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in September
-      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
-      tested: 0.8       # proportion of symptomatic who are tested (this is the same for 
+      tested: 0.8       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
-      duration: 7       # average duration of symptomatic illness (coldflu or Covid combined)
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day - the third term is to 
-                        #   correct for double counting of those who have both
-                        # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
       
   ## On 26th October
   - time: 313
     parameters:
       ## Targetted Testing
       coldflu: 0.03     # prevalence of symptomatic cold & flu in October
-      symptomatic: 0.5  # 50% of SARS-Cov-2 infected (IU) have symptoms
-      tested: 0.8       # proportion of symptomatic who are tested (this is the same for 
+      tested: 0.8       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
-      duration: 7       # average duration of symptomatic illness (coldflu or Covid combined)
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day - the third term is to 
-                        #   correct for double counting of those who have both
-                        # it is divided by duration of symptoms so as to only test each sympomatic 
-                        # person once during their illness
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
             
   ## 1st December - increase in cold&flu prevalence
   ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
   - time: 349
     parameters:
       coldflu: 0.04     # prevalence of symptomatic cold & flu in December-Feb
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
   
   ## 1st March 2021 - decrease in cold&flu prevalence
   ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
   - time: 439
     parameters:
       coldflu: 0.03     # prevalence of symptomatic cold & flu in March-April
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
                         
   ## 1st May 2021 - decrease in cold&flu prevalence
   - time: 500
     parameters:
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
 
   ## 1st June 2021 - decrease in cold&flu prevalence
   - time: 531
     parameters:
       coldflu: 0.01     # prevalence of symptomatic cold & flu in June-August
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
   
   ## 1st Sep 2021 - increase in cold&flu prevalence
   - time: 623
     parameters:
       coldflu: 0.02     # prevalence of symptomatic cold & flu in Sep
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
   
   ## 1st Oct 2021 - increase in cold&flu prevalence
   - time: 653
     parameters:
       coldflu: 0.03     # prevalence of symptomatic cold & flu in Oct & Nov
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
   
   ## 1st Dec 2021 - increase in cold&flu prevalence
   - time: 714
     parameters:
       coldflu: 0.04     # prevalence of symptomatic cold & flu in Dec-Feb
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
                                            
   ## 1st Mar 2022 - decrease in cold&flu prevalence
   - time: 804
     parameters:
       coldflu: 0.03     # prevalence of symptomatic cold & flu in Mar-Apr
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
 
 ## 1st May 2022 - decrease in cold&flu prevalence
   - time: 865
     parameters:
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
-      thetaI: (symptomatic*tested + coldflu*tested - symptomatic*tested*coldflu*tested)/duration
-                        # proportion targetted for testing each day
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
