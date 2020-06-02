@@ -146,10 +146,10 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced):
         # Startup costs
         costs = new_labs*econ_inputs['Test']['Lab_Startup_Cost']
         # Daily costs
-        costs += (max_labs*econ_inputs['Test']['Lab_NonTechs_Daily_Cost'] + 
+        costs += (max_labs*econ_inputs['Test']['Lab_NonTechs_Daily_Cost'] +
                   labs*econ_inputs['Test']['Lab_Techs_Daily_Cost'])*n
-        costs += (tested * econ_inputs['Test']['Cost_Per_PCR_Test'])*n
-
+        # Sum up the tests in this block
+        costs += sum(tested[i0:i0+n] * econ_inputs['Test']['Cost_Per_PCR_Test'])
         testing_costs.append(costs)
 
     if max(tested) == 0:
