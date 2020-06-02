@@ -88,7 +88,7 @@ econ_inputs['Test']['Lab_Tech_Salary'] = 200  # Per Shift
 econ_inputs['Test']['Lab_Supervisor_Salary'] = 300  # Per Day
 econ_inputs['Test']['Staff_Training_Cost'] = 200  # Trainings / retrainings every Period, per person.
 
-econ_inputs['Test']['Cost_Per_PCR_Test'] = 4  # 3.50 for testing supplies, 0.50 for swab.
+econ_inputs['Test']['Cost_Per_PCR_Test'] = 4.5  # 3.50 for testing supplies, 0.50 for mail out, 0.50 for courier to lab.
 
 
 # Setup / Fixed Costs
