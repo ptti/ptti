@@ -6,7 +6,7 @@
 
 meta:
   title: PTTI Scenario 2a
-  output: ptti-scenario-2a
+  output: ptti-scenario-2a-out
   start: 2019/12/18
   tmax: 895
   steps: 895

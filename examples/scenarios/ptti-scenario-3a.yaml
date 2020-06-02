@@ -5,7 +5,7 @@
 
 meta:
   title: PTTI Scenario 3a
-  output: ptti-scenario-3a
+  output: ptti-scenario-3a-out
   start: 2019/12/18
   tmax: 895
   steps: 895

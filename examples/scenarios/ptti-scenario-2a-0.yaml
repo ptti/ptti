@@ -62,14 +62,16 @@
                 - -1
                 title: Reproduction Number
               title: Reproduction Number
+        - - date
+          - false
         - - platform
-          - linux-x86_64
+          - macosx-10.9-x86_64
         - - software
           - ptti 0.1
         - - revision
-          - 52af091e54e9bfc2de6194ffe0cbf7a3873dba0f
+          - 9a1ceee633c2d0fd43118492775e715cc46341af
         - - python
-          - "3.6.10 |Anaconda, Inc.| (default, Mar 23 2020, 23:13:11) \n[GCC 7.3.0]"
+          - "3.8.2 (default, Mar 26 2020, 10:43:30) \n[Clang 4.0.1 (tags/RELEASE_401/final)]"
   - - initial
     - !!python/object/apply:collections.OrderedDict
       - - - N
@@ -88,6 +90,8 @@
           - 0.1429
         - - kappa
           - 0.0714
+        - - testedBase
+          - 0.0
         - - theta
           - 0.0
         - - chi
@@ -114,7 +118,9 @@
             - 152
           - - parameters
             - !!python/object/apply:collections.OrderedDict
-              - - - theta
+              - - - testedBase
+                  - 0.0014730575346369962
+                - - theta
                   - 0.0014730575346369962
                 - - chi
                   - 0.8
@@ -125,7 +131,9 @@
             - 166
           - - parameters
             - !!python/object/apply:collections.OrderedDict
-              - - - theta
+              - - - testedBase
+                  - 0.004419172603910989
+                - - theta
                   - 0.004419172603910989
                 - - chi
                   - 0.8
@@ -136,7 +144,9 @@
             - 194
           - - parameters
             - !!python/object/apply:collections.OrderedDict
-              - - - theta
+              - - - testedBase
+                  - 0.013257517811732965
+                - - theta
                   - 0.013257517811732965
                 - - chi
                   - 0.8
@@ -147,7 +157,9 @@
             - 222
           - - parameters
             - !!python/object/apply:collections.OrderedDict
-              - - - theta
+              - - - testedBase
+                  - 0.04419172603910988
+                - - theta
                   - 0.04419172603910988
                 - - chi
                   - 0.8
@@ -158,7 +170,9 @@
             - 257
           - - parameters
             - !!python/object/apply:collections.OrderedDict
-              - - - theta
+              - - - testedBase
+                  - 0.13257517811732966
+                - - theta
                   - 0.13257517811732966
                 - - chi
                   - 0.8

@@ -8,7 +8,7 @@
 
 meta:
   title: PTTI Scenario 1
-  output: ptti-scenario-1
+  output: ptti-scenario-1-out
   start: 2019/12/18
   envelope: false
   tmax: 895

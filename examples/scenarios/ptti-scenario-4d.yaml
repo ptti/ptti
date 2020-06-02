@@ -9,7 +9,7 @@
 
 meta:
   title: PTTI Scenario 4d
-  output: ptti-scenario-4d
+  output: ptti-scenario-4d-out
   start: 2019/12/18
   tmax: 895
   steps: 895
