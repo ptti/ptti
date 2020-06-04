@@ -1,8 +1,8 @@
 - parameters:
-    c: 10
+    c: 7.699999999999999
   time: 89
 - parameters:
-    c: 4
+    c: 3.3
   time: 96
 - parameters:
     chi: 0.8
@@ -35,19 +35,19 @@
     thetaI: 0.04285714285714286
   time: 222
 - after: 96
-  condition: x[IU] + x[ID] - 20000
+  condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
-    c: 8
+    c: 8.8
     locked: false
-  time: 248.3055793479163
+  time: 255.8315867729541
 - after: 96
-  condition: x[IU] + x[ID] - 20000
+  condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
-    c: 8
+    c: 8.8
     locked: false
-  time: 248.3055875219727
+  time: 255.8315867732817
 - parameters:
     coldflu: 0.02
     tested: 0.8
@@ -69,36 +69,120 @@
     theta: 0.060375510204081634
     thetaI: 0.05714285714285715
   time: 319
+- after: 96
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 342.7459823550315
+- after: 96
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 342.74598235503277
 - parameters:
     coldflu: 0.04
     testedBase: 0.004571428571428572
     theta: 0.061453061224489805
     thetaI: 0.05714285714285715
   time: 349
+- after: 96
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 369.7136549280323
+- after: 96
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 369.7136549289691
 - parameters:
     coldflu: 0.03
     testedBase: 0.003428571428571429
     theta: 0.060375510204081634
     thetaI: 0.05714285714285715
   time: 439
+- after: 96
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 484.24902251658995
+- after: 96
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 484.2490225169554
 - parameters:
     coldflu: 0.02
     testedBase: 0.002285714285714286
     theta: 0.05929795918367347
     thetaI: 0.05714285714285715
   time: 500
+- after: 96
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 511.8097402932906
+- after: 96
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 511.8097402940444
 - parameters:
     coldflu: 0.01
     testedBase: 0.001142857142857143
     theta: 0.05822040816326531
     thetaI: 0.05714285714285715
   time: 531
+- after: 96
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 613.664080564317
+- after: 96
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 613.6640806408916
 - parameters:
     coldflu: 0.02
     testedBase: 0.002285714285714286
     theta: 0.05929795918367347
     thetaI: 0.05714285714285715
   time: 623
+- after: 96
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 641.076389744518
+- after: 96
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 641.0763897445609
 - parameters:
     coldflu: 0.03
     testedBase: 0.003428571428571429
@@ -111,6 +195,27 @@
     theta: 0.061453061224489805
     thetaI: 0.05714285714285715
   time: 714
+- after: 96
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 758.096598780275
+- after: 96
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 783.9702850037346
+- after: 96
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 783.9702850041747
 - parameters:
     coldflu: 0.03
     testedBase: 0.003428571428571429

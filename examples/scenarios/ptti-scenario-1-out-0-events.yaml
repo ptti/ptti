@@ -1,15 +1,15 @@
 - parameters:
-    c: 10
+    c: 7.699999999999999
   time: 89
 - parameters:
-    c: 4
+    c: 3.3
   time: 96
 - parameters:
-    c: 6
+    c: 4.4
   time: 147
 - parameters:
-    c: 8
+    c: 6.6
   time: 166
 - parameters:
-    c: 11
+    c: 8.8
   time: 199

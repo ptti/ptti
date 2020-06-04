@@ -1,8 +1,8 @@
 - parameters:
-    c: 10
+    c: 7.699999999999999
   time: 89
 - parameters:
-    c: 4
+    c: 3.3
   time: 96
 - parameters:
     chi: 0.8
@@ -29,15 +29,15 @@
     theta: 0.04419172603910988
   time: 222
 - parameters:
-    c: 7
+    c: 4.4
     chi: 0.8
     eta: 0.8
     testedBase: 0.13257517811732966
     theta: 0.13257517811732966
   time: 257
 - parameters:
-    c: 9
+    c: 6.6
   time: 285
 - parameters:
-    c: 11
+    c: 8.8
   time: 313

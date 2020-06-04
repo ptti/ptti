@@ -28,6 +28,7 @@ parameters:
 
   ## c0 is contacts per day at baseline, pre-pandemic
   c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
+  c: c0
 
   ## alpha is the rate at which exposed individuals
   ## (infected but not infectious) become infectious. 

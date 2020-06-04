@@ -1,8 +1,8 @@
 - parameters:
-    c: 10
+    c: 7.699999999999999
   time: 89
 - parameters:
-    c: 4
+    c: 3.3
   time: 96
 - parameters:
     chi: 0.8
@@ -35,7 +35,7 @@
     thetaI: 0.04285714285714286
   time: 222
 - parameters:
-    c: 7
+    c: 4.4
     coldflu: 0.02
     tested: 0.8
     testedBase: 0.002285714285714286
@@ -43,14 +43,14 @@
     thetaI: 0.05714285714285715
   time: 257
 - parameters:
-    c: 9
+    c: 6.6
     coldflu: 0.03
     testedBase: 0.003428571428571429
     theta: 0.060375510204081634
     thetaI: 0.05714285714285715
   time: 285
 - parameters:
-    c: 11
+    c: 8.8
     coldflu: 0.03
     testedBase: 0.003428571428571429
     theta: 0.060375510204081634
