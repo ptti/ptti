@@ -1,8 +1,8 @@
 - parameters:
-    c: 10
+    c: 7.699999999999999
   time: 89
 - parameters:
-    c: 4
+    c: 3.3
   time: 96
 - parameters:
     beta: 0.0252
@@ -32,16 +32,30 @@
   condition: x[IU] + x[ID] - 20000
   direction: -1.0
   parameters:
-    c: 8
+    c: 6.6
     locked: false
-  time: 218.35921542125817
+  time: 204.5269115519415
 - after: 96
   condition: x[IU] + x[ID] - 20000
   direction: -1.0
   parameters:
-    c: 8
+    c: 6.6
     locked: false
-  time: 218.35923861321015
+  time: 204.52704313446594
+- after: 96
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 213.5863180582636
+- after: 96
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 213.58648694764247
 - parameters:
     coldflu: 0.01
     tested: 0.6
