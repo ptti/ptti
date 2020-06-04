@@ -79,13 +79,7 @@ interventions:
     after: 96
     direction: -1.0
     parameters:
-      c: c0 * 0.6 # Lockdown initial release
-      locked: False
-  - condition: x[IU] + x[ID] - 10000
-    after: 96
-    direction: -1.0
-    parameters:
-      c: c0 * 0.8 # Lockdown further release
+      c: c0 * 0.8 # Lockdown initial release
       locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000

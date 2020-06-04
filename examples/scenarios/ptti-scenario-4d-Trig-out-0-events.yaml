@@ -32,30 +32,16 @@
   condition: x[IU] + x[ID] - 20000
   direction: -1.0
   parameters:
-    c: 6.6
+    c: 8.8
     locked: false
   time: 204.5269115519415
 - after: 96
   condition: x[IU] + x[ID] - 20000
   direction: -1.0
   parameters:
-    c: 6.6
+    c: 8.8
     locked: false
   time: 204.52704313446594
-- after: 96
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 213.5863180582636
-- after: 96
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 213.58648694764247
 - parameters:
     coldflu: 0.01
     tested: 0.6

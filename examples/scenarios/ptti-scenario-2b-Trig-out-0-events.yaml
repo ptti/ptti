@@ -32,30 +32,16 @@
   condition: x[IU] + x[ID] - 20000
   direction: -1.0
   parameters:
-    c: 6.6
+    c: 8.8
     locked: false
   time: 234.72939326456785
 - after: 96
   condition: x[IU] + x[ID] - 20000
   direction: -1.0
   parameters:
-    c: 6.6
+    c: 8.8
     locked: false
   time: 234.72939326492207
-- after: 96
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 248.04096860088868
-- after: 96
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 248.04096860090223
 - parameters:
     chi: 0.8
     eta: 0.8
