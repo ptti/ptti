@@ -64,22 +64,22 @@ parameters:
 ## simulation days.
 interventions:
   ## After three months, start of restrictions on 16th March. 
-  ## Reduce contacts from 10 to 13 per day (by ~25%).
+  ## Reduce contacts by 30%.
   - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
     parameters:
       c: c0 * 0.7
-  ## After one more week, Lockdown, on 23rd March. 
-  ## Reduce contacts to 4 per day (~70% reduction).
+  ## After one more week, Lockdown, on 23rd March.
+  ## Reduce contacts to ~3 per day (~70% reduction).
   - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
   
-## Release lockdown gradually when below 20k cases, and further release when below 10k cases
+## Release lockdown when below 20k cases
   - condition: x[IU] + x[ID] - 20000
     after: 96
     direction: -1.0
     parameters:
-      c: c0 * 0.8 # Lockdown initial release
+      c: c0 * 0.8 # Lockdown release
       locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000

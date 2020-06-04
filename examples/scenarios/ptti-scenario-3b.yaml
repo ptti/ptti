@@ -22,11 +22,11 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta:  0.036   # this based on ptti-fit fitting
+  beta: 0.0425   # was 0.036 based on ptti fitting but scaled by 13/11 given change in
+                 # baseline c from 13 to 11 (beta has to increase to compensate and get the same fit)
 
-  ## c is the contact rate per day. 13 is an accepted
-  ## value on average under normal circumstances.
-  c:     13.0
+  ## c0 is contacts per day at baseline, pre-pandemic
+  c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
 
   ## alpha is the rate at which exposed individuals
   ## (infected but not infectious) become infectious. 
@@ -60,22 +60,22 @@ parameters:
 ## simulation days.
 interventions:
   ## After three months, start of restrictions on 16th March. 
-  ## Reduce contacts from 10 to 13 per day (by ~25%).
+  ## Reduce contacts by 30%.
   - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
     parameters:
-      c: 10
-  ## After one more week, Lockdown, on 23rd March. 
-  ## Reduce contacts to 4 per day (~70% reduction).
+      c: c0 * 0.7
+  ## After one more week, Lockdown, on 23rd March.
+  ## Reduce contacts to ~3 per day (~70% reduction).
   - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
     parameters:
-      c: 4
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
   
   ## On 13th May, start relax lockdown, phase one: 
   ##    those who can’t work from home encouraged back to work 
-  ## Contacts per day increse from 4 to 6
   - time: 147
     parameters:
-      c: 6
+      c: c0 * 0.4 # CoMix Weekly report 9 (LSHTM) shows contacts only increased from
+                  # 2.6 under lockdown to 3.5 week of 21-28th May
       
   ## On 18th May, start contact tracing, 
   ##  start cloth face covering (mask) wearing in public
@@ -88,8 +88,8 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
-      beta: 0.0252  # 30% reduction in Beta due to pulic wearing of home-made cloth face coverings
-                    # conservative assumption based on DELVE 4th May review
+      beta: 0.02975  # 30% reduction in Beta due to public wearing of home-made cloth face coverings
+                    # conservative assumption based on Greenhalgh & DELVE reviews
 
   ## On 1st June, scale up testing, and contact tracing 
   ##  start relax lockdown, relax lockdown more, phase two
@@ -103,7 +103,7 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
-      c: 8      # Contacts per day increse from 6 to 8    
+      c: c0 * 0.6    # Contacts per day increase from 4.4 to 6.6
                 
   ## On 29th June, scale up testing, and contact tracing further
   ##  relax lockdown more, phase two
@@ -116,15 +116,14 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
-      c: 9      # Contacts per day increse from 7 to 9
-  
+
   ## On 4th July, relax lockdown more, phase three
   ##  some entertainment venues may open
   ## Contacts per day increse from 8 to 11
   - time: 199
     parameters:
-      c: 11   # assume contacts per day won't go back up to pre-pandemic level of 13    
-                
+      c: c0 * 0.8    # Contacts per day increse from 6.6 to 8.8
+                  # assume contacts per day won't go back up to pre-pandemic level of 11
   ## On 27th July, scale up testing, and contact tracing further still
   - time: 222
     parameters:
