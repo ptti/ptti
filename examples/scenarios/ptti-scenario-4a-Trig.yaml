@@ -148,8 +148,8 @@ interventions:
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
 
-  ## Release lockdown when below 20k cases
-  - condition: x[IU] + x[ID] - 20000
+  ## Release lockdown when below 10k cases
+  - condition: x[IU] + x[ID] - 10000
     after: 257
     direction: -1.0
     parameters:

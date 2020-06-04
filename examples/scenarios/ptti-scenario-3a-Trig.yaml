@@ -128,8 +128,8 @@ interventions:
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
-## Release lockdown when below 20k cases
-  - condition: x[IU] + x[ID] - 20000
+## Release lockdown when below 10k cases
+  - condition: x[IU] + x[ID] - 10000
     after: 257
     direction: -1.0
     parameters:
