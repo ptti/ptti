@@ -1,5 +1,5 @@
 ###
-##  This is Scenario 4d Trig: Clinical case identification: As scenarios 3b with face coverings (reduce Beta 
+##  This is Scenario 4d Trig (60% traced): Clinical case identification: As scenarios 3b with face coverings (reduce Beta
 ##    -transmission per contact- by 30%) otherwise as as scenarios 2b but with targetted testing 
 ##    from pool of those identified clinically (by NHS 111) as per 'Numbers T & T' sheet of Test calcs sheets: 
 ##    https://docs.google.com/spreadsheets/d/136_sukzkrMrjtpRccAmoUoXn8Ue4GGUY3RRj4VWj7LU/edit?usp=sharing 
@@ -10,8 +10,8 @@
 ##
 
 meta:
-  title: PTTI Scenario 4d Trig
-  output: ptti-scenario-4d-Trig-out
+  title: PTTI Scenario 4d Trig60
+  output: ptti-scenario-4d-Trig60-out
   start: 2019/12/18
   tmax: 895
   steps: 895
