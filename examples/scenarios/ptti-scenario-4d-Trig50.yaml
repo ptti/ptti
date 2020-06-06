@@ -119,7 +119,7 @@ interventions:
             ## Tracing
       chi: 0.8  #  trace 80% of the eta contacts who will be traced in one day with teams of tracers
                 #
-      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers,
+      eta: 0.5  # 50% of contacts for each case successfully traced by contact tracers,
                 #   with support from mobile phone apps
                 # These tracing rates continue throughout the rest of the simulation
 
