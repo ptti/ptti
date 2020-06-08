@@ -7,8 +7,8 @@
 ##
 
 meta:
-  title: PTTI Scenario 3b Trig
-  output: ptti-scenario-3b-Trig-out
+  title: PTTI Scenario 3b Trig30-3mo
+  output: ptti-scenario-3b-Trig30-3mo-out
   start: 2019/12/18
   tmax: 895
   steps: 895

@@ -1,13 +1,14 @@
 ##
 ## This is Scenario 19 same as scenario 3b-Trig but with testing everyone every week with reduced tracing success to a level
-##  that doesn't work with targeted testing (eta=0.3)
+##  that doesn't work with targeted testing (eta=0.0)
+##  Scaled down to targeted testing after 3 months at full capacity to save costs
 ## : Cloth face coverings (masks) added starting 18th May
 ## (reduce Beta -transmission per contact- by 30%). Otherwise as per scenario 2b Trig
 ##
 
 meta:
-  title: PTTI Scenario 3b30 Trig
-  output: ptti-scenario-3b30-Trig-out
+  title: PTTI Scenario 3b Trig00-3mo
+  output: ptti-scenario-3b-Trig00-3mo-out
   start: 2019/12/18
   tmax: 895
   steps: 895
@@ -60,6 +61,10 @@ parameters:
   ## eta is the success rate of tracing. Starts at none
   eta:   0.0
 
+  ## duration of illness, used in calculations below
+  duration: 7
+  symptomatic: 0.5
+
 ## Exogenous interventions. The time is given in
 ## simulation days.
 interventions:
@@ -98,7 +103,7 @@ interventions:
       chi: 0.8  # 80% of the ~3000 cases per day (1% of tested) have contacts traced
                 # 18,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+      eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
       beta: 0.02975  # 30% reduction in Beta due to public wearing of home-made cloth face coverings
@@ -112,7 +117,7 @@ interventions:
       chi: 0.8  # 80% of the ~6000 cases per day (2% of tested) have contacts traced
                 # 36,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+      eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
 
@@ -124,7 +129,7 @@ interventions:
       chi: 0.8  # 80% of the ~9000 cases per day (1% of tested) have contacts traced
                 # 54,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+      eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
 
@@ -136,7 +141,7 @@ interventions:
       chi: 0.8  # 80% of the ~11667 cases per day (0.39% of tested) have contacts traced
                 # 70,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+      eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
 
@@ -148,9 +153,106 @@ interventions:
       chi: 0.8  # 80% of the ~11667 cases per day (0.13% of tested) have contacts traced
                 # 70,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+      eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
+
+
+ ## 1st November - Switch to targeted testing
+  ##  Targetted Testing - maximum proportion (50%) of symptomatics tested
+  - time: 319
+    parameters:
+                 ## Targetted Testing
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in November
+      tested: 0.8       # proportion of symptomatic who are tested (this is the same for
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+
+  ## 1st December - increase in cold&flu prevalence
+  ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
+  - time: 349
+    parameters:
+      coldflu: 0.04     # prevalence of symptomatic cold & flu in December-Feb
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+
+  ## 1st March 2021 - decrease in cold&flu prevalence
+  ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
+  - time: 439
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in March-April
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+
+  ## 1st May 2021 - decrease in cold&flu prevalence
+  - time: 500
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+
+  ## 1st June 2021 - decrease in cold&flu prevalence
+  - time: 531
+    parameters:
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in June-August
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+
+  ## 1st Sep 2021 - increase in cold&flu prevalence
+  - time: 623
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in Sep
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+
+  ## 1st Oct 2021 - increase in cold&flu prevalence
+  - time: 653
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in Oct & Nov
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+
+  ## 1st Dec 2021 - increase in cold&flu prevalence
+  - time: 714
+    parameters:
+      coldflu: 0.04     # prevalence of symptomatic cold & flu in Dec-Feb
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+
+  ## 1st Mar 2022 - decrease in cold&flu prevalence
+  - time: 804
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in Mar-Apr
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+
+## 1st May 2022 - decrease in cold&flu prevalence
+  - time: 865
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
 
 
 periods:

@@ -1,13 +1,13 @@
 ##
 ## This is Scenario 19 same as scenario 3b-Trig but with testing everyone every week with reduced tracing success to a level
-##  that doesn't work with targeted testing (eta=0.3)
-## : Cloth face coverings (masks) added starting 18th May
+##  that doesn't work with targeted testing (eta=0.0)
+## Cloth face coverings (masks) added starting 18th May
 ## (reduce Beta -transmission per contact- by 30%). Otherwise as per scenario 2b Trig
 ##
 
 meta:
-  title: PTTI Scenario 3b30 Trig
-  output: ptti-scenario-3b30-Trig-out
+  title: PTTI Scenario 3b Trig00
+  output: ptti-scenario-3b-Trig00-out
   start: 2019/12/18
   tmax: 895
   steps: 895
@@ -98,7 +98,7 @@ interventions:
       chi: 0.8  # 80% of the ~3000 cases per day (1% of tested) have contacts traced
                 # 18,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+      eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
       beta: 0.02975  # 30% reduction in Beta due to public wearing of home-made cloth face coverings
@@ -112,7 +112,7 @@ interventions:
       chi: 0.8  # 80% of the ~6000 cases per day (2% of tested) have contacts traced
                 # 36,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+      eta: 0.0  # 00% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
 
@@ -124,7 +124,7 @@ interventions:
       chi: 0.8  # 80% of the ~9000 cases per day (1% of tested) have contacts traced
                 # 54,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+      eta: 0.0  # 00% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
 
@@ -136,7 +136,7 @@ interventions:
       chi: 0.8  # 80% of the ~11667 cases per day (0.39% of tested) have contacts traced
                 # 70,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+      eta: 0.0  # 00% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
 
@@ -148,7 +148,7 @@ interventions:
       chi: 0.8  # 80% of the ~11667 cases per day (0.13% of tested) have contacts traced
                 # 70,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+      eta: 0.0  # 00% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
 
