@@ -1,7 +1,6 @@
 ##
 ## This is Scenario 19 same as scenario 3b-Trig but with testing everyone every week with reduced tracing success to a level
 ##  that doesn't work with targeted testing (eta=0.3)
-##  (ToDo: scale down to targeted testing after 3 months at full capacity to save costs)
 ## : Cloth face coverings (masks) added starting 18th May
 ## (reduce Beta -transmission per contact- by 30%). Otherwise as per scenario 2b Trig
 ##
