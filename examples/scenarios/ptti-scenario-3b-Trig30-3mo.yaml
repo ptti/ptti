@@ -61,6 +61,10 @@ parameters:
   ## eta is the success rate of tracing. Starts at none
   eta:   0.0
 
+  ## duration of illness, used in calculations below
+  duration: 7
+  symptomatic: 0.5
+
 ## Exogenous interventions. The time is given in
 ## simulation days.
 interventions:
