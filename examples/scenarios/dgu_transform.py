@@ -7,7 +7,7 @@ outf = argv[2]
 
 d = dgu(inf)
 
-d = np.vstack([d[:,0], d[:,1]/0.008]).T
+d = np.vstack([d[:,0], d[:,1]/0.01]).T
 
 np.savetxt(outf, d, delimiter="\t")
 
