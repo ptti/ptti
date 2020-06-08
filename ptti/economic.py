@@ -169,7 +169,7 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced):
     hospital = recovered[-1]*econ_inputs['Medical']['Hospitalised_Fraction'] - recovered[-1]*econ_inputs['Medical']['ICU_Fraction']  # Hospital non-ICU
     cases = recovered[-1] - deaths - hospital - icu
     nhs_costs = recovered[-1]*econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered']
-    prod_costs = recovered[-1]*econ_inputs['Medical']['Total_Productivity_Loss_Per_Recovered']
+    #prod_costs = recovered[-1]*econ_inputs['Medical']['Total_Productivity_Loss_Per_Recovered']
 
     output['Medical'] = {}
     output['Medical']['Deaths'] = deaths
@@ -193,7 +193,7 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced):
 
     output['Economic'] = {}
     output['Economic']['Total_NHS_Costs'] = nhs_costs
-    output['Economic']['Total_Productivity_Loss'] = prod_costs + (No_Pandemic_GDP-total_GDP)
+    output['Economic']['Total_Productivity_Loss'] = (No_Pandemic_GDP-total_GDP)
 
     return output
 

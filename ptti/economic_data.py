@@ -116,11 +116,11 @@ econ_inputs['Medical']['NHS_ICU_Cost'] = 8*1675 # 8 days median stay in ICU (ICN
 econ_inputs['Medical']['NHS_Hospital_Cost'] = 2422
 
 
-econ_inputs['Medical']['Productivity_Not_Working_Cost'] = 119
-econ_inputs['Medical']['Productivity_Death_Cost'] = 357 # 3 days at £119 per day
-econ_inputs['Medical']['Productivity_ICU_Cost'] = 2499  # 21 days at £119 per day
-econ_inputs['Medical']['Productivity_Hospital_Cost'] = 1190 # 10 days at £119 per day
-econ_inputs['Medical']['Productivity_Symptomatic_Cost'] = 357 # 3 days at £119 per day
+#econ_inputs['Medical']['Productivity_Not_Working_Cost'] = 119
+#econ_inputs['Medical']['Productivity_Death_Cost'] = 357 # 3 days at £119 per day
+#econ_inputs['Medical']['Productivity_ICU_Cost'] = 2499  # 21 days at £119 per day
+#econ_inputs['Medical']['Productivity_Hospital_Cost'] = 1190 # 10 days at £119 per day
+#econ_inputs['Medical']['Productivity_Symptomatic_Cost'] = 357 # 3 days at £119 per day
 econ_inputs['Medical']['Pct_Symptomatic'] = 0.5
 
 ################ DERIVED QUANTITIES - Do not touch these ###########
@@ -162,8 +162,8 @@ econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered'] = (econ_inputs['Medical']
                                                           econ_inputs['Medical']['Hospitalised_Fraction']*econ_inputs['Medical']['NHS_Hospital_Cost'])
 
 
-econ_inputs['Medical']['Total_Productivity_Loss_Per_Recovered'] = (econ_inputs['Medical']['IFR']* econ_inputs['Medical']['Productivity_Death_Cost'] + 
-                                                                   econ_inputs['Medical']['ICU_Fraction']*econ_inputs['Medical']['Productivity_ICU_Cost'] + 
-                                                                   econ_inputs['Medical']['Hospitalised_Fraction']*econ_inputs['Medical']['Productivity_Hospital_Cost'] + 
-                                                                   econ_inputs['Medical']['Pct_Symptomatic'] * econ_inputs['Medical']['Productivity_Symptomatic_Cost'])
+#econ_inputs['Medical']['Total_Productivity_Loss_Per_Recovered'] = (econ_inputs['Medical']['IFR']* econ_inputs['Medical']['Productivity_Death_Cost'] +
+#                                                                   econ_inputs['Medical']['ICU_Fraction']*econ_inputs['Medical']['Productivity_ICU_Cost'] +
+#                                                                   econ_inputs['Medical']['Hospitalised_Fraction']*econ_inputs['Medical']['Productivity_Hospital_Cost'] +
+#                                                                  econ_inputs['Medical']['Pct_Symptomatic'] * econ_inputs['Medical']['Productivity_Symptomatic_Cost'])
 
