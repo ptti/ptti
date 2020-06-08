@@ -7,8 +7,8 @@
 ##
 
 meta:
-  title: PTTI Scenario 1
-  output: ptti-scenario-1-out
+  title: PTTI Scenario 19
+  output: ptti-scenario-19-out
   start: 2019/12/18
   envelope: false
   tmax: 895
@@ -91,7 +91,7 @@ interventions:
 
   - time: 174
     parameters:
-      testedBase: 9000000/N
+      testedBase: 13500000/N
       theta: testedBase
       
   ## On 4th July, relax lockdown more, phase three
@@ -104,7 +104,9 @@ interventions:
   - time: 264
     parameters:
       testedBase: 0
-      theta: 0
+      theta: 0.5
+      eta: 0.8
+      chi: 0.8
 
 periods:
   - 2021/05/31
