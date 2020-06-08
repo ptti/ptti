@@ -11,13 +11,15 @@
     c: 6.6
   time: 166
 - parameters:
-    testedBase: 0.13257517811732966
-    theta: 0.13257517811732966
+    testedBase: 0.19886276717599446
+    theta: 0.19886276717599446
   time: 174
 - parameters:
     c: 8.8
   time: 199
 - parameters:
+    chi: 0.8
+    eta: 0.8
     testedBase: 0
-    theta: 0
+    theta: 0.5
   time: 264
