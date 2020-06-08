@@ -1,0 +1,22 @@
+PTTI Scenario 3b Trig00-3mo											
+Economic											
+	Total_NHS_Costs	512189518.5367842									
+	Total_Productivity_Loss	630185714285.6787									
+Medical											
+	Cases	6806022.781771892									
+	Deaths	69835.45918971974									
+	Hospital	91534.52630880768									
+	ICU	16153.151701554294									
+Testing											
+	Laboratories	9	261	10	10	10					
+	Max_Laboratories	261									
+	Testing_Block_Lengths	180	180	180	180	176					
+	Testing_Costs	42196336.90025319	3652475775.7016573	256218004.793284	179518897.5519563	258902435.78220198					
+	Testing_Total_Costs	4389311450.729353									
+Tracing											
+	Max_Supervisors	1910									
+	Max_Tracers	95466									
+	Tracers	0	30342	38161	27964	85923	95466	92976	73906	94784	94034
+	Tracing_Block_Lengths	90	90	90	90	90	90	90	90	90	86
+	Tracing_Costs	53557250.0	2505750526.0	905989733.0	248960142.00000003	4243366269.0	1498469348.0	774298277.9999999	625495068.0	788406102.0000001	747773680.8000001
+	Tracing_Total_Costs	12392066396.8									
