@@ -168,7 +168,7 @@ the duration of infectiousness and is fixed at one week.
 
 *Justification:*
 
-### Assumption: the overall infection fatality rate (IFR) is 0.008
+### Assumption: the overall infection fatality rate (IFR) is 0.01
 
 The model does not explicitly produce a time-series for the number of dead.
 Rather, it produces the number of individuals removed through recovery or death.
@@ -285,7 +285,7 @@ of the measures that we propose here.
 Fitting can be verified by downloading the mortality data from the
 [data.gov.uk coronavirus web site] and running the command,
 ```sh
-ptti-fit -y fitting.yaml --dgu coronavirus-deaths_latest.csv --mask c theta --ifr 0.008
+ptti-fit -y fitting.yaml --dgu coronavirus-deaths_latest.csv --mask c theta --ifr 0.01
 ```
 where `fitting.yaml` is the [fitting scenario] in the `examples/` subdirectory
 of the [PTTI software] distribution.
