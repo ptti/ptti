@@ -1,0 +1,111 @@
+##
+## This is Scenario 1: Phased lockdown release, no testing and tracing. 
+##   Lockdown lifted in a phased way as per UK government Covid-19 recovery strategy (11th May): 
+##   those who can’t work from home encouraged back to work from 13th May, some schools 
+##   may open 1st June, some entertainment venues may open 4th July 
+##   (the latter both subject to estimates of infections circulating and R)
+##
+
+meta:
+  title: PTTI Scenario 1
+  output: ptti-scenario-1-out
+  start: 2019/12/18
+  envelope: false
+  tmax: 895
+  steps: 895
+
+## Initial values for the simulation
+initial:
+  ## N is the total population
+  N:    67886011    # mid-year 2020 from: https://www.worldometers.info/world-population/uk-population/
+  ## IU is the number of unconfined, infected individuals
+  IU:   2
+
+## Parameters of the simulation.
+## All rates are per individual per day.
+parameters:
+  ## beta is the infectiousness of the disease, the
+  ## probability of infecting a contact.
+  beta: 0.0425   # was 0.036 based on ptti fitting but scaled by 13/11 given change in
+                 # baseline c from 13 to 11 (beta has to increase to compensate and get the same fit)
+
+  ## c0 is contacts per day at baseline, pre-pandemic
+  c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
+  c: c0
+
+  ## alpha is the rate at which exposed individuals
+  ## (infected but not infectious) become infectious. 
+  ## 5 day incubation period
+  alpha: 0.2
+
+  ## gamma is the rate at which individuals either 
+  ## recover, or are taken into hospital and assumed
+  ## to be isolated. One week.
+  gamma: 0.1429
+
+  ## kappa is the rate at which individuals leave
+  ## isolation. This is one week according to UK policy.
+  ## The WHO thinks it should be 0.0714 (14 days).
+  ## We agree with WHO and think isolation should last for 14 symptom free days
+  kappa: 0.0714
+
+  ## testedBase is the rate of testing at random in the population
+  testedBase: 0.0
+
+  ## theta governs testing, and we start with none
+  theta: 0.0
+
+  ## chi is the rate at which contacts are traced.
+  ## Tracing is triggered by testing. Starts at none.
+  chi:   0.0
+
+  ## eta is the success rate of tracing. Starts at none
+  eta:   0.0
+
+## Exogenous interventions. The time is given in
+## simulation days.
+interventions:
+  ## After three months, start of restrictions on 16th March. 
+  ## Reduce contacts by 30%.
+  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.7
+  ## After one more week, Lockdown, on 23rd March.
+  ## Reduce contacts to ~3 per day (~70% reduction).
+  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+  
+  ## On 13th May, start relax lockdown, phase one: 
+  ##    those who can’t work from home encouraged back to work 
+  - time: 147
+    parameters:
+      c: c0 * 0.4 # CoMix Weekly report 9 (LSHTM) shows contacts only increased from
+                  # 2.6 under lockdown to 3.5 week of 21-28th May
+
+  ## On 1st June, relax lockdown more, phase two
+  ##  some schools may open 1st June
+  - time: 166
+    parameters:
+      c: c0 * 0.6    # Contacts per day increase from 4.4 to 6.6
+
+  - time: 174
+    parameters:
+      testedBase: 9000000/N
+      theta: testedBase
+      
+  ## On 4th July, relax lockdown more, phase three
+  ##  some entertainment venues may open
+  - time: 199
+    parameters:
+      c: c0 * 0.8 # Contacts per day increse from 6.6 to 8.8
+                  # assume contacts per day won't go back up to pre-pandemic level of 11
+
+  - time: 264
+    parameters:
+      testedBase: 0
+      theta: 0
+
+periods:
+  - 2021/05/31
+  - 2022/05/31

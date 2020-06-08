@@ -4,7 +4,8 @@ ptti-scenario-3a ptti-scenario-3a-Trig ptti-scenario-3b ptti-scenario-3b-Trig \
 ptti-scenario-4a ptti-scenario-4b ptti-scenario-4c ptti-scenario-4d \
 ptti-scenario-4a-Trig ptti-scenario-4b-Trig ptti-scenario-4c-Trig ptti-scenario-4d-Trig \
 ptti-scenario-4d-Trig10 ptti-scenario-4d-Trig20 ptti-scenario-4d-Trig30 \
-ptti-scenario-4d-Trig40 ptti-scenario-4d-Trig50 ptti-scenario-4d-Trig60 ptti-scenario-4d-Trig70
+ptti-scenario-4d-Trig40 ptti-scenario-4d-Trig50 ptti-scenario-4d-Trig60 ptti-scenario-4d-Trig70 \
+ptti-scenario-19
 
 PYTHON=python3
 
