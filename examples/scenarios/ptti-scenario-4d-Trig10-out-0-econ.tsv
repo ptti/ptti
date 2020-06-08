@@ -1,12 +1,12 @@
 PTTI Scenario 4d Trig10											
 Economic											
-	Total_NHS_Costs	408259811.7624801									
-	Total_Productivity_Loss	600581932434.3264									
+	Total_NHS_Costs	510324764.70310014									
+	Total_Productivity_Loss	600620480840.772									
 Medical											
-	Cases	6816619.120379625									
-	Deaths	55664.964610348135									
-	Hospital	72961.0176080122									
-	ICU	12875.473695531564									
+	Cases	6781243.756401152									
+	Deaths	69581.20576293518									
+	Hospital	91201.27201001525									
+	ICU	16094.342119414458									
 Testing											
 	Laboratories	2	10	9	10	10					
 	Max_Laboratories	10									
