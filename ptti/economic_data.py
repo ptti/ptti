@@ -108,7 +108,11 @@ econ_inputs['Medical']['IFR'] = 0.008
 
 # Based on Spreadsheet from v1.
 econ_inputs['Medical']['NHS_Death_Cost'] = 500
-econ_inputs['Medical']['NHS_ICU_Cost'] = 16760 # 8 days median stay in ICU (ICNARC data) at £2095 per day
+# From a comment from Manuel Gomes on the paper: "The uni cost is:
+# XC04Z Adult Critical Care, 3 Organs Supported £1,582.03
+# Using the NHS cost inflation published below, the actual value should be ~£1675
+# https://www.pssru.ac.uk/pub/uc/uc2019/sources-of-information.pdf"
+econ_inputs['Medical']['NHS_ICU_Cost'] = 8*1675 # 8 days median stay in ICU (ICNARC data)
 econ_inputs['Medical']['NHS_Hospital_Cost'] = 2422
 
 
