@@ -26,17 +26,8 @@ models = {}
 for ep in pkg_resources.iter_entry_points(group='models'):
     models.update({ep.name: ep.load()})
 
-def mkcfg(sample):
-    cfg = config_load(args.yaml, sample)
-
-    for meta in ("model", "tmax", "steps", "samples", "output", "date"):
-        arg = getattr(args, meta)
-        if arg is not None:
-            cfg["meta"][meta] = arg
-    for init in ("N", "IU"):
-        arg = getattr(args, init)
-        if arg is not None:
-            cfg["initial"][init] = arg
+def mkcfg(filename, sample):
+    cfg = config_load(filename, sample)
 
     if isinstance(cfg["meta"]["model"], str):
         model = models.get(cfg["meta"]["model"])
@@ -50,11 +41,13 @@ def mkcfg(sample):
 
 def pmap(f, v): return list(map(f, v))
 
+@st.cache(suppress_st_warning=True) #Enable caching to get this to run faster, esp. for pre-run scenarios.
 def runSample(arg):
     i, cfg = arg
 
     # set random seed for the benefit of stochastic simulations
     cfg["meta"]["seed"] = i
+    # cfg["meta"]["model"] = 'SEIRCTODEMem'
 
     # for indexed samples, select the right parameter:
     for k, v in cfg["parameters"].copy().items():
@@ -89,25 +82,56 @@ base_policy = st.sidebar.selectbox("Policy name", POLICY_NAMES)
 to_run = st.sidebar.button("Run Model")
 # model_load_state = st.info(f"Loading policy '{base_policy}'...")
 
-arglist = namedtuple('arglist', 'model, yaml, tmax, steps, samples, output, date, N, IU, save_param, econ, statistics, plot')
-args = arglist('SEIRCTODEMem', '..\examples\scenarios\ptti-scenario-'+ str(base_policy) + '.yaml', 365, 365, None, None, None, 10000, 1, [], False, False, False)
+filename = 'examples\scenarios\ptti-scenario-'+ str(base_policy) + '.yaml'
+args = yaml.safe_load(open(filename))
+args['meta']['model'] = 'SEIRCTODEMem'
+args['yaml'] = filename
+cfg = mkcfg(filename,0)
 
-import os
+st.write("Scenario: " + cfg['meta']['title'])
 
-st.text(os.getcwd())
+# This will be modified below.
+
+# We want to show the intervention details and timing.
+# For preconfigured interventions, For now only allow changing times.
+# NOTE: The first four interventions are fixed past events.
+To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infected", "Recovered", "Quarantined"],
+                                  default=["Susceptible", "Infected", "Quarantined"])
+
+Intervention_Start = st.sidebar.date_input("Intervention Start (Not working.)")
+
+# min_value=datetime.now() ) <- No changing the past.
+# "How you think you gonna move time while you're standin in it you dumn ass three-dimensional monkey ass dummies?"
+
+st.write(str(type(Intervention_Start)) + " " + str(Intervention_Start))
+
+#import os
+# st.text(os.getcwd())
 
 if to_run:
-    cfg = mkcfg(0)
-    samples = [(i, mkcfg(i)) for i in range(cfg["meta"]["samples"])]
+    samples = [(i, mkcfg(filename, i)) for i in range(cfg["meta"]["samples"])]
+
     results = pmap(runSample, samples)
 
     for s, (traj, events, paramtraj) in zip(samples, results):
         econ_args = calcArgumentsODE(traj, paramtraj, cfg)
         econ = calcEconOutputs(**econ_args)
 
-    # for i in plots:
+    # for i in plots: ["Susceptible", "Exposed", "Infected", "Recovered", "Quarantined"])
+    if len(To_Graph)>0:
+        df_plot_results = pd.DataFrame()
+        Out_Columns = [col['name'] for col in cfg['meta']['model'].observables]
+        for Compartment in To_Graph:
+            if Compartment == "Quarantined":
+                C_list = [i for i in range(len(Out_Columns)) if Out_Columns[i][1]=="D"]
+            else:
+                Leftmost = Compartment[0]
+                C_list = [i for i in range(len(Out_Columns)) if Out_Columns[i][0] == Leftmost]
+            C_total = list()
+            for x in traj:
+                C_total.append(sum([x[c] for c in C_list]))
+            df_plot_results[Compartment] = C_total.copy()
 
-    i = 2
-    chart_data = pd.DataFrame([x[i] for x in traj], columns=[[col['name'] for col in cfg['meta']['model'].observables][i]])
-    plt.plot(chart_data)
-    st.pyplot()
+        plt.plot(df_plot_results)
+        plt.legend(To_Graph)
+        st.pyplot()
