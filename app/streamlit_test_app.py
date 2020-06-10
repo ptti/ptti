@@ -41,7 +41,7 @@ def mkcfg(filename, sample):
 
 def pmap(f, v): return list(map(f, v))
 
-@st.cache(suppress_st_warning=True) #Enable caching to get this to run faster, esp. for pre-run scenarios.
+# @st.cache(suppress_st_warning=True) #Enable caching to get this to run faster, esp. for pre-run scenarios.
 def runSample(arg):
     i, cfg = arg
 
@@ -74,7 +74,9 @@ Run different epidemic control policies for COVID-19. This uses the
 """
 )
 
-POLICY_NAMES = ["1", "2a", "2b", "4a", "4b"]
+POLICY_NAMES = ["1", "2a", "2b", "4a", "4b", "4c", "4d"]
+POLICY_NAMES = [name+append for name in POLICY_NAMES for append in ["","-Trig"]]
+POLICY_NAMES.append("19")
 DEFAULT_TEXT = "Model Goes Here."
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
 
@@ -82,7 +84,7 @@ base_policy = st.sidebar.selectbox("Policy name", POLICY_NAMES)
 to_run = st.sidebar.button("Run Model")
 # model_load_state = st.info(f"Loading policy '{base_policy}'...")
 
-filename = 'examples\scenarios\ptti-scenario-'+ str(base_policy) + '.yaml'
+filename = '..\examples\scenarios\ptti-scenario-'+ str(base_policy) + '.yaml'
 args = yaml.safe_load(open(filename))
 args['meta']['model'] = 'SEIRCTODEMem'
 args['yaml'] = filename
@@ -109,7 +111,7 @@ st.write(str(type(Intervention_Start)) + " " + str(Intervention_Start))
 # st.text(os.getcwd())
 
 if to_run:
-    samples = [(i, mkcfg(filename, i)) for i in range(cfg["meta"]["samples"])]
+    samples = [(i, cfg) for i in range(cfg["meta"]["samples"])]
 
     results = pmap(runSample, samples)
 
@@ -133,5 +135,19 @@ if to_run:
             df_plot_results[Compartment] = C_total.copy()
 
         plt.plot(df_plot_results)
+        pop = cfg['initial']['N']
+        for i in cfg['interventions']:
+            if ('c' in i['parameters'].keys() and 'time' in i.keys()):
+                if i['parameters']['c'] == 3.3: # Shouldn't fix this, should use shutdown value
+                    plt.plot([i['time'], i['time']], [0, pop], color='red', linestyle='-', linewidth=0.5)
+                elif i['parameters']['c'] == 6.6: # Shouldn't fix this, should use correct value
+                    plt.plot([i['time'], i['time']], [0, pop], color='yellow', linestyle='-', linewidth=0.5)
+                elif i['parameters']['c'] == 8.8: # Shouldn't fix this, should use correct value
+                    plt.plot([i['time'], i['time']], [0, pop], color='green', linestyle='-', linewidth=0.5)
+                else:
+                    plt.plot([i['time'], i['time']], [0, pop], color='k', linestyle='-', linewidth=0.5)
+            else:
+                pass # These are interventions other than changing distancing - like running PTTI. We should show that.
+
         plt.legend(To_Graph)
         st.pyplot()
