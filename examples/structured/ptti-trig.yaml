@@ -1,0 +1,18 @@
+# Automatic lockdowns.
+
+interventions:
+   
+## Release lockdown when below 10k cases
+  - condition: x[IU] + x[ID] - 10000
+    after: 96
+    direction: -1.0
+    parameters:
+      c: c0 * 0.8 # Lockdown release
+      locked: False
+## Lockdown trigger on 40k cases
+  - condition: x[IU] + x[ID] - 40000
+    after: 96
+    direction: 1.0
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+      locked: True

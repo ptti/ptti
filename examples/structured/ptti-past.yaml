@@ -1,0 +1,109 @@
+## Initial values and past policy changes.
+
+meta:
+  # title: PTTI Scenario X
+  # output: ptti-scenario-X-out
+  start: 2019/12/18
+  envelope: false
+  tmax: 895
+  steps: 895
+
+## Initial values for the simulation
+initial:
+  ## N is the total population
+  N:    67886011    # mid-year 2020 from: https://www.worldometers.info/world-population/uk-population/
+  ## IU is the number of unconfined, infected individuals
+  IU:   2
+
+## Parameters of the simulation.
+## All rates are per individual per day.
+parameters:
+  ## beta is the infectiousness of the disease, the
+  ## probability of infecting a contact.
+  beta: 0.0425   # was 0.036 based on ptti fitting but scaled by 13/11 given change in
+                 # baseline c from 13 to 11 (beta has to increase to compensate and get the same fit)
+
+  ## c0 is contacts per day at baseline, pre-pandemic
+  c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
+  c: c0
+
+  ## alpha is the rate at which exposed individuals
+  ## (infected but not infectious) become infectious. 
+  ## 5 day incubation period
+  alpha: 0.2
+
+  ## gamma is the rate at which individuals either 
+  ## recover, or are taken into hospital and assumed
+  ## to be isolated. One week.
+  gamma: 0.1429
+
+  ## kappa is the rate at which individuals leave
+  ## isolation. This is one week according to UK policy.
+  ## The WHO thinks it should be 0.0714 (14 days).
+  ## We agree with WHO and think isolation should last for 14 symptom free days
+  kappa: 0.0714
+
+  ## testedBase is the background rate of testing
+  testedBase: 0.0
+  ## theta governs testing of infectious individuals, and we start with none
+  theta: testedBase
+
+  ## chi is the rate at which contacts are traced.
+  ## Tracing is triggered by testing. Starts at none.
+  chi:   0.0
+
+  ## eta is the success rate of tracing. Starts at none
+  eta:   0.0
+
+  ## default testing rate (proportion of symptomatics)
+  tested: 0.8   
+  ## 50% of SARS-Cov-2 infected (IU) have symptoms
+  symptomatic: 0.5 
+  ## average duration of symptomatic illness(coldflu or Covid combined)
+  duration: 7
+
+## Exogenous interventions. The time is given in
+## simulation days.
+interventions:
+  ## After three months, start of restrictions on 16th March. 
+  ## Reduce contacts by 30%.
+  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.7
+    name: "Past"
+    
+  ## After one more week, Lockdown, on 23rd March.
+  ## Reduce contacts to ~3 per day (~70% reduction).
+  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+    name: "Past"
+  ## On 13th May, start relax lockdown, phase one: 
+  ##    those who can’t work from home encouraged back to work 
+  - time: 147
+    parameters:
+      c: c0 * 0.4 # CoMix Weekly report 9 (LSHTM) shows contacts only increased from
+                  # 2.6 under lockdown to 3.5 week of 21-28th May
+  
+  ## On 18th May, start contact tracing
+  ##  start cloth face covering (mask) wearing in public
+  ##  Targetted Testing - initial proportion of symptomatics tested during their week long illness
+  - time: 152
+    parameters:
+          ## Face coverings
+      beta: 0.02975  # 30% reduction in Beta due to public wearing of home-made cloth face coverings
+                    # conservative assumption based on Greenhalgh & DELVE reviews
+      ## Targetted Testing
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      tested: 0.1       # proportion of symptomatic who are tested (this is the same for 
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing
+      chi: 0.8  # 80% of the those who test positive per day have contacts traced
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+                # These tracing rates continue throughout the rest of the simulation
+
