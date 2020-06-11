@@ -179,7 +179,7 @@ Run different epidemic control policies for COVID-19. This uses the
 """
 )
 
-cfg = mkcfg('..\examples\structured\ptti-past.yaml', 0)
+cfg = mkcfg(os.path.join("..", "examples", "structured", "ptti-past.yaml"), 0)
 
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
 
@@ -189,13 +189,13 @@ triggers = st.sidebar.checkbox("Reimpose Shutdowns As Needed")
 dance = st.sidebar.checkbox("Dance!")
 
 if end:
-    cfg = interventions_load('..\examples\structured\ptti-relax.yaml',cfg)
+    cfg = interventions_load(os.path.join("..", "examples", "structured", "ptti-relax.yaml"), cfg)
 
 if TTI:
-    cfg = interventions_load('..\examples\structured\ptti-tti.yaml',cfg)
+    cfg = interventions_load(os.path.join("..", "examples", "structured", "ptti-tti.yaml"), cfg)
 
 if triggers:
-    cfg = interventions_load('..\examples\structured\ptti-trig.yaml', cfg)
+    cfg = interventions_load(os.path.join("..", "examples", "structured", "ptti-trig.yaml"), cfg)
 
 to_run = st.sidebar.button("Run Model")
 # model_load_state = st.info(f"Loading policy '{base_policy}'...")
