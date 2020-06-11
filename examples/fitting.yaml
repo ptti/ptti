@@ -26,7 +26,15 @@ interventions:
   - time: 82
     parameters:
       beta: 0.5
-  ## slight relaxation 54 days later
+  ## slight relaxation 54 days later 16 may
   - time: 136
     parameters:
       beta: 0.5
+  ## 28 may relaxation in scotland
+#  - time: 148 
+#    parameters:
+#      beta: 0.5
+  ## 1 june some schools open
+  -  time: 152
+     parameters:
+       beta: 0.5
