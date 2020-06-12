@@ -36,7 +36,7 @@ def numpy_funcs():
     return {f: getattr(np.random, f) for f in funcs}
 
 
-def config_load(filename=None, sample=0):
+def config_load(filename=None, sample=0, defaults={}):
     """
     Load a YAML configuration file, supporting evaluation of some expressions and
     sensible defaults. The defaults are:
@@ -57,7 +57,8 @@ def config_load(filename=None, sample=0):
     else:
         cfg = {}
 
-    gvars = {"sample": sample}
+    gvars = defaults.copy()
+    gvars["sample"] = sample
     gvars.update(numpy_funcs())
 
     for k, v in cfg.items():
