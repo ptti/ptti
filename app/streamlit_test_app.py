@@ -82,12 +82,6 @@ Run different epidemic control policies for COVID-19. This uses the
 
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
 
-end = st.sidebar.checkbox("End Shutdown")
-TTI = st.sidebar.checkbox("Test and Trace")
-triggers = st.sidebar.checkbox("Reimpose Shutdowns As Needed")
-dance = st.sidebar.checkbox("Dance!")
-
-
 cfg = config_load(os.path.join("..", "examples", "structured", "ptti-past.yaml"))
 cfg["meta"]["model"] = SEIRCTODEMem
 defaults = {}
@@ -98,13 +92,24 @@ cfg_relax = config_load(os.path.join("..", "examples", "structured", "ptti-relax
 cfg_tti   = config_load(os.path.join("..", "examples", "structured", "ptti-tti.yaml"),   defaults=defaults)
 cfg_trig  = config_load(os.path.join("..", "examples", "structured", "ptti-trig.yaml"),  defaults=defaults)
 
-if end: cfg = merge_interventions(cfg, cfg_relax)
-if TTI: cfg = merge_interventions(cfg, cfg_tti)
-if triggers: cfg = merge_interventions(cfg, cfg_trig)
+end = st.sidebar.checkbox("End Shutdown")
+if end:
+    end_date = st.sidebar.date_input("Shutdown End Date (Unimplemented)")
+TTI = st.sidebar.checkbox("Test and Trace")
+if TTI:
+    TTI_amount = st.sidebar.slider("TTI Modifier (Unimplemented)", min_value=0, max_value=1)
+triggers = st.sidebar.checkbox("Reimpose Shutdowns As Needed")
+#dance = st.sidebar.checkbox("Dance!")
+
+if end:
+    cfg = merge_interventions(cfg, cfg_relax)
+if TTI:
+    cfg = merge_interventions(cfg, cfg_tti)
+if triggers:
+    cfg = merge_interventions(cfg, cfg_trig)
 
 to_run = st.sidebar.button("Run Model")
 # model_load_state = st.info(f"Loading policy '{base_policy}'...")
-
 
 # This will be modified below.
 
@@ -114,18 +119,17 @@ to_run = st.sidebar.button("Run Model")
 To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infected", "Recovered", "Quarantined"],
                                   default=["Susceptible", "Infected", "Quarantined"])
 
-Intervention_Start = st.sidebar.date_input("Intervention Start (Not working.)")
+# Intervention_Start = st.sidebar.date_input("Intervention Start (Not working.)")
 
 # min_value=datetime.now() ) <- No changing the past.
 # "How you think you gonna move time while you're standin in it you dumn ass three-dimensional monkey ass dummies?"
 
-st.write(str(type(Intervention_Start)) + " " + str(Intervention_Start))
+# st.write(str(type(Intervention_Start)) + " " + str(Intervention_Start))
 
 #import os
 # st.text(os.getcwd())
 
-if dance:
-    st.image('GIPHY_Dance.gif', caption=None, format='GIF')
+# if dance: st.image('GIPHY_Dance.gif', caption=None, format='GIF')
 
 if to_run:
     samples = [(i, cfg) for i in range(cfg["meta"]["samples"])]
@@ -137,17 +141,23 @@ if to_run:
 
     # for i in plots: ["Susceptible", "Exposed", "Infected", "Recovered", "Quarantined"])
     if len(To_Graph)>0:
+        pop = cfg['initial']['N']
         df_plot_results = pd.DataFrame()
         Out_Columns = [col['name'] for col in cfg['meta']['model'].observables]
         for Compartment in To_Graph:
             if Compartment == "Quarantined":
                 C_list = [i for i in range(len(Out_Columns)) if Out_Columns[i][1]=="D"]
+                # C_list = [pop - c for c in C_list] # TODO: Don't know why this is needed, but...?
             else:
                 Leftmost = Compartment[0]
                 C_list = [i for i in range(len(Out_Columns)) if Out_Columns[i][0] == Leftmost]
             C_total = list()
             for x in traj:
-                C_total.append(sum([x[c] for c in C_list]))
+                fix=0
+                if Compartment == "Quarantined":
+                    fix=pop
+                C_total.append(abs(fix-sum([x[c] for c in C_list])))
+                
             df_plot_results[Compartment] = C_total.copy()
 
         plt.plot(df_plot_results)
@@ -157,12 +167,12 @@ if to_run:
         ax.set_xlabel('Date')
         ax.set_ylabel('People')
 
-        pop = cfg['initial']['N']
+
         for i in cfg['interventions']:
             if ('c' in i['parameters'].keys() and 'time' in i.keys()):
                 if i['parameters']['c'] == 3.3: # Shouldn't fix this, should use shutdown value
                     plt.plot([i['time'], i['time']], [0, pop], color='red', linestyle='-', linewidth=0.5)
-                elif i['parameters']['c'] == 6.6: # Shouldn't fix this, should use correct value
+                elif (i['parameters']['c'] > 3.3) & (i['parameters']['c'] < 8.8): # Shouldn't fix this, should use correct value
                     plt.plot([i['time'], i['time']], [0, pop], color='yellow', linestyle='-', linewidth=0.5)
                 elif i['parameters']['c'] == 8.8: # Shouldn't fix this, should use correct value
                     plt.plot([i['time'], i['time']], [0, pop], color='green', linestyle='-', linewidth=0.5)
