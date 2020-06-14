@@ -36,7 +36,7 @@ def numpy_funcs():
     return {f: getattr(np.random, f) for f in funcs}
 
 
-def config_load(filename=None, sample=0, defaults={}):
+def config_load(filename=None, interventions=None, sample=0, defaults={}):
     """
     Load a YAML configuration file, supporting evaluation of some expressions and
     sensible defaults. The defaults are:
@@ -51,11 +51,22 @@ def config_load(filename=None, sample=0, defaults={}):
               'tmax': 360},
      'parameters': {}}
     """
+
     if filename is not None:
         with open(filename) as fp:
             cfg = ordered_load(fp.read(), yaml.FullLoader)
     else:
         cfg = {}
+    if 'interventions' not in cfg.keys():
+        cfg['interventions'] = []
+
+    if interventions is not None:
+        for filename in interventions:
+            with open(filename) as fp:
+                interventionset = ordered_load(fp.read(), yaml.FullLoader)
+            cfg['interventions'].extend(interventionset['interventions'])
+
+    cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000)))
 
     gvars = defaults.copy()
     gvars["sample"] = sample

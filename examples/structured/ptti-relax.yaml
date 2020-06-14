@@ -1,5 +1,4 @@
 interventions:
-
   - time: 199
     parameters:
       c: c0 * 0.8    # Contacts per day increse from 6.6 to 8.8

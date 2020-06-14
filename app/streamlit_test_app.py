@@ -83,30 +83,38 @@ Run different epidemic control policies for COVID-19. This uses the
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
 
 cfg = config_load(os.path.join("..", "examples", "structured", "ptti-past.yaml"))
+
+cfg_relax = os.path.join("..", "examples", "structured", "ptti-relax.yaml")
+cfg_flu   = os.path.join("..", "examples", "structured", "ptti-fluseason.yaml")
+# Add flu season to TTI...
+cfg_tti   = os.path.join("..", "examples", "structured", "ptti-tti.yaml")
+cfg_trig  = os.path.join("..", "examples", "structured", "ptti-trig.yaml")
+
+intervention_list = []
+
+end = st.sidebar.checkbox("End Shutdown")
+if end:
+    intervention_list.append(cfg_relax)
+    end_date = st.sidebar.date_input("Shutdown End Date (Unimplemented)")
+
+TTI = st.sidebar.checkbox("Test and Trace")
+if TTI:
+    intervention_list.append(cfg_flu)
+    intervention_list.append(cfg_tti)
+    TTI_amount = st.sidebar.slider("TTI Modifier (Unimplemented)", min_value=0, max_value=1)
+
+triggers = st.sidebar.checkbox("Reimpose Shutdowns As Needed")
+if triggers:
+    intervention_list.append(cfg_trig)
+dance = False
+dance = st.sidebar.checkbox("Dance!")
+
+
+cfg = config_load(filename=os.path.join("..", "examples", "structured", "ptti-past.yaml"), interventions=intervention_list)
 cfg["meta"]["model"] = SEIRCTODEMem
 defaults = {}
 defaults.update(cfg["initial"])
 defaults.update(cfg["parameters"])
-
-cfg_relax = config_load(os.path.join("..", "examples", "structured", "ptti-relax.yaml"), defaults=defaults)
-cfg_tti   = config_load(os.path.join("..", "examples", "structured", "ptti-tti.yaml"),   defaults=defaults)
-cfg_trig  = config_load(os.path.join("..", "examples", "structured", "ptti-trig.yaml"),  defaults=defaults)
-
-end = st.sidebar.checkbox("End Shutdown")
-if end:
-    end_date = st.sidebar.date_input("Shutdown End Date (Unimplemented)")
-TTI = st.sidebar.checkbox("Test and Trace")
-if TTI:
-    TTI_amount = st.sidebar.slider("TTI Modifier (Unimplemented)", min_value=0, max_value=1)
-triggers = st.sidebar.checkbox("Reimpose Shutdowns As Needed")
-#dance = st.sidebar.checkbox("Dance!")
-
-if end:
-    cfg = merge_interventions(cfg, cfg_relax)
-if TTI:
-    cfg = merge_interventions(cfg, cfg_tti)
-if triggers:
-    cfg = merge_interventions(cfg, cfg_trig)
 
 to_run = st.sidebar.button("Run Model")
 # model_load_state = st.info(f"Loading policy '{base_policy}'...")
@@ -157,7 +165,7 @@ if to_run:
                 if Compartment == "Quarantined":
                     fix=pop
                 C_total.append(abs(fix-sum([x[c] for c in C_list])))
-                
+
             df_plot_results[Compartment] = C_total.copy()
 
         plt.plot(df_plot_results)

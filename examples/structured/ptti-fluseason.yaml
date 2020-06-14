@@ -1,0 +1,111 @@
+
+interventions:      
+
+  - time: 152
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+
+  - time: 194
+    parameters:
+            ## Targetted Testing
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in July
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+
+  - time: 257
+    parameters:
+           ## Targetted Testing
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in September
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+
+  ## 1st October - increase in cold&flu prevalence
+  - time: 288
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in October
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+
+  ## 1st November - increase in cold&flu prevalence
+  - time: 319
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in November
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            
+            
+  ## 1st December - increase in cold&flu prevalence
+  - time: 349
+    parameters:
+      coldflu: 0.04     # prevalence of symptomatic cold & flu in December-Feb
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+  
+  ## 1st March 2021 - decrease in cold&flu prevalence
+  - time: 439
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in March-April
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+                        
+  ## 1st May 2021 - decrease in cold&flu prevalence
+  - time: 500
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+
+  ## 1st June 2021 - decrease in cold&flu prevalence
+  - time: 531
+    parameters:
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in June-August
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+
+  ## 1st Sep 2021 - increase in cold&flu prevalence
+  - time: 623
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in Sep
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+  
+  ## 1st Oct 2021 - increase in cold&flu prevalence
+  - time: 653
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in Oct & Nov
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+
+  ## 1st Dec 2021 - increase in cold&flu prevalence
+  - time: 714
+    parameters:
+      coldflu: 0.04     # prevalence of symptomatic cold & flu in Dec-Feb
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+
+  ## 1st Mar 2022 - decrease in cold&flu prevalence
+  - time: 804
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in Mar-Apr
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+
+## 1st May 2022 - decrease in cold&flu prevalence
+  - time: 865
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
