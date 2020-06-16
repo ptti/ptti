@@ -61,9 +61,20 @@ def config_load(filename=None, interventions=None, sample=0, defaults={}):
         cfg['interventions'] = []
 
     if interventions is not None:
-        for filename in interventions:
+        for item in interventions:
+            if type(item) == type([]): #Lists have filename, offset
+                filename = item[0]
+                offset = item[1]
+            elif type(item) != type(""):
+                raise(NotImplementedError)
+            else:
+                filename = item
+                offset = 0
             with open(filename) as fp:
                 interventionset = ordered_load(fp.read(), yaml.FullLoader)
+                if offset != 0:
+                    for item in interventionset['interventions']:
+                        item['time'] = item['time'] + offset
             cfg['interventions'].extend(interventionset['interventions'])
 
     cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000)))

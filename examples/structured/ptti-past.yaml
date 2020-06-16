@@ -81,6 +81,7 @@ interventions:
   ## On 13th May, start relax lockdown, phase one: 
   ##    those who can’t work from home encouraged back to work 
   - time: 147
+    name: "Past"
     parameters:
       c: c0 * 0.4 # CoMix Weekly report 9 (LSHTM) shows contacts only increased from
                   # 2.6 under lockdown to 3.5 week of 21-28th May
@@ -89,21 +90,8 @@ interventions:
   ##  start cloth face covering (mask) wearing in public
   ##  Targetted Testing - initial proportion of symptomatics tested during their week long illness
   - time: 152
+    name: "Past"
     parameters:
           ## Face coverings
       beta: 0.02975  # 30% reduction in Beta due to public wearing of home-made cloth face coverings
                     # conservative assumption based on Greenhalgh & DELVE reviews
-      ## Targetted Testing
-      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
-      tested: 0.1       # proportion of symptomatic who are tested (this is the same for 
-                        #    symptomatic Covid and coldflu because they are indistinguishable)
-      testedBase: coldflu*tested/duration
-      thetaI: symptomatic*tested/duration
-      theta: testedBase + (1-testedBase)*thetaI
-            ## Tracing
-      chi: 0.8  # 80% of the those who test positive per day have contacts traced
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
-                #   with support from mobile phone apps
-                # These tracing rates continue throughout the rest of the simulation
-
