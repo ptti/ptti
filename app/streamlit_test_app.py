@@ -76,10 +76,10 @@ intervention_list = []
 
 start = date(int(cfg['meta']['start'][0:4]), int(cfg['meta']['start'][5:7]), int(cfg['meta']['start'][8:10]))
 
-end = st.sidebar.checkbox("End Shutdown")
-if end:
+end_shutdown = st.sidebar.checkbox("End Shutdown")
+if end_shutdown:
     intervention_list.append(cfg_relax)
-    end_date = st.sidebar.date_input("Shutdown End Date",
+end_date = st.sidebar.date_input("Shutdown End Date",
                                      value=(start+timedelta(days=199)), max_value=start+timedelta(days=cfg['meta']['tmax']))
 TTI = st.sidebar.checkbox("Test and Trace")
 if TTI:
@@ -88,18 +88,18 @@ if TTI:
     #TTI_Launch = st.sidebar.date_input("Test and Trace Ramp-up Period (Start and End)",
     #                                 value=((start+timedelta(days=152)), start+timedelta(days=257)), max_value=start+timedelta(days=cfg['meta']['tmax']))
     # Error with too-close dates needs to be fixed before this is put in.
-    TTI_rate_inf = st.sidebar.slider("Symptomatic percentage tested (at end of ramp-up)", value=0.8,
-                                            min_value=0.1, max_value=1.0)
-    TTI_chi = st.sidebar.slider("Trace Speed (chi = Percentage of traces complete on day 1)", value=0.8, min_value=0.1,
-                                max_value=1.0)
-    TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.8, min_value=0.1,
-                                max_value=1.0)
-                                  #mouseover="System starts at 10% operational, scales to 100% over this many days."
+TTI_rate_inf = st.sidebar.slider("Symptomatic percentage tested (at end of ramp-up)", value=0.8,
+                                        min_value=0.1, max_value=1.0)
+TTI_chi = st.sidebar.slider("Trace Speed (chi = Percentage of traces complete on day 1)", value=0.8, min_value=0.1,
+                            max_value=1.0)
+TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.8, min_value=0.1,
+                            max_value=1.0)
+                              #mouseover="System starts at 10% operational, scales to 100% over this many days."
 triggers = st.sidebar.checkbox("Reimpose Shutdowns As Needed")
 if triggers:
     intervention_list.append(cfg_trig)
-dance = False
-dance = st.sidebar.checkbox("Dance!")
+#dance = False
+#dance = st.sidebar.checkbox("Dance!")
 
 cfg = config_load(filename=os.path.join("..", "examples", "structured", "ptti-past.yaml"),
                   interventions=[[i, 0] for i in intervention_list])
@@ -108,16 +108,15 @@ defaults = {}
 defaults.update(cfg["initial"])
 defaults.update(cfg["parameters"])
 
-if end:
-   for i in cfg['interventions']:
-       if i['name' ]== "End Lockdown":
-           i['time'] = (end_date-start).days
+if end_shutdown:
+    for i in cfg['interventions']:
+        if i['name' ]== "End Lockdown":
+            i['time'] = (end_date-start).days
 
 if TTI:
     Phases = max([i['phase'] if i['name'] == "Targeted Testing" else 0 for i in cfg['interventions']])
     for i in cfg['interventions']:
         if i['name'] == "Targeted Testing":
-            print(i)
             i['parameters']['chi'] = TTI_chi
             i['parameters']['eta'] = TTI_eta
             # Set date based on number of phases (3)
@@ -136,7 +135,7 @@ cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))
 # For preconfigured interventions, For now only allow changing times.
 # NOTE: The first four interventions are fixed past events.
 To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infected", "Recovered", "Quarantined"],
-                                  default=["Susceptible", "Infected", "Quarantined"])
+                                  default=["Infected", "Quarantined", "Recovered"])
 
 # Intervention_Start = st.sidebar.date_input("Intervention Start (Not working.)")
 
@@ -152,7 +151,7 @@ Model_Today = (Today-start).days
 # if dance: st.image('GIPHY_Dance.gif', caption=None, format='GIF')
 
 #if to_run:
-samples = [(i, cfg) for i in range(cfg["meta"]["samples"])]
+# samples = [(i, cfg) for i in range(cfg["meta"]["samples"])]
 
 traj, events, paramtraj = cachedRun(**cfg["meta"], **cfg)
 Latest_run = True
