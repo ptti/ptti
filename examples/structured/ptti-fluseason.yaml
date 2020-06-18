@@ -1,10 +1,22 @@
 
 interventions:      
 
-  - time: 152
+  - time: 154
     name: "Flu"
     parameters:
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      tested: 0.0001       # proportion of symptomatic who are tested (this is the same for
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing
+      chi: 0.0001  #  trace 80% of the eta contacts who will be traced in one day with teams of tracers
+                #
+      eta: 0.0001  # 80% of contacts for each case successfully traced by contact tracers,
+                #   with support from mobile phone apps
+                # These tracing rates continue throughout the rest of the simulation
+
 
   - time: 194
     name: "Flu"
