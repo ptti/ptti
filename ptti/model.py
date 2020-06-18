@@ -324,6 +324,13 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
             times.append(t)
             trajs.append(traj)
 
+    # fix up duplication for segments: the last point of segment n is the
+    # first of segment n+1
+    last = len(times) - 1
+    times = [times[i] if i == last else times[i][:-1] for i in range(len(times))]
+    trajs  = [trajs[i] if i == last else trajs[i][:-1] for i in range(len(times))]
+    
+    # stack the time series and trajectories
     t = np.hstack(times)
     traj = np.vstack(trajs)
 

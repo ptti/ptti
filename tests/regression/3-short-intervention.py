@@ -2,6 +2,7 @@
 
 from ptti.model import runModel
 from ptti.seirct_ode import SEIRCTODEMem
+import numpy as np
 import logging
 import sys
 logging.basicConfig(stream=sys.stdout, level=logging.INFO,
@@ -16,4 +17,6 @@ interventions = [
   { "time": 11, "parameters": { "c": 10 } }
 ]
 
-result = runModel(SEIRCTODEMem, t0=0, tmax=20, steps=20, initial=initial, interventions=interventions)
+t, traj, e, p = runModel(SEIRCTODEMem, t0=0, tmax=20, steps=20, initial=initial, interventions=interventions)
+
+assert np.all(t == np.linspace(0., 20., 21))
