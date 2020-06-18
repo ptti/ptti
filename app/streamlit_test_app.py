@@ -161,9 +161,6 @@ econ_args = calcArgumentsODE(traj, paramtraj, cfg)
 econ = calcEconOutputs(**econ_args)
 Update_Graph=True
 # st.write(str(events))
-st.write("ECON")
-st.write(str(econ))
-# for i in plots: ["Susceptible", "Exposed", "Infected", "Recovered", "Quarantined"])
 
 if len(To_Graph)>0:
     pop = cfg['initial']['N']
@@ -213,3 +210,14 @@ if len(To_Graph)>0:
             plt.plot([i['time'], i['time']], [0, maxy], color='k', linestyle='-', linewidth=0.75)
     plt.legend(To_Graph)
     st.pyplot()
+
+
+#Econ Outputs / Graph:
+st.write("Total COVID-19 Deaths: " + str(econ['Medical']['Deaths']))
+st.write("")
+st.write("Economic Results:")
+st.write("Maximum Tracers Needed: " + str(econ['Tracing']['Max_Tracers']))
+st.write("Total Tracer Budget: " + str(econ['Tracing']['Tracing_Total_Costs']/1000000) + " million GBP")
+st.write("Total Testing Budget: " + str(econ['Testing']['Testing_Total_Costs']/1000000) + " million GBP")
+st.write("Total Economic Loss from COVID-19: " + str(econ['Economic']['Total_Productivity_Loss']/1000000) + " million GBP")
+# st.write(str(econ))
