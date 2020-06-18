@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from ptti.model import runModel
 from ptti.seirct_ode import SEIRCTODEMem
 import logging
