@@ -17,7 +17,7 @@ yaml_seirct_obs = """
 - name:  EU
   descr: exposed and unconfined
 - name:  ED
-  descr: infectious and distanced
+  descr: exposed and distanced
 - name:  IU
   descr: infectious and unconfined
 - name:  ID
