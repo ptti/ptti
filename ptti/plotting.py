@@ -147,9 +147,14 @@ def iplot(model, traj, events, paramtraj, cfg):
     ax_ei.legend()
 
     ax_r.plot(time, traj[:, -1], color=colours[0], label="R(t)")
+    for intv in [i for i in events if "time" in i]:
+        ax_r.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
+
     ax_r.xaxis.set_major_locator(months)
     ax_r.xaxis.set_major_formatter(ym_fmt)
     ax_r.set_xlabel("Days since start of outbreak")
     ax_r.legend()
 
     fig.autofmt_xdate()
+
+    return fig, axes

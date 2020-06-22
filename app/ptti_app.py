@@ -15,7 +15,7 @@ import streamlit as st
 # from plotting.py import yaml_plot_defaults
 
 
-@st.cache(suppress_st_warning=True) #Enable caching to get this to run faster, esp. for pre-run scenarios.
+@st.cache(allow_output_mutation=True) #Enable caching to get this to run faster, esp. for pre-run scenarios.
 def cachedRun(*av, **kw):
     t, traj, events, paramtraj = runModel(*av, **kw)
     tseries = np.concatenate([t[:, None], traj], axis=1)
@@ -135,8 +135,6 @@ cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))
 # We want to show the intervention details and timing.
 # For preconfigured interventions, For now only allow changing times.
 # NOTE: The first four interventions are fixed past events.
-To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infected", "Recovered", "Isolated"],
-                                  default=["Infected", "Isolated"])
 
 # Intervention_Start = st.sidebar.date_input("Intervention Start (Not working.)")
 
@@ -146,71 +144,19 @@ Model_Today = (Today-start).days
 # "How you think you gonna move time while you're standin' in it you dumb ass three-dimensional monkey ass dummies?"
 
 
-#import os
-# st.text(os.getcwd())
-
-# if dance: st.image('GIPHY_Dance.gif', caption=None, format='GIF')
-
-#if to_run:
-# samples = [(i, cfg) for i in range(cfg["meta"]["samples"])]
-
 traj, events, paramtraj = cachedRun(**cfg["meta"], **cfg)
+interventions = sorted(events + [i for i in cfg["interventions"] if "time" in i],
+                       key=lambda x: x["time"])
+
 Latest_run = True
 
 econ_args = calcArgumentsODE(traj, paramtraj, cfg)
 econ = calcEconOutputs(**econ_args)
 Update_Graph=True
 
-iplot(cfg["meta"]["model"], traj, events, paramtraj, cfg)
+fig, axes = iplot(cfg["meta"]["model"], traj, interventions, paramtraj, cfg)
 st.pyplot()
 
-# st.write(str(events))
-
-# if len(To_Graph)>0:
-#     pop = cfg['initial']['N']
-#     df_plot_results = pd.DataFrame()
-#     Out_Columns = [col['name'] for col in cfg['meta']['model'].observables]
-#     for Compartment in To_Graph:
-#         if Compartment == "Isolated":
-#             C_list = [i+1 for i in range(len(Out_Columns)) if Out_Columns[i][1]=="D"]
-#         else:
-#             Leftmost = Compartment[0]
-#             C_list = [i+1 for i in range(len(Out_Columns)) if Out_Columns[i][0] == Leftmost]
-#         C_total = list()
-#         for x in traj:
-#             C_total.append(abs(sum([x[c] for c in C_list])))
-
-#         df_plot_results[Compartment] = C_total.copy()
-
-#     plt.plot(df_plot_results)
-#     ax = plt.gca()
-#     ax.yaxis.set_major_formatter(FuncFormatter(y_fmt))
-#     ax.xaxis.set_major_formatter(FuncFormatter(date_fmt))
-#     ax.set_xlabel('Date')
-#     ax.set_ylabel('People')
-#     maxy = ax.get_ylim()[1]
-#     st.write(str(maxy))
-
-#     intervention_lines = [(i['time'], i['parameters']['c']) for i in cfg['interventions'] if
-#                           ('c' in i['parameters'].keys() and 'time' in i.keys())]
-
-#     intervention_lines_2 = [(i['time'],i['parameters']['c']) for i in events]
-#     if len(intervention_lines_2)>0:
-#         st.write(intervention_lines_2[0])
-
-#     intervention_lines.extend(intervention_lines_2)
-
-#     for i in intervention_lines:
-#         if i[1] == 3.3: # Shouldn't fix this, should use shutdown value
-#             plt.plot([i[0], i[0]], [0, maxy], color='red', linestyle='-', linewidth=0.75)
-#         elif (i[1] > 3.3) & (i[1] < 8.8): # Shouldn't fix this, should use correct value
-#             plt.plot([i[0], i[0]], [0, maxy], color='yellow', linestyle='-', linewidth=0.75)
-#         elif i[1] == 8.8: # Shouldn't fix this, should use correct value
-#             plt.plot([i[0], i[0]], [0, maxy], color='green', linestyle='-', linewidth=0.75)
-#         else:
-#             plt.plot([i['time'], i['time']], [0, maxy], color='k', linestyle='-', linewidth=0.75)
-#     plt.legend(To_Graph)
-#     st.pyplot()
 
 
 #Econ Outputs / Graph:
