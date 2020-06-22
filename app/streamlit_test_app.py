@@ -135,7 +135,7 @@ cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))
 # For preconfigured interventions, For now only allow changing times.
 # NOTE: The first four interventions are fixed past events.
 To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infected", "Recovered", "Quarantined"],
-                                  default=["Infected", "Quarantined", "Recovered"])
+                                  default=["Infected", "Quarantined"])
 
 # Intervention_Start = st.sidebar.date_input("Intervention Start (Not working.)")
 
