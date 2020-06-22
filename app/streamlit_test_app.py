@@ -167,16 +167,13 @@ if len(To_Graph)>0:
     Out_Columns = [col['name'] for col in cfg['meta']['model'].observables]
     for Compartment in To_Graph:
         if Compartment == "Quarantined":
-            C_list = [i for i in range(len(Out_Columns)) if Out_Columns[i][1]=="D"]
+            C_list = [i+1 for i in range(len(Out_Columns)) if Out_Columns[i][1]=="D"]
         else:
             Leftmost = Compartment[0]
-            C_list = [i for i in range(len(Out_Columns)) if Out_Columns[i][0] == Leftmost]
+            C_list = [i+1 for i in range(len(Out_Columns)) if Out_Columns[i][0] == Leftmost]
         C_total = list()
         for x in traj:
-            fix=0
-            if Compartment == "Quarantined":
-                fix=pop  # TODO: Don't know why this is needed, but...?
-            C_total.append(abs(fix-sum([x[c] for c in C_list])))
+            C_total.append(abs(sum([x[c] for c in C_list])))
 
         df_plot_results[Compartment] = C_total.copy()
 
