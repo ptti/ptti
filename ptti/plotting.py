@@ -117,7 +117,8 @@ def iplot(model, traj, events, paramtraj, cfg):
     time_offset = datetime.strptime(start, "%Y/%m/%d").toordinal()
     time += time_offset
 
-
+    months = mdates.MonthLocator()
+    ym_fmt = mdates.DateFormatter('%Y/%m')
     fig, axes = plt.subplots(2,2, figsize=(12,12))
     ((ax_sr, ax_ei), (ax_r, _)) = axes
 
@@ -128,8 +129,6 @@ def iplot(model, traj, events, paramtraj, cfg):
     for intv in [i for i in events if "time" in i]:
         ax_sr.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
 
-    months = mdates.MonthLocator()
-    ym_fmt = mdates.DateFormatter('%Y/%m')
     ax_sr.xaxis.set_major_locator(months)
     ax_sr.xaxis.set_major_formatter(ym_fmt)
     ax_sr.set_xlabel("Days since start of outbreak")
@@ -142,16 +141,12 @@ def iplot(model, traj, events, paramtraj, cfg):
     for intv in [i for i in events if "time" in i]:
         ax_ei.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
 
-    months = mdates.MonthLocator()
-    ym_fmt = mdates.DateFormatter('%Y/%m')
     ax_ei.xaxis.set_major_locator(months)
     ax_ei.xaxis.set_major_formatter(ym_fmt)
     ax_ei.set_xlabel("Days since start of outbreak")
     ax_ei.legend()
 
     ax_r.plot(time, traj[:, -1], color=colours[0], label="R(t)")
-    months = mdates.MonthLocator()
-    ym_fmt = mdates.DateFormatter('%Y/%m')
     ax_r.xaxis.set_major_locator(months)
     ax_r.xaxis.set_major_formatter(ym_fmt)
     ax_r.set_xlabel("Days since start of outbreak")
