@@ -54,7 +54,7 @@ for seed in args.seeds:
     graph_Yh = 0.1
     graph_maxa = 0.5
     graph_colors = ['#aa3366', '#0066aa', '#00aa66']
-    graph_labels = ['c', '{/Symbol q}', '{/Symbol h}{/Symbol c}']
+    graph_labels = ['contacts/day', 'testing coverage', 'tracing success']
 
     gpfname = seed + '-events.gp'
     with open(gpfname, 'w') as f:
