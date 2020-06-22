@@ -134,8 +134,8 @@ cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))
 # We want to show the intervention details and timing.
 # For preconfigured interventions, For now only allow changing times.
 # NOTE: The first four interventions are fixed past events.
-To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infected", "Recovered", "Quarantined"],
-                                  default=["Infected", "Quarantined"])
+To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infected", "Recovered", "Isolated"],
+                                  default=["Infected", "Isolated"])
 
 # Intervention_Start = st.sidebar.date_input("Intervention Start (Not working.)")
 
@@ -166,7 +166,7 @@ if len(To_Graph)>0:
     df_plot_results = pd.DataFrame()
     Out_Columns = [col['name'] for col in cfg['meta']['model'].observables]
     for Compartment in To_Graph:
-        if Compartment == "Quarantined":
+        if Compartment == "Isolated":
             C_list = [i+1 for i in range(len(Out_Columns)) if Out_Columns[i][1]=="D"]
         else:
             Leftmost = Compartment[0]
