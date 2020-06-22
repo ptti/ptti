@@ -113,7 +113,7 @@ class SEIRCTODEMem(Model):
         for name, rate in self.couplings(N):
             self.cm.set_coupling_rate(name, rate, name=name)
 
-        t = np.linspace(t0, tmax, tsteps)
+        t = np.linspace(t0, tmax, tsteps+1)
 
         traj = self.cm.integrate(t, y0, events=self.conditions, ivpargs={"max_step": 1.0})
 
@@ -178,7 +178,7 @@ class SEIRODE(Model):
         """
         y0, N = state
         cm = self._cmodel(N)
-        t = np.linspace(t0, tmax, tsteps)
+        t = np.linspace(t0, tmax, tsteps+1)
 
         traj = cm.integrate(t, y0, events=self.conditions)
 
