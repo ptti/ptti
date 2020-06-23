@@ -87,7 +87,7 @@ interventions:
 
   ## On 31st July, contacts increase a bit more
   - time: 226
-     parameters:
+    parameters:
       c: c0 * 0.7 # Contacts per day increase
 
   ## On 31st August, contacts increase a bit more
