@@ -1,0 +1,6 @@
+interventions:
+  - time: 199
+    name: "End Lockdown"
+    parameters:
+      c: c0 * 0.8    # Contacts per day increse from 6.6 to 8.8
+                  # assume contacts per day won't go back up to pre-pandemic level of 11

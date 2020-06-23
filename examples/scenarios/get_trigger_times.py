@@ -54,7 +54,7 @@ for seed in args.seeds:
     graph_Yh = 0.1
     graph_maxa = 0.5
     graph_colors = ['#aa3366', '#0066aa', '#00aa66']
-    graph_labels = ['c', '{/Symbol q}', '{/Symbol h}{/Symbol c}']
+    graph_labels = ['contacts/day', 'testing coverage', 'tracing success']
 
     gpfname = seed + '-events.gp'
     with open(gpfname, 'w') as f:
@@ -64,7 +64,7 @@ for seed in args.seeds:
                 continue  # Skip 0 range
             y0 = graph_Ymin+graph_Yh*i
             y1 = y0 + graph_Yh
-            f.write('set label "{0}" at graph 0.9,{1}\n'.format(
+            f.write('set label "{0}" at graph 0.7,{1}\n'.format(
                 graph_labels[i], (y0+y1)/2))
             for j in range(len(times)-1):
                 p = phist[i][j]

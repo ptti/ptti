@@ -1,0 +1,18 @@
+# Automatic lockdowns.
+
+interventions:
+  - condition: "-1 if not (x[IU] + x[ID] > 40000) else 1"
+    name: "Lockdown Trigger"
+    after: 96
+    direction: 1.0
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+      locked: True
+## Release lockdown when below 10k cases
+  - condition: "-1 if not (x[IU] + x[ID] < 10000) else 1"
+    name: "Lockdown Release Trigger"
+    after: 96
+    direction: -1.0
+    parameters:
+      c: c0 * 0.8 # Lockdown release
+      locked: False

@@ -5,7 +5,8 @@ of various kinds: compartmental models, agent-based models, network models
 and rule-based models. It is intended for studying the effects of testing
 and contact tracing for containing disease outbreaks. We call this TTI - Testing, 
 tracing and Isolation. The underlying principles are described in our
-[SEIR-TTI paper]. This software contains the following models:
+[SEIR-TTI paper] and used in our [PTTI paper] examining the human and 
+economic cost of various interventions. This software contains the following models:
 
   * SEIRCTABM an agent-based model
   * SEIRCTODEMem an ODE implementation of a compartmental model with
@@ -282,6 +283,7 @@ properties:
 [GNU Parallel]: https://www.gnu.org/software/parallel/
 [examples/ukfitting.py]: https://github.com/ptti/ptti/blob/master/examples/ukfitting.py
 [SEIR-TTI paper]: https://github.com/ptti/ptti/raw/master/docs/tti.pdf
+[PTTI paper]: https://github.com/ptti/ptti/raw/master/docs/PTTI-Covid-19-UK.pdf
 [GNU Make]: https://www.gnu.org/software/make/
 [Kappa Language]: http://kappalanguage.org/
 [Epidemics on Networks]: https://epidemicsonnetworks.readthedocs.io/

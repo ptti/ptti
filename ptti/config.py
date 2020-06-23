@@ -36,7 +36,7 @@ def numpy_funcs():
     return {f: getattr(np.random, f) for f in funcs}
 
 
-def config_load(filename=None, sample=0):
+def config_load(filename=None, interventions=None, sample=0, defaults={}):
     """
     Load a YAML configuration file, supporting evaluation of some expressions and
     sensible defaults. The defaults are:
@@ -51,13 +51,36 @@ def config_load(filename=None, sample=0):
               'tmax': 360},
      'parameters': {}}
     """
+
     if filename is not None:
         with open(filename) as fp:
             cfg = ordered_load(fp.read(), yaml.FullLoader)
     else:
         cfg = {}
+    if 'interventions' not in cfg.keys():
+        cfg['interventions'] = []
 
-    gvars = {"sample": sample}
+    if interventions is not None:
+        for item in interventions:
+            if type(item) == type([]): #Lists have filename, offset
+                filename = item[0]
+                offset = item[1]
+            elif type(item) != type(""):
+                raise(NotImplementedError)
+            else:
+                filename = item
+                offset = 0
+            with open(filename) as fp:
+                interventionset = ordered_load(fp.read(), yaml.FullLoader)
+                if offset != 0:
+                    for item in interventionset['interventions']:
+                        item['time'] = item['time'] + offset
+            cfg['interventions'].extend(interventionset['interventions'])
+
+    cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000)))
+
+    gvars = defaults.copy()
+    gvars["sample"] = sample
     gvars.update(numpy_funcs())
 
     for k, v in cfg.items():

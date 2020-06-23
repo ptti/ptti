@@ -106,3 +106,55 @@ def plot(model, output, plots, title, envelope=True, start=None, **unused):
 
         plt.savefig("{}-{}.png".format(output, plot["name"]))
 
+
+def iplot(model, traj, events, paramtraj, cfg):
+
+    colours = [mcolors.to_rgb(c) for c in mcolors.TABLEAU_COLORS.values()]
+
+    time = traj[:, 0]
+
+    start = cfg["meta"]["start"]
+    time_offset = datetime.strptime(start, "%Y/%m/%d").toordinal()
+    time += time_offset
+
+    months = mdates.MonthLocator()
+    ym_fmt = mdates.DateFormatter('%Y/%m')
+    fig, axes = plt.subplots(2,2, figsize=(12,12))
+    ((ax_sr, ax_ei), (ax_r, _)) = axes
+
+    for i, ts in enumerate(["SU", "SD", "RU", "RD"]):
+        colour = colours[i % len(colours)]
+        ax_sr.plot(time, traj[:, model.colindex(ts)], color=colour, label=ts)
+
+    for intv in [i for i in events if "time" in i]:
+        ax_sr.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
+
+    ax_sr.xaxis.set_major_locator(months)
+    ax_sr.xaxis.set_major_formatter(ym_fmt)
+    ax_sr.set_xlabel("Days since start of outbreak")
+    ax_sr.legend()
+
+    for i, ts in enumerate(["EU", "ED", "IU", "ID"]):
+        colour = colours[i % len(colours)]
+        ax_ei.plot(time, traj[:, model.colindex(ts)], color=colour, label=ts)
+
+    for intv in [i for i in events if "time" in i]:
+        ax_ei.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
+
+    ax_ei.xaxis.set_major_locator(months)
+    ax_ei.xaxis.set_major_formatter(ym_fmt)
+    ax_ei.set_xlabel("Days since start of outbreak")
+    ax_ei.legend()
+
+    ax_r.plot(time, traj[:, -1], color=colours[0], label="R(t)")
+    for intv in [i for i in events if "time" in i]:
+        ax_r.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
+
+    ax_r.xaxis.set_major_locator(months)
+    ax_r.xaxis.set_major_formatter(ym_fmt)
+    ax_r.set_xlabel("Days since start of outbreak")
+    ax_r.legend()
+
+    fig.autofmt_xdate()
+
+    return fig, axes

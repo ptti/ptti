@@ -92,7 +92,7 @@ def command():
                     format='%(asctime)s - %(name)s:%(levelname)s - %(message)s')
 
     def mkcfg(sample):
-        cfg = config_load(args.yaml, sample)
+        cfg = config_load(args.yaml, sample=sample)
 
         for meta in ("model", "tmax", "steps", "samples", "output", "date"):
             arg = getattr(args, meta)
