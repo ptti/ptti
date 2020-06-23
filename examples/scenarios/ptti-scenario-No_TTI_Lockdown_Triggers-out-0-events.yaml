@@ -1,0 +1,26 @@
+- parameters:
+    c: 7.699999999999999
+  time: 89
+- parameters:
+    c: 3.3
+  time: 96
+- parameters:
+    c: 4.4
+  time: 174
+- parameters:
+    c: 6.6
+  time: 199
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 448.97861470005864
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 448.9786147001072

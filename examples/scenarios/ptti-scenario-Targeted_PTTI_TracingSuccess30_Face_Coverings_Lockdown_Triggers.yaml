@@ -1,0 +1,286 @@
+##
+##   Targeted PTTI 30% Tracing Success Face Coverings Lockdown Triggers: Clinical case identification: As Untargeted PTTI but with targeted testing
+##    from pool of those identified clinically (by bespoke clinical reporting system) as per 'Numbers T & T' sheet of Test calcs sheets: 
+##    https://docs.google.com/spreadsheets/d/136_sukzkrMrjtpRccAmoUoXn8Ue4GGUY3RRj4VWj7LU/edit?usp=sharing 
+##    with 80% of contacts traced per case (all on one day).
+##    + Face Coverings, which reduce transmission (Beta) by 25%
+##    From 31st July: Lockdown released when there are less than 10,000 cases per day
+##    Lockdown triggered when there are more than 40,000 cases per day
+##  reduced tracing success to a level that doesn't work with targeted testing (eta=0.3)
+##
+
+meta:
+  title: PTTI Scenario Targeted PTTI 30% Tracing Success Face Coverings Lockdown Triggers
+  output: ptti-scenario-Targeted-PTTI-TracingSuccess30-Face-Coverings-Lockdown-Triggers-out
+  start: 2019/12/18
+  tmax: 895
+  steps: 895
+
+## Initial values for the simulation
+initial:
+  ## N is the total population
+  N:    67886011    # mid-year 2020 from: https://www.worldometers.info/world-population/uk-population/
+  ## IU is the number of unconfined, infected individuals
+  IU:   2
+
+## Parameters of the simulation.
+## All rates are per individual per day.
+parameters:
+  ## beta is the infectiousness of the disease, the
+  ## probability of infecting a contact.
+  beta: 0.039   # based on model fitting
+
+  ## c0 is contacts per day at baseline, pre-pandemic
+  c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
+  c: c0
+
+  ## alpha is the rate at which exposed individuals
+  ## (infected but not infectious) become infectious. 
+  ## 5 day incubation period
+  alpha: 0.2
+
+  ## gamma is the rate at which individuals either 
+  ## recover, or are taken into hospital and assumed
+  ## to be isolated. One week.
+  gamma: 0.1429
+
+  ## kappa is the rate at which individuals leave
+  ## isolation. This is one week according to UK policy.
+  ## The WHO thinks it should be 0.0714 (14 days).
+  ## We agree with WHO and think isolation should last for 14 symptom free days
+  kappa: 0.0714
+
+  ## chi is the rate at which contacts are traced.
+  ## Tracing is triggered by testing. Starts at none.
+  chi:   0.0
+
+  ## eta is the success rate of tracing. Starts at none
+  eta:   0.0
+
+  ## below parameters are used in calculation of theta below
+
+  ## rate of testing at random in the general population
+  testedBase: 0.0
+
+  ## default testing rate (proportion of symptomatics)
+  tested: 0.8   
+  ## 50% of SARS-Cov-2 infected (IU) have symptoms
+  symptomatic: 0.5 
+  ## average duration of symptomatic illness(coldflu or Covid combined)
+  duration: 7
+  ## theta governs testing, and we start with none
+  theta: 0.0
+  
+## Exogenous interventions. The time is given in
+## simulation days.
+interventions:
+  ## After three months, start of restrictions on 16th March. 
+  ## Reduce contacts by 30%.
+  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.7
+  ## After one more week, Lockdown, on 23rd March.
+  ## Reduce contacts to ~3 per day (~70% reduction).
+  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+  
+  ## On 18th May, start contact tracing
+  ##  Targetted Testing - initial proportion of symptomatics tested during their week long illness
+  - time: 152
+    parameters:
+          ## Targetted Testing
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      tested: 0.1       # proportion of symptomatic who are tested (this is the same for 
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+      ## Tracing
+      chi: 0.8  # 80% of the those who test positive per day have contacts traced
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers
+                # These tracing rates continue throughout the rest of the simulation
+
+  ## On 9th June, scale up testing, and contact tracing
+  ## 9th June, contacts per day only slightly increased according to CoMix data:
+  - time: 174
+    parameters:
+      c: c0 * 0.6    # Contacts per day increase from 4.4 to 6.6
+ 
+      ## Targetted Testing - scale up tested (proportion of symptomatics tested during their week long illness)
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in June
+      tested: 0.2       # proportion of symptomatic who are tested (this is the same for
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+      c: c0 * 0.4 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
+        # 2.6 under lockdown to 3.8 week of 5th-12th June
+                
+  ## On 4th July, scale up testing, and contact tracing further
+  ##  Targetted Testing - scale up tested further (proportion of symptomatics tested during their week long illness)
+  ## On 4th July, pubs and entertainment venues open with 1m distancing rule
+  - time: 199
+    parameters:
+            ## Targetted Testing
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in July
+      tested: 0.4       # proportion of symptomatic who are tested (this is the same for 
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+      c: c0 * 0.6 # Contacts per day increase
+      beta: 0.02925  # 25% reduction in Beta due to public wearing of home-made cloth face coverings
+
+## Lockdown triggers - start from 31st July (given sudden release to c0*0.8 don't want them too early)
+## Release lockdown when below 10k cases
+  - condition: x[IU] + x[ID] - 10000
+    after: 226
+    direction: -1.0
+    parameters:
+      c: c0 * 0.8 # Lockdown release
+      locked: False
+## Lockdown trigger on 40k cases
+  - condition: x[IU] + x[ID] - 40000
+    after: 226
+    direction: 1.0
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+      locked: True
+
+  ## On 31st July, scale up testing, and contact tracing further still
+  - time: 226
+    parameters:
+            ## Targetted Testing
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in July-August
+      tested: 0.6       # proportion of symptomatic who are tested (this is the same for 
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+
+  ## On 31st August, scale up testing, and contact tracing to maximum
+  ##  Targetted Testing - maximum propotion (80%) of symptomatics tested during their week long illness
+  - time: 257
+    parameters:
+           ## Targetted Testing
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in September
+      tested: 0.8       # proportion of symptomatic who are tested (this is the same for 
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above
+
+  ## 1st October - increase in cold&flu prevalence
+  ##  Targetted Testing - maximum proportion (50%) of symptomatics tested
+  - time: 288
+    parameters:
+                 ## Targetted Testing
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in October
+      tested: 0.8       # proportion of symptomatic who are tested (this is the same for 
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+            
+  ## 1st November - increase in cold&flu prevalence
+  ##  Targetted Testing - maximum proportion (50%) of symptomatics tested
+  - time: 319
+    parameters:
+                 ## Targetted Testing
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in November
+      tested: 0.8       # proportion of symptomatic who are tested (this is the same for 
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+            
+  ## 1st December - increase in cold&flu prevalence
+  ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
+  - time: 349
+    parameters:
+      coldflu: 0.04     # prevalence of symptomatic cold & flu in December-Feb
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+  
+  ## 1st March 2021 - decrease in cold&flu prevalence
+  ##  Targetted Testing - maximum proportion (80%) of symptomatics tested
+  - time: 439
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in March-April
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+                        
+  ## 1st May 2021 - decrease in cold&flu prevalence
+  - time: 500
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+
+  ## 1st June 2021 - decrease in cold&flu prevalence
+  - time: 531
+    parameters:
+      coldflu: 0.01     # prevalence of symptomatic cold & flu in June-August
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+  
+  ## 1st Sep 2021 - increase in cold&flu prevalence
+  - time: 623
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in Sep
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+  
+  ## 1st Oct 2021 - increase in cold&flu prevalence
+  - time: 653
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in Oct & Nov
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+  
+  ## 1st Dec 2021 - increase in cold&flu prevalence
+  - time: 714
+    parameters:
+      coldflu: 0.04     # prevalence of symptomatic cold & flu in Dec-Feb
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+                                           
+  ## 1st Mar 2022 - decrease in cold&flu prevalence
+  - time: 804
+    parameters:
+      coldflu: 0.03     # prevalence of symptomatic cold & flu in Mar-Apr
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
+
+## 1st May 2022 - decrease in cold&flu prevalence
+  - time: 865
+    parameters:
+      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+           ## Tracing - as above
