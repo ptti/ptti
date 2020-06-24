@@ -6,9 +6,9 @@
 ##
 
 meta:
-  title: PTTI Scenario No TTI
-  output: ptti-scenario-No_TTI-out
-  start: 2020/02/22   # end of February half term when 1300 cases came in from Spain, Italy, France
+  title: PTTI Scenario No TTI new
+  output: ptti-scenario-No_TTI_new-out
+  start: 2020/02/28   # ~5000 cases estimated before 28th Feb
   envelope: false
   tmax: 895
   steps: 895
@@ -65,33 +65,33 @@ parameters:
 interventions:
   ## After three months, start of restrictions on 16th March. 
   ## Reduce contacts by 30%.
-  - time: 23    # 16th March 2020 (assume seeding on 18th December 2019)
+  - time: 17    # 16th March 2020 (assume seeding on 18th December 2019)
     parameters:
       c: c0 * 0.7
   ## After one more week, Lockdown, on 23rd March.
   ## Reduce contacts to ~3 per day (~70% reduction).
-  - time: 30    # 23rd March 2020 (assume seeding on 18th December 2019)
+  - time: 24    # 23rd March 2020 (assume seeding on 18th December 2019)
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
   
   ## 9th June, contacts per day only slightly increased according to CoMix data:
-  - time: 108
+  - time: 102
     parameters:
       c: c0 * 0.4 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
                   # 2.6 under lockdown to 3.8 week of 5th-12th June
 
   ## On 4th July, pubs and entertainment venues open with 1m distancing rule
-  - time: 133
+  - time: 127
     parameters:
       c: c0 * 0.6 # Contacts per day increase
 
   ## On 31st July, contacts increase a bit more
-  - time: 160
+  - time: 154
     parameters:
       c: c0 * 0.7 # Contacts per day increase
 
   ## On 31st August, contacts increase a bit more
-  - time: 191
+  - time: 185
     parameters:
       c: c0 * 0.8 # Contacts per day increase
                   # assume contacts per day won't go back up to pre-pandemic level of 11
