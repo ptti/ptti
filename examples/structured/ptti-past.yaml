@@ -85,11 +85,3 @@ interventions:
     parameters:
       c: c0 * 0.4 # CoMix Weekly report 9 (LSHTM) shows contacts only increased from
                   # 2.6 under lockdown to 3.5 week of 21-28th May
-  
-  ## On 17th May, start cloth face covering (mask) wearing in public
-  - time: 151
-    name: "Past"
-    parameters:
-          ## Face coverings
-      beta: 0.02975  # 30% reduction in Beta due to public wearing of home-made cloth face coverings
-                    # conservative assumption based on Greenhalgh & DELVE reviews
