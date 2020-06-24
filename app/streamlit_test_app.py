@@ -66,6 +66,7 @@ HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; borde
 
 cfg = config_load(os.path.join("..", "examples", "structured", "ptti-past.yaml"))
 
+cfg_mask = os.path.join("..", "examples", "structured", "ptti-masks.yaml")
 cfg_relax = os.path.join("..", "examples", "structured", "ptti-relax.yaml")
 cfg_flu   = os.path.join("..", "examples", "structured", "ptti-fluseason.yaml")
 # Add flu season to TTI...
@@ -75,6 +76,11 @@ cfg_trig  = os.path.join("..", "examples", "structured", "ptti-trig.yaml")
 intervention_list = []
 
 start = date(int(cfg['meta']['start'][0:4]), int(cfg['meta']['start'][5:7]), int(cfg['meta']['start'][8:10]))
+
+mask = st.sidebar.checkbox("Wear Masks")
+if mask:
+    intervention_list.append(cfg_mask)
+
 
 end_shutdown = st.sidebar.checkbox("End Shutdown")
 if end_shutdown:
