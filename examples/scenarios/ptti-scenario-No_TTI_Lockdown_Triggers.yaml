@@ -8,8 +8,8 @@
 ##
 
 meta:
-  title: PTTI Scenario No TTI
-  output: ptti-scenario-No_TTI-out
+  title: PTTI Scenario No TTI Lockdown Triggers
+  output: ptti-scenario-No_TTI-Lockdown-Triggers-out
   start: 2019/12/18
   envelope: false
   tmax: 895
@@ -89,17 +89,17 @@ interventions:
     parameters:
       c: c0 * 0.6 # Contacts per day increase
 
-## Lockdown triggers - start from 31st July (given sudden release to c0*0.8 don't want them too early)
+## Lockdown triggers - start from 4th July (so trigger can happen as it doesn't work if already over 40k cases)
 ## Release lockdown when below 10k cases
   - condition: x[IU] + x[ID] - 10000
-    after: 226
+    after: 199
     direction: -1.0
     parameters:
       c: c0 * 0.8 # Lockdown release
       locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
-    after: 226
+    after: 199
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts

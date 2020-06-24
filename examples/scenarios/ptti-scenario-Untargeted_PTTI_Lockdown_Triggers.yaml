@@ -5,8 +5,8 @@
 ##
 
 meta:
-  title: PTTI Scenario Untargeted PTTI
-  output: ptti-scenario-Untargeted-PTTI-out
+  title: PTTI Scenario Untargeted PTTI Lockdown Triggers
+  output: ptti-scenario-Untargeted-PTTI-Lockdown-Triggers-out
   start: 2019/12/18
   tmax: 895
   steps: 895

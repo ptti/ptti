@@ -104,7 +104,7 @@ econ_inputs['Medical']['Non_ICU_Fatality'] = 0.363  # 4207 deaths out of 11580 n
 
 econ_inputs['Medical']['Hospitalized_Pct_Deaths'] = 0.60  # The percentage of deaths that occur in hospitals 
 
-econ_inputs['Medical']['IFR'] = 0.01
+econ_inputs['Medical']['IFR'] = 0.011
 
 # Based on Spreadsheet from v1.
 econ_inputs['Medical']['NHS_Death_Cost'] = 500
