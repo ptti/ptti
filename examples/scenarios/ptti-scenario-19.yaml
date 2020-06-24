@@ -1,16 +1,15 @@
 ##
-## This is Scenario 1: Phased lockdown release, no testing and tracing. 
-##   Lockdown lifted in a phased way as per UK government Covid-19 recovery strategy (11th May): 
-##   those who can’t work from home encouraged back to work from 13th May, some schools 
-##   may open 1st June, some entertainment venues may open 4th July 
-##   (the latter both subject to estimates of infections circulating and R)
+## This is Scenario 19 same as scenario 3b-Trig but with testing everyone every week with reduced tracing success to a level
+##  that doesn't work with targeted testing (eta=0.3)
+##  (ToDo: scale down to targeted testing after 3 months at full capacity to save costs)
+## : Cloth face coverings (masks) added starting 18th May
+## (reduce Beta -transmission per contact- by 30%). Otherwise as per scenario 2b Trig
 ##
 
 meta:
-  title: PTTI Scenario 19
-  output: ptti-scenario-19-out
+  title: PTTI Scenario 3b Trig
+  output: ptti-scenario-3b-Trig-out
   start: 2019/12/18
-  envelope: false
   tmax: 895
   steps: 895
 
@@ -34,11 +33,11 @@ parameters:
   c: c0
 
   ## alpha is the rate at which exposed individuals
-  ## (infected but not infectious) become infectious. 
+  ## (infected but not infectious) become infectious.
   ## 5 day incubation period
   alpha: 0.2
 
-  ## gamma is the rate at which individuals either 
+  ## gamma is the rate at which individuals either
   ## recover, or are taken into hospital and assumed
   ## to be isolated. One week.
   gamma: 0.1429
@@ -49,7 +48,7 @@ parameters:
   ## We agree with WHO and think isolation should last for 14 symptom free days
   kappa: 0.0714
 
-  ## testedBase is the rate of testing at random in the population
+  ## rate of testing at random in the general population
   testedBase: 0.0
 
   ## theta governs testing, and we start with none
@@ -65,7 +64,7 @@ parameters:
 ## Exogenous interventions. The time is given in
 ## simulation days.
 interventions:
-  ## After three months, start of restrictions on 16th March. 
+  ## After three months, start of restrictions on 16th March.
   ## Reduce contacts by 30%.
   - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
     parameters:
@@ -75,38 +74,85 @@ interventions:
   - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
-  
-  ## On 13th May, start relax lockdown, phase one: 
-  ##    those who can’t work from home encouraged back to work 
-  - time: 147
-    parameters:
-      c: c0 * 0.4 # CoMix Weekly report 9 (LSHTM) shows contacts only increased from
-                  # 2.6 under lockdown to 3.5 week of 21-28th May
 
-  ## On 1st June, relax lockdown more, phase two
-  ##  some schools may open 1st June
+## Release lockdown when below 10k cases
+  - condition: x[IU] + x[ID] - 10000
+    after: 96
+    direction: -1.0
+    parameters:
+      c: c0 * 0.8 # Lockdown release
+      locked: False
+## Lockdown trigger on 40k cases
+  - condition: x[IU] + x[ID] - 40000
+    after: 96
+    direction: 1.0
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+      locked: True
+
+  ## On 18th May, start contact tracing,
+  ##  start cloth face covering (mask) wearing in public
+  - time: 152
+    parameters:
+      testedBase: 100000/N   # 100,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% of the ~3000 cases per day (1% of tested) have contacts traced
+                # 18,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+                #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
+                #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
+      beta: 0.02975  # 30% reduction in Beta due to public wearing of home-made cloth face coverings
+                    # conservative assumption based on Greenhalgh & DELVE reviews
+
+  ## On 1st June, scale up testing, and contact tracing
   - time: 166
     parameters:
-      c: c0 * 0.6    # Contacts per day increase from 4.4 to 6.6
-
-  - time: 174
-    parameters:
-      testedBase: 13500000/N
+      testedBase: 300000/N   # 300,000 people tested per day in the UK
       theta: testedBase
-      
-  ## On 4th July, relax lockdown more, phase three
-  ##  some entertainment venues may open
-  - time: 199
-    parameters:
-      c: c0 * 0.8 # Contacts per day increse from 6.6 to 8.8
-                  # assume contacts per day won't go back up to pre-pandemic level of 11
+      chi: 0.8  # 80% of the ~6000 cases per day (2% of tested) have contacts traced
+                # 36,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+                #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
+                #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
 
-  - time: 264
+  ## On 29th June, scale up testing, and contact tracing further
+  - time: 194
     parameters:
-      testedBase: 0
-      theta: 0.5
-      eta: 0.8
-      chi: 0.8
+      testedBase: 900000/N   # 900,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% of the ~9000 cases per day (1% of tested) have contacts traced
+                # 54,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+                #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
+                #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
+
+  ## On 27th July, scale up testing, and contact tracing further still
+  - time: 222
+    parameters:
+      testedBase: 3000000/N   # 3,000,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% of the ~11667 cases per day (0.39% of tested) have contacts traced
+                # 70,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+                #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
+                #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
+
+  ## On 31st August, scale up testing, and contact tracing to maximum
+  - time: 257
+    parameters:
+      testedBase: 9000000/N   # 9,000,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% of the ~11667 cases per day (0.13% of tested) have contacts traced
+                # 70,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.3  # 30% of contacts for each case successfully traced by contact tracers,
+                #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
+                #   eta needs to be >=0.4 to suppress the epidemic - see 4d-Trig40 and others
+
 
 periods:
   - 2021/05/31
