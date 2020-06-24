@@ -1,0 +1,151 @@
+##
+## Untargeted PTTI: Weekly Testing of 80% of people, Contact Tracing of 80% of positives within one day,
+##  with 80% of contacts traced per case.
+##  With Phased Lockdown release as per No TTI counterfactual while testing, tracing and isolation scaled up
+##
+
+meta:
+  title: PTTI Scenario Untargeted PTTI Lockdown Triggers
+  output: ptti-scenario-Untargeted-PTTI-Lockdown-Triggers-out
+  start: 2019/12/18
+  tmax: 895
+  steps: 895
+
+## Initial values for the simulation
+initial:
+  ## N is the total population
+  N:    67886011    # mid-year 2020 from: https://www.worldometers.info/world-population/uk-population/
+  ## IU is the number of unconfined, infected individuals
+  IU:   2
+
+## Parameters of the simulation.
+## All rates are per individual per day.
+parameters:
+  ## beta is the infectiousness of the disease, the
+  ## probability of infecting a contact.
+  beta: 0.042   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
+                # the average daily number of contactsobserved per participant (from 10.8 to 2.8). We round these to 11 and 3
+
+  ## c0 is contacts per day at baseline, pre-pandemic
+  c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
+  c: c0
+
+  ## alpha is the rate at which exposed individuals
+  ## (infected but not infectious) become infectious. 
+  ## 5 day incubation period
+  alpha: 0.2
+
+  ## gamma is the rate at which individuals either 
+  ## recover, or are taken into hospital and assumed
+  ## to be isolated. One week.
+  gamma: 0.1429
+
+  ## kappa is the rate at which individuals leave
+  ## isolation. This is one week according to UK policy.
+  ## The WHO thinks it should be 0.0714 (14 days).
+  ## We agree with WHO and think isolation should last for 14 symptom free days
+  kappa: 0.0714
+
+  ## testedBase is the background rate of testing
+  testedBase: 0.0
+  ## theta governs testing of infectious individuals, and we start with none
+  theta: testedBase
+
+  ## chi is the rate at which contacts are traced.
+  ## Tracing is triggered by testing. Starts at none.
+  chi:   0.0
+
+  ## eta is the success rate of tracing. Starts at none
+  eta:   0.0
+
+## Exogenous interventions. The time is given in
+## simulation days.
+interventions:
+  ## After three months, start of restrictions on 16th March. 
+  ## Reduce contacts by 30%.
+  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.7
+  ## After one more week, Lockdown, on 23rd March.
+  ## Reduce contacts to ~3 per day (~70% reduction).
+  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.26 # Lockdown, Jarvis et al 2020: "We found a 74% reduction in the average daily number of contacts
+                  # observed per participant (from 10.8 to 2.8). We round these to 11 and 3
+
+  ## On 18th May, start contact tracing
+  - time: 152
+    parameters:
+      testedBase: 100000/N   # 100,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% of the ~3000 cases per day (1% of tested) have contacts traced
+                # 18,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+
+  ## On 9th June, scale up testing, and contact tracing
+  ## 9th June, contacts per day only slightly increased according to CoMix data:
+  - time: 174
+    parameters:
+      testedBase: 300000/N   # 300,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% of the ~6000 cases per day (2% of tested) have contacts traced
+                # 36,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+      c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
+                  # ~3 under lockdown to 3.8 week of 5th-12th June
+
+  ## On 4th July, scale up testing, and contact tracing further
+  ## On 4th July, pubs and entertainment venues open with 1m distancing rule
+  - time: 199
+    parameters:
+      testedBase: 900000/N   # 900,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% of the ~9000 cases per day (1% of tested) have contacts traced
+                # 54,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+      c: c0 * 0.6 # Contacts per day increase
+
+## Lockdown triggers - start from 31st July (given sudden release to c0*0.8 don't want them too early)
+## Release lockdown when below 10k cases
+  - condition: x[IU] + x[ID] - 10000
+    after: 226
+    direction: -1.0
+    parameters:
+      c: c0 * 0.8 # Lockdown release
+      locked: False
+## Lockdown trigger on 40k cases
+  - condition: x[IU] + x[ID] - 40000
+    after: 226
+    direction: 1.0
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+      locked: True
+
+  ## On 31st July, scale up testing, and contact tracing further still
+  - time: 226
+    parameters:
+      testedBase: 3000000/N   # 3,000,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% of the ~11667 cases per day (0.39% of tested) have contacts traced
+                # 70,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+
+  ## On 31st August, scale up testing, and contact tracing to maximum
+  - time: 257
+    parameters:
+      testedBase: 9000000/N   # 9,000,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% of the ~11667 cases per day (0.13% of tested) have contacts traced
+                # 70,000 contact tracers starting on this date should be able to
+                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
+                #   with support from mobile phone apps
+

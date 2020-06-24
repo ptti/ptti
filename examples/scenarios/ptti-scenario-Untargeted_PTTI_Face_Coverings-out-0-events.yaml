@@ -1,0 +1,41 @@
+- parameters:
+    c: 7.699999999999999
+  time: 89
+- parameters:
+    c: 2.8600000000000003
+  time: 96
+- parameters:
+    chi: 0.8
+    eta: 0.8
+    testedBase: 0.0014730575346369962
+    theta: 0.0014730575346369962
+  time: 152
+- parameters:
+    c: 3.8499999999999996
+    chi: 0.8
+    eta: 0.8
+    testedBase: 0.004419172603910989
+    theta: 0.004419172603910989
+  time: 174
+- parameters:
+    beta: 0.0315
+    c: 6.6
+    chi: 0.8
+    eta: 0.8
+    testedBase: 0.013257517811732965
+    theta: 0.013257517811732965
+  time: 199
+- parameters:
+    c: 7.699999999999999
+    chi: 0.8
+    eta: 0.8
+    testedBase: 0.04419172603910988
+    theta: 0.04419172603910988
+  time: 226
+- parameters:
+    c: 8.8
+    chi: 0.8
+    eta: 0.8
+    testedBase: 0.13257517811732966
+    theta: 0.13257517811732966
+  time: 257
