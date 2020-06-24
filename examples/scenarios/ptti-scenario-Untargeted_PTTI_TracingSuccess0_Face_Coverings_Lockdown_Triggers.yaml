@@ -115,7 +115,7 @@ interventions:
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see Targeted PTTI TracingSuccess40 and others
       c: c0 * 0.6 # Contacts per day increase
-      beta: 0.0315  # 25% reduction in Beta due to public wearing of home-made cloth face coverings
+      beta: 0.0357  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
 
 ## Lockdown triggers - start from 31st July (given sudden release to c0*0.8 don't want them too early)
 ## Release lockdown when below 10k cases
