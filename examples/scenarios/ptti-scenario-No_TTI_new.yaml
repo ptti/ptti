@@ -18,7 +18,7 @@ initial:
   ## N is the total population
   N:    67886011    # mid-year 2020 from: https://www.worldometers.info/world-population/uk-population/
   ## IU is the number of unconfined, infected individuals
-  IU:   2
+  IU:   1300  # end of February half term when 1300 cases came in from Spain, Italy, France
 
 ## Parameters of the simulation.
 ## All rates are per individual per day.
