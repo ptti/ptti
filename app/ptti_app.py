@@ -1,9 +1,9 @@
 import streamlit as st
 from ptti.config import config_load
 from ptti.model import runModel
+from ptti.plotting import iplot
 from ptti.economic import calcEconOutputs, calcArgumentsODE
 from ptti.seirct_ode import SEIRCTODEMem
-from ptti.plotting import iplot
 from datetime import date, datetime, timedelta
 import os
 import numpy as np
@@ -14,6 +14,7 @@ import pandas as pd
 import streamlit as st
 # from plotting.py import yaml_plot_defaults
 
+print("App Run Started")
 
 @st.cache(allow_output_mutation=True) #Enable caching to get this to run faster, esp. for pre-run scenarios.
 def cachedRun(*av, **kw):
@@ -21,35 +22,10 @@ def cachedRun(*av, **kw):
     tseries = np.concatenate([t[:, None], traj], axis=1)
     return tseries, events, paramtraj
 
-######################
-# Graphing misc:     #
-######################
-from matplotlib.ticker import FuncFormatter
-
-def y_fmt(y, pos):
-    decades = [1e9, 1e6, 1e3, 1e0, 1e-3, 1e-6, 1e-9 ]
-    suffix  = ["G", "M", "k", "" , "m" , "u", "n"  ]
-    if y == 0:
-        return str(0)
-    for i, d in enumerate(decades):
-        if np.abs(y) >=d:
-            val = y/float(d)
-            signf = len(str(val).split(".")[1])
-            if signf == 0:
-                return '{val:d} {suffix}'.format(val=int(val), suffix=suffix[i])
-            else:
-                if signf == 1:
-                    print(val, signf)
-                    if str(val).split(".")[1] == "0":
-                       return '{val:d} {suffix}'.format(val=int(round(val)), suffix=suffix[i])
-                tx = "{"+"val:.{signf}f".format(signf = signf) +"} {suffix}"
-                return tx.format(val=val, suffix=suffix[i])
-
-    return y
-
-def date_fmt(x, pos):  # formatter function takes tick label and tick position
-    start = date(int(cfg['meta']['start'][0:4]), int(cfg['meta']['start'][5:7]), int(cfg['meta']['start'][8:10]))
-    return start+timedelta(days=x)
+#@st.cache(allow_output_mutation=True) #Enable caching to get this to run faster, esp. for pre-run scenarios.
+#def plotmodel(cfg, traj, interventions, paramtraj):
+#    fig_i, axes_i = iplot(cfg["meta"]["model"], traj, interventions, paramtraj, cfg)
+#    return(fig_i, axes_i)
 
 st.title("PTTI Policy Simulator")
 
@@ -62,11 +38,13 @@ Run different epidemic control policies for COVID-19. This uses the
 )
 
 
-
+if 'app' not in os.getcwd():
+    os.chdir('app')
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
 
 cfg = config_load(os.path.join("..", "examples", "structured", "ptti-past.yaml"))
 
+cfg_mask = os.path.join("..", "examples", "structured", "ptti-masks.yaml")
 cfg_relax = os.path.join("..", "examples", "structured", "ptti-relax.yaml")
 cfg_flu   = os.path.join("..", "examples", "structured", "ptti-fluseason.yaml")
 # Add flu season to TTI...
@@ -76,6 +54,10 @@ cfg_trig  = os.path.join("..", "examples", "structured", "ptti-trig.yaml")
 intervention_list = []
 
 start = date(int(cfg['meta']['start'][0:4]), int(cfg['meta']['start'][5:7]), int(cfg['meta']['start'][8:10]))
+
+mask = st.sidebar.checkbox("Wear Masks")
+if mask:
+    intervention_list.append(cfg_mask)
 
 end_shutdown = st.sidebar.checkbox("End Shutdown")
 if end_shutdown:
@@ -89,6 +71,7 @@ if TTI:
     #TTI_Launch = st.sidebar.date_input("Test and Trace Ramp-up Period (Start and End)",
     #                                 value=((start+timedelta(days=152)), start+timedelta(days=257)), max_value=start+timedelta(days=cfg['meta']['tmax']))
     # Error with too-close dates needs to be fixed before this is put in.
+# TTI_rate_inf = 0.8; TTI_chi = 0.8; TTI_eta = 0.8
 TTI_rate_inf = st.sidebar.slider("Symptomatic percentage tested (at end of ramp-up)", value=0.8,
                                         min_value=0.1, max_value=1.0)
 TTI_chi = st.sidebar.slider("Trace Speed (chi = Percentage of traces complete on day 1)", value=0.8, min_value=0.1,
@@ -148,16 +131,15 @@ traj, events, paramtraj = cachedRun(**cfg["meta"], **cfg)
 interventions = sorted(events + [i for i in cfg["interventions"] if "time" in i],
                        key=lambda x: x["time"])
 
-Latest_run = True
-
 econ_args = calcArgumentsODE(traj, paramtraj, cfg)
 econ = calcEconOutputs(**econ_args)
-Update_Graph=True
 
+# print("Plotting Now.")
 fig, axes = iplot(cfg["meta"]["model"], traj, interventions, paramtraj, cfg)
+# fig.show()
 st.pyplot()
 
-
+#print("plotted")
 
 #Econ Outputs / Graph:
 st.write("Total COVID-19 Deaths: " + str(econ['Medical']['Deaths']))

@@ -3,6 +3,7 @@ __all__ = ["plot", "plot_defaults"]
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import matplotlib.dates as mdates
+from matplotlib.lines import Line2D
 
 from datetime import datetime
 import numpy as np
@@ -108,7 +109,7 @@ def plot(model, output, plots, title, envelope=True, start=None, **unused):
 
 
 def iplot(model, traj, events, paramtraj, cfg):
-
+    # model = cfg['meta']['model']
     colours = [mcolors.to_rgb(c) for c in mcolors.TABLEAU_COLORS.values()]
 
     time = traj[:, 0]
@@ -117,44 +118,50 @@ def iplot(model, traj, events, paramtraj, cfg):
     time_offset = datetime.strptime(start, "%Y/%m/%d").toordinal()
     time += time_offset
 
-    months = mdates.MonthLocator()
-    ym_fmt = mdates.DateFormatter('%Y/%m')
-    fig, axes = plt.subplots(2,2, figsize=(12,12))
-    ((ax_sr, ax_ei), (ax_r, _)) = axes
+    months = mdates.MonthLocator(interval=4)
+    # ym_fmt = mdates.DateFormatter('%Y/%m')
+    fig, axes = plt.subplots(3, 1, figsize=(8, 24))
+    ((ax_sr, ax_ei, ax_r)) = axes
 
     for i, ts in enumerate(["SU", "SD", "RU", "RD"]):
         colour = colours[i % len(colours)]
         ax_sr.plot(time, traj[:, model.colindex(ts)], color=colour, label=ts)
 
-    for intv in [i for i in events if "time" in i]:
-        ax_sr.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
-
-    ax_sr.xaxis.set_major_locator(months)
-    ax_sr.xaxis.set_major_formatter(ym_fmt)
-    ax_sr.set_xlabel("Days since start of outbreak")
-    ax_sr.legend()
-
     for i, ts in enumerate(["EU", "ED", "IU", "ID"]):
         colour = colours[i % len(colours)]
         ax_ei.plot(time, traj[:, model.colindex(ts)], color=colour, label=ts)
 
-    for intv in [i for i in events if "time" in i]:
-        ax_ei.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
-
-    ax_ei.xaxis.set_major_locator(months)
-    ax_ei.xaxis.set_major_formatter(ym_fmt)
-    ax_ei.set_xlabel("Days since start of outbreak")
-    ax_ei.legend()
-
     ax_r.plot(time, traj[:, -1], color=colours[0], label="R(t)")
-    for intv in [i for i in events if "time" in i]:
-        ax_r.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.5, ls='--')
 
-    ax_r.xaxis.set_major_locator(months)
-    ax_r.xaxis.set_major_formatter(ym_fmt)
-    ax_r.set_xlabel("Days since start of outbreak")
-    ax_r.legend()
+    legends = []
+    # All plots have intervention lines, labels, legends...
+    for plot_axis in [ax_sr, ax_ei, ax_r]:
+        for intv in [i for i in events if ("time" in i and i['name'] != 'Flu')]:
+            if 'c' in intv['parameters']:
+                c = intv['parameters']['c']
+                c_min = 3.3
+                c_max = 8.9
+                c_midpoint = 5.5
+                if c < c_midpoint:
+                    plot_axis.axvline(intv["time"] + time_offset, lw=1.25, ls='--', c=(1, (c - c_min)/(c_midpoint-c_min), 0))
+                else:
+                    plot_axis.axvline(intv["time"] + time_offset, lw=1.25, ls='--', c=((c_max - c) / (c_max - c_midpoint), 1, 0))
+                # plot_axis.axvline(intv["time"] + time_offset, c=intervention_color, lw=0.5, ls='--')
+                # print("Draw lines")
+            elif intv['name'] == 'Targeted Testing':
+                plot_axis.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.75, ls=':')
+            elif intv['name'] == "Masks":
+                plot_axis.axvline(intv["time"] + time_offset, c=(1, 1, 0), lw=0.75, ls=':')
+            else:
+                plot_axis.axvline(intv["time"] + time_offset, c=(0, 0, 0), lw=0.75, ls='--')
+        plot_axis.xaxis.set_major_locator(months)
+        # plot_axis.xaxis.set_major_formatter(ym_fmt)
+        plot_axis.set_xlabel("Date")
+        legends.append(plot_axis.legend())
+        #legends.append(plot_axis.legend([Line2D([0], [0], c=(0, 0, 0), lw=0.75, ls=':'),
+        #                            Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'),
+        #                            Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
+        #                           ["Test and Trace", "Close Economy", "Open Economy"], loc=7))
 
     fig.autofmt_xdate()
-
     return fig, axes
