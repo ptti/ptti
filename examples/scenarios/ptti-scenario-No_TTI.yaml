@@ -25,7 +25,8 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta: 0.039   # based on model fitting
+  beta: 0.042   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
+                # the average daily number of contactsobserved per participant (from 10.8 to 2.8). We round these to 11 and 3
 
   ## c0 is contacts per day at baseline, pre-pandemic
   c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
@@ -72,15 +73,16 @@ interventions:
   ## Reduce contacts to ~3 per day (~70% reduction).
   - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
     parameters:
-      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+      c: c0 * 0.26 # Lockdown, Jarvis et al 2020: "We found a 74% reduction in the average daily number of contacts
+                  # observed per participant (from 10.8 to 2.8). We round these to 11 and 3
   
   ## 9th June, contacts per day only slightly increased according to CoMix data:
   - time: 174
     parameters:
-      c: c0 * 0.4 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
-                  # 2.6 under lockdown to 3.8 week of 5th-12th June
+      c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
+                  # ~3 under lockdown to 3.8 week of 5th-12th June
 
-  ## On 4th July, pubs and entertainment venues open with 1m distancing rule
+  ## On 4th July, pubs and entertainment venues open with new 1m distancing rule
   - time: 199
     parameters:
       c: c0 * 0.6 # Contacts per day increase

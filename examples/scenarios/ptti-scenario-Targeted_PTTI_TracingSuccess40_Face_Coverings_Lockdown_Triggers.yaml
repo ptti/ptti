@@ -28,7 +28,8 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta: 0.039   # based on model fitting
+  beta: 0.042   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
+                # the average daily number of contactsobserved per participant (from 10.8 to 2.8). We round these to 11 and 3
 
   ## c0 is contacts per day at baseline, pre-pandemic
   c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
@@ -83,7 +84,8 @@ interventions:
   ## Reduce contacts to ~3 per day (~70% reduction).
   - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
     parameters:
-      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+      c: c0 * 0.26 # Lockdown, Jarvis et al 2020: "We found a 74% reduction in the average daily number of contacts
+                  # observed per participant (from 10.8 to 2.8). We round these to 11 and 3
   
   ## On 18th May, start contact tracing
   ##  Targetted Testing - initial proportion of symptomatics tested during their week long illness
@@ -106,8 +108,6 @@ interventions:
   ## 9th June, contacts per day only slightly increased according to CoMix data:
   - time: 174
     parameters:
-      c: c0 * 0.6    # Contacts per day increase from 4.4 to 6.6
- 
       ## Targetted Testing - scale up tested (proportion of symptomatics tested during their week long illness)
       coldflu: 0.01     # prevalence of symptomatic cold & flu in June
       tested: 0.2       # proportion of symptomatic who are tested (this is the same for
@@ -116,8 +116,8 @@ interventions:
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
             ## Tracing - as above
-      c: c0 * 0.4 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
-        # 2.6 under lockdown to 3.8 week of 5th-12th June
+      c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
+                  # ~3 under lockdown to 3.8 week of 5th-12th June
                 
   ## On 4th July, scale up testing, and contact tracing further
   ##  Targetted Testing - scale up tested further (proportion of symptomatics tested during their week long illness)
@@ -133,7 +133,7 @@ interventions:
       theta: testedBase + (1-testedBase)*thetaI
             ## Tracing - as above
       c: c0 * 0.6 # Contacts per day increase
-      beta: 0.02925  # 25% reduction in Beta due to public wearing of home-made cloth face coverings
+      beta: 0.0315  # 25% reduction in Beta due to public wearing of home-made cloth face coverings
 
 ## Lockdown triggers - start from 31st July (given sudden release to c0*0.8 don't want them too early)
 ## Release lockdown when below 10k cases
