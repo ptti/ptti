@@ -1,12 +1,12 @@
 PTTI Scenario Targeted PTTI Lockdown Triggers											
 Economic											
-	Total_NHS_Costs	574209322.293949									
+	Total_NHS_Costs	631630254.5233437									
 	Total_Productivity_Loss	673740714285.6836									
 Medical											
-	Cases	7630147.801936612									
-	Deaths	78291.66791224723									
-	Hospital	102618.22316948365									
-	ICU	18109.098206379465									
+	Cases	7610245.903007803									
+	Deaths	86120.83470347195									
+	Hospital	112880.04548643198									
+	ICU	19920.008027017408									
 Testing											
 	Laboratories	1	9	9	9	9					
 	Max_Laboratories	9									
