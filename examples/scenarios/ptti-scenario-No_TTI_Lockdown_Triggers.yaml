@@ -85,7 +85,7 @@ interventions:
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
-      locked: Truep
+      locked: True
 
 
   ## 9th June, contacts per day only slightly increased according to CoMix data:
