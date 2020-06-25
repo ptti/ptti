@@ -89,10 +89,9 @@ interventions:
     parameters:
       c: c0 * 0.6 # Contacts per day increase
 
-## Lockdown trigger if already >40k cases - start 18th July - two weeks after entertainment venues open
-#   - condition: -1 if (t < 210 or x[IU] + x[ID] < 40000) else 1
-#  - condition: 1 if (x[IU] + x[ID] > 40000) else -1
-  - condition: if (x[IU] + x[ID] > 40000) then (x[IU] + x[ID]) - (x[IU] + x[ID])
+## Lockdown trigger - start 18th July - two weeks after entertainment venues open
+# needs to be higher than current cases to go on
+  - condition: x[IU] + x[ID] - 300000
     after: 213
     direction: 1.0
     parameters:
