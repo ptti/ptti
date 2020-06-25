@@ -84,27 +84,21 @@ interventions:
       c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
                   # ~3 under lockdown to 3.8 week of 5th-12th June
 
-  ## On 4th July, pubs and entertainment venues open with 1m distancing rule
-  - time: 199
-    parameters:
-      c: c0 * 0.6 # Contacts per day increase
-
-## Lockdown triggers - start from 4th July (so trigger can happen as it doesn't work if already over 40k cases)
+## Lockdown triggers - start from 9th June (so trigger can happen as it doesn't work if already over 40k cases)
 ## Release lockdown when below 10k cases
   - condition: x[IU] + x[ID] - 10000
-    after: 199
+    after: 174
     direction: -1.0
     parameters:
       c: c0 * 0.8 # Lockdown release
       locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
-    after: 199
+    after: 174
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
       locked: True
-
 
 periods:
   - 2021/05/31
