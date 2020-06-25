@@ -87,30 +87,17 @@ interventions:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
       locked: True
 
-
-  ## 9th June, contacts per day only slightly increased according to CoMix data:
-  - time: 174
-    parameters:
-      c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
-                  # ~3 under lockdown to 3.8 week of 5th-12th June
-
-  ## On 4th July, pubs and entertainment venues open with new 1m distancing rule
-  - time: 199
-    parameters:
-      c: c0 * 0.6 # Contacts per day increase
-
-
-## Lockdown triggers - start from 31st July (given sudden release to c0*0.8 don't want them too early)
+## Lockdown triggers
 ## Release lockdown when below 10k cases
   - condition: x[IU] + x[ID] - 10000
-    after: 226
+    after: 96
     direction: -1.0
     parameters:
       c: c0 * 0.8 # Lockdown release
       locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
-    after: 226
+    after: 96
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
