@@ -84,17 +84,17 @@ interventions:
       c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
                   # ~3 under lockdown to 3.8 week of 5th-12th June
 
-## Lockdown triggers - start from June 23rd (so trigger can happen as it doesn't work if already over 40k cases)
+## Lockdown triggers - start from June 30th (so trigger can happen as it doesn't work if already over 40k cases, also needs to be close to 40k to trigger in less than a year)
 ## Release lockdown when below 10k cases
   - condition: x[IU] + x[ID] - 10000
-    after: 188
+    after: 195
     direction: -1.0
     parameters:
       c: c0 * 0.8 # Lockdown release
       locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
-    after: 188
+    after: 195
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
