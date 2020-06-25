@@ -10,14 +10,14 @@
 - parameters:
     c: 6.6
   time: 199
-- after: 226
+- after: 199
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
     c: 8.8
     locked: false
   time: 427.3762656212991
-- after: 226
+- after: 199
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
