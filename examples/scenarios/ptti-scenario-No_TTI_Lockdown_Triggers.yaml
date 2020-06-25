@@ -91,7 +91,7 @@ interventions:
 
 ## Lockdown trigger - start 18th July - two weeks after entertainment venues open
 # needs to be higher than current cases to go on
-  - condition: x[IU] + x[ID] - 300000
+  - condition: x[IU] + x[ID] - 250000
     after: 213
     direction: 1.0
     parameters:
