@@ -80,7 +80,7 @@ interventions:
 
 
 ## Lockdown trigger if already >40k cases
-  - condition: "-1 if not (x[IU] + x[ID] > 40000) else 1"
+  - condition: -1 if not (x[IU] + x[ID] > 40000) else 1
     after: 96
     direction: 1.0
     parameters:
