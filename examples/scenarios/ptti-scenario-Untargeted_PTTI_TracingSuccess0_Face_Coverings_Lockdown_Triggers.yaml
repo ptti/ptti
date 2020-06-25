@@ -117,6 +117,15 @@ interventions:
       c: c0 * 0.6 # Contacts per day increase
       beta: 0.0357  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
 
+## Lockdown trigger - start 18th July - two weeks after entertainment venues open
+# needs to be higher than current cases to go on - will stop a runaway epidemic as per No TTI by going on at 300,000 cases
+  - condition: x[IU] + x[ID] - 300000
+    after: 213
+    direction: 1.0
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+      locked: True
+
 ## Lockdown triggers - start from 31st July (given sudden release to c0*0.8 don't want them too early)
 ## Release lockdown when below 10k cases
   - condition: x[IU] + x[ID] - 10000
