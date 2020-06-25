@@ -78,23 +78,38 @@ interventions:
       c: c0 * 0.26 # Lockdown, Jarvis et al 2020: "We found a 74% reduction in the average daily number of contacts
                   # observed per participant (from 10.8 to 2.8). We round these to 11 and 3
 
+## Lockdown trigger if already >40k cases
+- condition: "-1 if not (x[IU] + x[ID] > 40000) else 1"
+  name: "Lockdown Trigger"
+  after: 96
+  direction: 1.0
+  parameters:
+    c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+    locked: Truep
+
+
   ## 9th June, contacts per day only slightly increased according to CoMix data:
   - time: 174
     parameters:
       c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
                   # ~3 under lockdown to 3.8 week of 5th-12th June
 
-## Lockdown triggers - start from June 30th (so trigger can happen as it doesn't work if already over 40k cases, also needs to be close to 40k to trigger in less than a year)
+  ## On 4th July, pubs and entertainment venues open with new 1m distancing rule
+  - time: 199
+    parameters:
+      c: c0 * 0.6 # Contacts per day increase
+
+## Lockdown triggers - start from 31st July (given sudden release to c0*0.8 don't want them too early)
 ## Release lockdown when below 10k cases
   - condition: x[IU] + x[ID] - 10000
-    after: 195
+    after: 226
     direction: -1.0
     parameters:
       c: c0 * 0.8 # Lockdown release
       locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
-    after: 195
+    after: 226
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
