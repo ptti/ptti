@@ -80,9 +80,7 @@ interventions:
     parameters:
       testedBase: 100000/N   # 100,000 people tested per day in the UK
       theta: testedBase
-      chi: 0.8  # 80% of the ~3000 cases per day (1% of tested) have contacts traced
-                # 18,000 contact tracers starting on this date should be able to
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      chi: 0.0  # No tracing - so no tracing costed
       eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see Targeted PTTI TracingSuccess40 and others
@@ -93,9 +91,7 @@ interventions:
     parameters:
       testedBase: 300000/N   # 300,000 people tested per day in the UK
       theta: testedBase
-      chi: 0.8  # 80% of the ~6000 cases per day (2% of tested) have contacts traced
-                # 36,000 contact tracers starting on this date should be able to
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      chi: 0.0  # No tracing - so no tracing costed
       eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see Targeted PTTI TracingSuccess40 and others
@@ -108,9 +104,7 @@ interventions:
     parameters:
       testedBase: 900000/N   # 900,000 people tested per day in the UK
       theta: testedBase
-      chi: 0.8  # 80% of the ~9000 cases per day (1% of tested) have contacts traced
-                # 54,000 contact tracers starting on this date should be able to
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      chi: 0.0  # No tracing - so no tracing costed
       eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see Targeted PTTI TracingSuccess40 and others
@@ -147,9 +141,7 @@ interventions:
     parameters:
       testedBase: 3000000/N   # 3,000,000 people tested per day in the UK
       theta: testedBase
-      chi: 0.8  # 80% of the ~11667 cases per day (0.39% of tested) have contacts traced
-                # 70,000 contact tracers starting on this date should be able to
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      chi: 0.0  # No tracing - so no tracing costed
       eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see Targeted PTTI TracingSuccess40 and others
@@ -159,9 +151,7 @@ interventions:
     parameters:
       testedBase: 9000000/N   # 9,000,000 people tested per day in the UK
       theta: testedBase
-      chi: 0.8  # 80% of the ~11667 cases per day (0.13% of tested) have contacts traced
-                # 70,000 contact tracers starting on this date should be able to
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
+      chi: 0.0  # No tracing - so no tracing costed
       eta: 0.0  # 0% of contacts for each case successfully traced by contact tracers,
                 #   this is lower to compare to a situation of targeted testing where tracing does not work well enough
                 #   eta needs to be >=0.4 to suppress the epidemic - see Targeted PTTI TracingSuccess40 and others
