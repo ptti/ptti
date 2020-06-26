@@ -34,8 +34,8 @@ parameters:
 
   ## alpha is the rate at which exposed individuals
   ## (infected but not infectious) become infectious.
-  ## 3 day incubation period
-  alpha: 0.3333
+  ## 4 day incubation period
+  alpha: 0.25
 
   ## gamma is the rate at which individuals either 
   ## recover, or are taken into hospital and assumed
