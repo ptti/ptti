@@ -4,7 +4,7 @@ econ_inputs = {}
 # econ_inputs['Population'] = 67886011 # From scenario
 
 econ_inputs['Shutdown'] = dict()
-econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'] = 0.40  # How much economic damage is happening.
+econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'] = 0.25  # How much economic damage is happening.
 econ_inputs['Shutdown']['UK_Open_Contacts'] = 11  # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
 econ_inputs['Shutdown']['UK_Shutdown_Contacts'] = 11 * 0.3  # Shutdown level
 econ_inputs['Shutdown']['UK_GDP_Monthly'] = 186000000000

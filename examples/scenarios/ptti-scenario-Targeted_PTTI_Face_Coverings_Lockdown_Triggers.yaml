@@ -65,7 +65,7 @@ parameters:
   ## default testing rate (proportion of symptomatics)
   tested: 0.8   
   ## 50% of SARS-Cov-2 infected (IU) have symptoms
-  symptomatic: 0.8
+  symptomatic: 0.5
   ## average duration of symptomatic illness(coldflu or Covid combined)
   duration: 7
   ## theta governs testing, and we start with none
