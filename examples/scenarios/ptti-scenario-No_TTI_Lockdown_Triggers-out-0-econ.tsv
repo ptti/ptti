@@ -1,12 +1,12 @@
 PTTI Scenario No TTI Lockdown Triggers											
 Economic											
-	Total_NHS_Costs	2658288567.188275									
-	Total_Productivity_Loss	1308625142857.1035									
+	Total_NHS_Costs	3954561181.723219									
+	Total_Productivity_Loss	929185142857.0723									
 Medical											
-	Cases	32028595.10382966									
-	Deaths	362449.437229245									
-	Hospital	475068.6532688639									
-	ICU	83835.64469450538									
+	Cases	47646835.81237568									
+	Deaths	539192.2052767428									
+	Hospital	706728.4109255688									
+	ICU	124716.77839862977									
 Testing											
 	Laboratories	0	0	0	0	0					
 	Max_Laboratories	0									

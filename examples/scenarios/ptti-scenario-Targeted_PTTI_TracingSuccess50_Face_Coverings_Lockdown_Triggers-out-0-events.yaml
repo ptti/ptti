@@ -37,27 +37,6 @@
     theta: 0.04367755102040816
     thetaI: 0.04285714285714286
   time: 226
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 235.98667054835033
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 235.9866705483538
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 235.98844130572283
 - parameters:
     coldflu: 0.02
     tested: 0.8
@@ -85,6 +64,27 @@
     theta: 0.061453061224489805
     thetaI: 0.05714285714285715
   time: 349
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 349.4160511734544
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 349.4160580751549
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 349.41838395653167
 - parameters:
     coldflu: 0.03
     testedBase: 0.003428571428571429
@@ -115,6 +115,41 @@
     theta: 0.060375510204081634
     thetaI: 0.05714285714285715
   time: 653
+- after: 226
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 685.4638256842121
+- after: 226
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 685.4638258091029
+- after: 226
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 685.4641466111253
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 708.1533613927961
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 708.1533613929787
 - parameters:
     coldflu: 0.04
     testedBase: 0.004571428571428572
