@@ -13,11 +13,11 @@ set obj rect from "2020-06-09 00:00:00", graph 0.25 to "2020-07-04 00:00:00", gr
 set style rect fc rgb "#aa3366" fs solid 0.3 noborder lw 0
 set obj rect from "2020-07-04 00:00:00", graph 0.25 to "2020-07-31 00:00:00", graph 0.35
 set style rect fc rgb "#aa3366" fs solid 0.3 noborder lw 0
-set obj rect from "2020-07-31 00:00:00", graph 0.25 to "2020-08-23 00:00:00", graph 0.35
+set obj rect from "2020-07-31 00:00:00", graph 0.25 to "2020-08-31 00:00:00", graph 0.35
+set style rect fc rgb "#aa3366" fs solid 0.3 noborder lw 0
+set obj rect from "2020-08-31 00:00:00", graph 0.25 to "2020-09-29 00:00:00", graph 0.35
 set style rect fc rgb "#aa3366" fs solid 0.4 noborder lw 0
-set obj rect from "2020-08-23 00:00:00", graph 0.25 to "2020-08-31 00:00:00", graph 0.35
-set style rect fc rgb "#aa3366" fs solid 0.4 noborder lw 0
-set obj rect from "2020-08-31 00:00:00", graph 0.25 to "2020-10-01 00:00:00", graph 0.35
+set obj rect from "2020-09-29 00:00:00", graph 0.25 to "2020-10-01 00:00:00", graph 0.35
 set style rect fc rgb "#aa3366" fs solid 0.4 noborder lw 0
 set obj rect from "2020-10-01 00:00:00", graph 0.25 to "2020-11-01 00:00:00", graph 0.35
 set style rect fc rgb "#aa3366" fs solid 0.4 noborder lw 0
@@ -54,11 +54,11 @@ set obj rect from "2020-06-09 00:00:00", graph 0.35 to "2020-07-04 00:00:00", gr
 set style rect fc rgb "#0066aa" fs solid 0.2369819341126461 noborder lw 0
 set obj rect from "2020-07-04 00:00:00", graph 0.35 to "2020-07-31 00:00:00", graph 0.44999999999999996
 set style rect fc rgb "#0066aa" fs solid 0.35537327311370875 noborder lw 0
-set obj rect from "2020-07-31 00:00:00", graph 0.35 to "2020-08-23 00:00:00", graph 0.44999999999999996
-set style rect fc rgb "#0066aa" fs solid 0.35537327311370875 noborder lw 0
-set obj rect from "2020-08-23 00:00:00", graph 0.35 to "2020-08-31 00:00:00", graph 0.44999999999999996
+set obj rect from "2020-07-31 00:00:00", graph 0.35 to "2020-08-31 00:00:00", graph 0.44999999999999996
 set style rect fc rgb "#0066aa" fs solid 0.48246546227417636 noborder lw 0
-set obj rect from "2020-08-31 00:00:00", graph 0.35 to "2020-10-01 00:00:00", graph 0.44999999999999996
+set obj rect from "2020-08-31 00:00:00", graph 0.35 to "2020-09-29 00:00:00", graph 0.44999999999999996
+set style rect fc rgb "#0066aa" fs solid 0.48246546227417636 noborder lw 0
+set obj rect from "2020-09-29 00:00:00", graph 0.35 to "2020-10-01 00:00:00", graph 0.44999999999999996
 set style rect fc rgb "#0066aa" fs solid 0.49123273113708815 noborder lw 0
 set obj rect from "2020-10-01 00:00:00", graph 0.35 to "2020-11-01 00:00:00", graph 0.44999999999999996
 set style rect fc rgb "#0066aa" fs solid 0.49123273113708815 noborder lw 0
@@ -95,11 +95,11 @@ set obj rect from "2020-06-09 00:00:00", graph 0.45 to "2020-07-04 00:00:00", gr
 set style rect fc rgb "#00aa66" fs solid 0.5 noborder lw 0
 set obj rect from "2020-07-04 00:00:00", graph 0.45 to "2020-07-31 00:00:00", graph 0.55
 set style rect fc rgb "#00aa66" fs solid 0.5 noborder lw 0
-set obj rect from "2020-07-31 00:00:00", graph 0.45 to "2020-08-23 00:00:00", graph 0.55
+set obj rect from "2020-07-31 00:00:00", graph 0.45 to "2020-08-31 00:00:00", graph 0.55
 set style rect fc rgb "#00aa66" fs solid 0.5 noborder lw 0
-set obj rect from "2020-08-23 00:00:00", graph 0.45 to "2020-08-31 00:00:00", graph 0.55
+set obj rect from "2020-08-31 00:00:00", graph 0.45 to "2020-09-29 00:00:00", graph 0.55
 set style rect fc rgb "#00aa66" fs solid 0.5 noborder lw 0
-set obj rect from "2020-08-31 00:00:00", graph 0.45 to "2020-10-01 00:00:00", graph 0.55
+set obj rect from "2020-09-29 00:00:00", graph 0.45 to "2020-10-01 00:00:00", graph 0.55
 set style rect fc rgb "#00aa66" fs solid 0.5 noborder lw 0
 set obj rect from "2020-10-01 00:00:00", graph 0.45 to "2020-11-01 00:00:00", graph 0.55
 set style rect fc rgb "#00aa66" fs solid 0.5 noborder lw 0

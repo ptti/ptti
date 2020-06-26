@@ -18,7 +18,7 @@
     theta: 0.004419172603910989
   time: 174
 - parameters:
-    beta: 0.04998
+    beta: 0.0294
     c: 6.6
     chi: 0.0
     eta: 0.0
@@ -43,11 +43,11 @@
   parameters:
     c: 8.8
     locked: false
-  time: 293.90757397618387
+  time: 331.59162710867463
 - after: 226
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
     c: 8.8
     locked: false
-  time: 293.90757397624265
+  time: 331.5916809322927
