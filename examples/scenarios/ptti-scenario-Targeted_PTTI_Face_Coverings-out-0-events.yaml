@@ -22,7 +22,7 @@
     thetaI: 0.014285714285714287
   time: 174
 - parameters:
-    beta: 0.0399
+    beta: 0.04998
     c: 6.6
     coldflu: 0.01
     tested: 0.4
