@@ -41,8 +41,8 @@ parameters:
 
   ## gamma is the rate at which individuals either
   ## recover, or are taken into hospital and assumed
-  ## to be isolated. 5 days
-  gamma: 0.2
+  ## to be isolated. One Week.
+  gamma: 0.1429
 
   ## kappa is the rate at which individuals leave
   ## isolation. This is one week according to UK policy.
