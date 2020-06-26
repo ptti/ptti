@@ -26,7 +26,8 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta: 0.0588   # changed because of higher gamma (5 days rather than 7 days) to get same R0: beta=0.042*7/5
+  beta: 0.042   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
+                # the average daily number of contactsobserved per participant (from 10.8 to 2.8). We round these to 11 and 3
 
   ## c0 is contacts per day at baseline, pre-pandemic
   c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
@@ -39,8 +40,8 @@ parameters:
 
   ## gamma is the rate at which individuals either
   ## recover, or are taken into hospital and assumed
-  ## to be isolated. 5 days
-  gamma: 0.2
+  ## to be isolated. One Week.
+  gamma: 0.1429
 
   ## kappa is the rate at which individuals leave
   ## isolation. This is one week according to UK policy.
@@ -131,7 +132,7 @@ interventions:
       theta: testedBase + (1-testedBase)*thetaI
             ## Tracing - as above
       c: c0 * 0.6 # Contacts per day increase
-      beta: 0.04998  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
+      beta: 0.0294  # 30% reduction in Beta due to public wearing of (home-made) cloth face coverings
 
 
   ## On 31st July, scale up testing, and contact tracing further still
