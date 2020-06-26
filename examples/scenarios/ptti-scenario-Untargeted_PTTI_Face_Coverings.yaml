@@ -32,13 +32,13 @@ parameters:
 
   ## alpha is the rate at which exposed individuals
   ## (infected but not infectious) become infectious. 
-  ## 4 day incubation period
-  alpha: 0.25
+  ## 5 day incubation period
+  alpha: 0.2
 
-  ## gamma is the rate at which individuals either 
+  ## gamma is the rate at which individuals either
   ## recover, or are taken into hospital and assumed
-  ## to be isolated. One week.
-  gamma: 0.1429
+  ## to be isolated. 5 days
+  gamma: 0.2
 
   ## kappa is the rate at which individuals leave
   ## isolation. This is one week according to UK policy.
