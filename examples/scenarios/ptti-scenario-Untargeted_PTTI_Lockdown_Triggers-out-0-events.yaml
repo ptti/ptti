@@ -24,6 +24,20 @@
     testedBase: 0.013257517811732965
     theta: 0.013257517811732965
   time: 199
+- after: 213
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 223.42859255159115
+- after: 213
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 223.42859291841543
 - parameters:
     chi: 0.8
     eta: 0.8
@@ -36,3 +50,17 @@
     testedBase: 0.13257517811732966
     theta: 0.13257517811732966
   time: 257
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 282.10983432434256
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 282.1098343243752
