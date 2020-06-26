@@ -37,17 +37,3 @@
     testedBase: 0.13257517811732966
     theta: 0.13257517811732966
   time: 257
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 292.4071113942592
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 292.4072478579672

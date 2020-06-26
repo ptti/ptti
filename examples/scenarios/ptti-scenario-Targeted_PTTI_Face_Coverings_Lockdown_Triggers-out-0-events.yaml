@@ -51,20 +51,6 @@
     theta: 0.060375510204081634
     thetaI: 0.05714285714285715
   time: 288
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 310.04471304617505
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 310.0447130461859
 - parameters:
     coldflu: 0.03
     tested: 0.8
