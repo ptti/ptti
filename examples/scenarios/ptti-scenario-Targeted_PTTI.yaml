@@ -10,7 +10,7 @@ meta:
   title: PTTI Scenario Targeted PTTI
   output: ptti-scenario-Targeted-PTTI-out
   start: 2019/12/18
-  t0: 7
+  t0: 8.5
   envelope: false
   tmax: 895
   steps: 895
@@ -27,9 +27,8 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  #beta: 0.042   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
+  beta: 0.042   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
                 # the average daily number of contactsobserved per participant (from 10.8 to 2.8). We round these to 11 and 3
-  beta: 0.0588   # beta changed to 0.042*7/5=0.0588
 
   ## c0 is contacts per day at baseline, pre-pandemic
   c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
@@ -37,13 +36,13 @@ parameters:
 
   ## alpha is the rate at which exposed individuals
   ## (infected but not infectious) become infectious.
-  ## 5 day incubation period
-  alpha: 0.2
+  ## 3 day incubation period
+  alpha: 0.333
 
   ## gamma is the rate at which individuals either
   ## recover, or are taken into hospital and assumed
   ## to be isolated. One Week.
-  gamma: 0.2     # gamma changed from 0.1429 (7 days) to 0.2 (5 days)
+  gamma: 0.1429
 
   ## kappa is the rate at which individuals leave
   ## isolation. This is one week according to UK policy.
