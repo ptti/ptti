@@ -30,14 +30,14 @@
   parameters:
     c: 3.3
     locked: true
-  time: 223.42859255159115
+  time: 217.55789019506065
 - after: 213
   condition: x[IU] + x[ID] - 300000
   direction: 1.0
   parameters:
     c: 3.3
     locked: true
-  time: 223.42859291841543
+  time: 217.55789129714796
 - parameters:
     chi: 0.8
     eta: 0.8
@@ -56,11 +56,11 @@
   parameters:
     c: 8.8
     locked: false
-  time: 282.10983432434256
+  time: 272.2463457872757
 - after: 226
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
     c: 8.8
     locked: false
-  time: 282.1098343243752
+  time: 272.2463705401116
