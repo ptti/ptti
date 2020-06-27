@@ -16,11 +16,11 @@
   parameters:
     c: 8.8
     locked: false
-  time: 384.3607303649264
+  time: 388.9576400125277
 - after: 226
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
     c: 8.8
     locked: false
-  time: 384.3607598512012
+  time: 388.95769856935624

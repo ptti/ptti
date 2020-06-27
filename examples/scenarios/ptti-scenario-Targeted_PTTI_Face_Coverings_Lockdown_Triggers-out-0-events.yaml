@@ -22,7 +22,7 @@
     thetaI: 0.014285714285714287
   time: 174
 - parameters:
-    beta: 0.04998
+    beta: 0.0357
     c: 6.6
     coldflu: 0.01
     tested: 0.4
@@ -58,33 +58,33 @@
     theta: 0.060375510204081634
     thetaI: 0.05714285714285715
   time: 319
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 333.74355907082895
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 333.74355933081296
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 333.74406102814635
 - parameters:
     coldflu: 0.04
     testedBase: 0.004571428571428572
     theta: 0.061453061224489805
     thetaI: 0.05714285714285715
   time: 349
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 362.69156133940885
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 362.69157607962774
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 362.69435696569843
 - parameters:
     coldflu: 0.03
     testedBase: 0.003428571428571429
@@ -97,27 +97,27 @@
   parameters:
     c: 3.3
     locked: true
-  time: 473.23755940079815
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 495.203134005675
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 495.20313584078656
+  time: 492.23333910930927
 - parameters:
     coldflu: 0.02
     testedBase: 0.002285714285714286
     theta: 0.05929795918367347
     thetaI: 0.05714285714285715
   time: 500
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 513.2253350265755
+- after: 226
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 8.8
+    locked: false
+  time: 513.2255234899706
 - parameters:
     coldflu: 0.01
     testedBase: 0.001142857142857143
@@ -130,66 +130,45 @@
     theta: 0.05929795918367347
     thetaI: 0.05714285714285715
   time: 623
-- after: 226
-  condition: x[IU] + x[ID] - 40000
-  direction: 1.0
-  parameters:
-    c: 3.3
-    locked: true
-  time: 625.8840877691046
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 648.0512018793167
-- after: 226
-  condition: x[IU] + x[ID] - 10000
-  direction: -1.0
-  parameters:
-    c: 8.8
-    locked: false
-  time: 648.0512018794719
 - parameters:
     coldflu: 0.03
     testedBase: 0.003428571428571429
     theta: 0.060375510204081634
     thetaI: 0.05714285714285715
   time: 653
-- parameters:
-    coldflu: 0.04
-    testedBase: 0.004571428571428572
-    theta: 0.061453061224489805
-    thetaI: 0.05714285714285715
-  time: 714
-- parameters:
-    coldflu: 0.03
-    testedBase: 0.003428571428571429
-    theta: 0.060375510204081634
-    thetaI: 0.05714285714285715
-  time: 804
 - after: 226
   condition: x[IU] + x[ID] - 40000
   direction: 1.0
   parameters:
     c: 3.3
     locked: true
-  time: 813.8863531712393
+  time: 699.3776705272459
+- parameters:
+    coldflu: 0.04
+    testedBase: 0.004571428571428572
+    theta: 0.061453061224489805
+    thetaI: 0.05714285714285715
+  time: 714
 - after: 226
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
     c: 8.8
     locked: false
-  time: 835.3751848335514
+  time: 720.4615084235628
 - after: 226
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
     c: 8.8
     locked: false
-  time: 835.3752055904356
+  time: 720.4615084242951
+- parameters:
+    coldflu: 0.03
+    testedBase: 0.003428571428571429
+    theta: 0.060375510204081634
+    thetaI: 0.05714285714285715
+  time: 804
 - parameters:
     coldflu: 0.02
     testedBase: 0.002285714285714286
