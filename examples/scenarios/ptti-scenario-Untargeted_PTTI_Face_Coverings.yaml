@@ -113,7 +113,7 @@ interventions:
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
       c: c0 * 0.6 # Contacts per day increase
-      beta: 0.0357  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
+      beta: 0.04998  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
 
   ## On 31st July, scale up testing, and contact tracing further still
   ## On 31st July, contacts increase a bit more

@@ -43,7 +43,7 @@ parameters:
   ## recover, or are taken into hospital and assumed
   ## to be isolated. One Week.
   gamma: 0.2     # gamma changed from 0.1429 (7 days) to 0.2 (5 days)
-  
+
   ## kappa is the rate at which individuals leave
   ## isolation. This is one week according to UK policy.
   ## The WHO thinks it should be 0.0714 (14 days).
@@ -114,7 +114,7 @@ interventions:
       eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers, 
                 #   with support from mobile phone apps
       c: c0 * 0.6 # Contacts per day increase
-      beta: 0.0357  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
+      beta: 0.04998  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
 
 ## Lockdown trigger - start 18th July - two weeks after entertainment venues open
 # needs to be higher than current cases to go on - will stop a runaway epidemic as per No TTI by going on at 300,000 cases
