@@ -54,12 +54,12 @@ if 'app' not in os.getcwd():
     os.chdir('app')
 
 
-st.title("PTTI Policy Simulator")
+st.title("UK COVID-19 Policy Simulator")
 
 st.sidebar.title("Interactive PTTI Policy Creator")
 st.sidebar.markdown(
     """
-Run different epidemic control policies for COVID-19. This uses the  
+Run different epidemic control policies for COVID-19 in the UK. This uses the  
 [PTTI](https://github.com/ptti/ptti) model.
 """
 )
@@ -231,11 +231,12 @@ if len(To_Graph)>0:
 
 
 #Econ Outputs / Graph:
-st.write("Total COVID-19 Deaths: " + str(econ['Medical']['Deaths']))
+st.write("Total COVID-19 Deaths: " + f"{round(econ['Medical']['Deaths'],-3)/1000:,}" + " thousand")
+st.write("Total Economic Loss from COVID-19: " + f"{round(econ['Economic']['Total_Productivity_Loss']/1000000000):,}" + " billion GBP")
 st.write("")
-st.write("Economic Results:")
-st.write("Maximum Tracers Needed: " + str(econ['Tracing']['Max_Tracers']))
-st.write("Total Tracer Budget: " + str(econ['Tracing']['Tracing_Total_Costs']/1000000) + " million GBP")
-st.write("Total Testing Budget: " + str(econ['Testing']['Testing_Total_Costs']/1000000) + " million GBP")
-st.write("Total Economic Loss from COVID-19: " + str(econ['Economic']['Total_Productivity_Loss']/1000000) + " million GBP")
+st.write("Test and Trace Results:")
+st.write("Maximum Tracers Needed: " + f"{round(econ['Tracing']['Max_Tracers'])}")
+st.write("Total Tracer Budget: " + f"{round(econ['Tracing']['Tracing_Total_Costs']/1000000):,}" + " million GBP")
+st.write("Total Testing Budget: " + f"{round(econ['Testing']['Testing_Total_Costs']/1000000) :,}" + " million GBP")
+
 # st.write(str(econ))
