@@ -5,4 +5,4 @@ interventions:
     parameters:
           ## Face coverings
       beta: 0.02975  # 30% reduction in Beta due to public wearing of home-made cloth face coverings
-                    # conservative assumption based on Greenhalgh & DELVE reviews
+                     # conservative assumption based on Greenhalgh & DELVE reviews
