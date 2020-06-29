@@ -1,7 +1,6 @@
 interventions:
-  - time: 152
+  - time: 80
     name: "Targeted Testing"
-    phase: 0
     parameters:
       tested: 0.1       # ramp up testing
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
@@ -14,10 +13,11 @@ interventions:
                 #   with support from mobile phone apps
                 # These tracing rates continue throughout the rest of the simulation
 
-  - time: 166
+  - time: 94
     name: "Targeted Testing"
     parameters:
       tested: 0.2       # ramp up testing more      testedBase: coldflu*tested/duration
+      testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
             ## Tracing
@@ -27,7 +27,7 @@ interventions:
                 #   with support from mobile phone apps
                 # These tracing rates continue throughout the rest of the simulation
   ## Scale up testing, and contact tracing further
-  - time: 194
+  - time: 122
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing
@@ -38,7 +38,7 @@ interventions:
       theta: testedBase + (1-testedBase)*thetaI
             ## Tracing - as above  
   ##  Targetted Testing - scale up tested further still (proportion of symptomatics tested during their week long illness)
-  - time: 222
+  - time: 150
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing
@@ -49,7 +49,7 @@ interventions:
             ## Tracing - as above
   ## Scale up testing, and contact tracing further
 ## Scale up testing, and contact tracing further
-  - time: 257
+  - time: 185
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing

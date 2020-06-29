@@ -1,5 +1,5 @@
 interventions:
-  - time: 152
+  - time: 80
     name: "Untargeted Testing"
     parameters:
       testedBase: 100000/N   # 100,000 people tested per day in the UK
@@ -11,24 +11,24 @@ interventions:
                 # 18,000 contact tracers starting on this date should be able to
                 #   trace 'all' (eta) contacts in one day in teams of 6 for each case
 
-  - time: 166
+  - time: 94
     name: "Untargeted Testing"
       ## Targeted Testing
     parameters:
       testedBase: 300000/N   # 300,000 people tested per day in the UK
       theta: testedBase
-  - time: 194
+  - time: 122
     name: "Untargeted Testing"  
     parameters:
       testedBase: 900000/N   # 900,000 people tested per day in the UK
       theta: testedBase
   ## Scale up testing, and contact tracing further
-  - time: 222
+  - time: 150
     name: "Untargeted Testing"
     parameters:
       testedBase: 3000000/N   # 3,000,000 people tested per day in the UK
       theta: testedBase
-  - time: 257
+  - time: 185
     name: "Untargeted Testing"
     parameters:
       testedBase: 9000000/N   # 9,000,000 people tested per day in the UK (

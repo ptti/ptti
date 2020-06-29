@@ -1,10 +1,9 @@
 ## Initial values and past policy changes.
 
 meta:
-  # title: PTTI Scenario X
-  # output: ptti-scenario-X-out
-  start: 2019/12/18
+  start: 2020/02/28   # ~5000 cases estimated before 28th Feb
   envelope: false
+  t0: 8.5
   tmax: 895
   steps: 895
 
@@ -13,16 +12,14 @@ initial:
   ## N is the total population
   N:    67886011    # mid-year 2020 from: https://www.worldometers.info/world-population/uk-population/
   ## IU is the number of unconfined, infected individuals
-  IU:   2
+  IU:   5000
 
 ## Parameters of the simulation.
 ## All rates are per individual per day.
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta: 0.0425   # was 0.036 based on ptti fitting but scaled by 13/11 given change in
-                 # baseline c from 13 to 11 (beta has to increase to compensate and get the same fit)
-
+  beta: 0.042
   ## c0 is contacts per day at baseline, pre-pandemic
   c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
   c: c0
@@ -30,7 +27,7 @@ parameters:
   ## alpha is the rate at which exposed individuals
   ## (infected but not infectious) become infectious. 
   ## 5 day incubation period
-  alpha: 1.0/5.1
+  alpha: 0.2
 
   ## gamma is the rate at which individuals either 
   ## recover, or are taken into hospital and assumed
@@ -67,27 +64,24 @@ parameters:
 interventions:
   ## After three months, start of restrictions on 16th March. 
   ## Reduce contacts by 30%.
-  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+  - time: 17    # 16th March 2020 (assume seeding on 18th December 2019)
+    name: "Past"
     parameters:
       c: c0 * 0.7
-    name: "Past"
-    
   ## After one more week, Lockdown, on 23rd March.
   ## Reduce contacts to ~3 per day (~70% reduction).
-  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
-    parameters:
-      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
-    name: "Past"
- 
-  ## On 13th May, start relax lockdown, phase one: 
-  ##    those who can’t work from home encouraged back to work 
-  - time: 147
+  - time: 24    # 23rd March 2020 (assume seeding on 18th December 2019)
     name: "Past"
     parameters:
-      c: c0 * 0.4 # CoMix Weekly report 9 (LSHTM) shows contacts only increased from
-                  # 2.6 under lockdown to 3.5 week of 21-28th May
-                  
-  - time: 166
+      c: c0 * 0.26 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+  
+  ## 9th June, contacts per day only slightly increased according to CoMix data:
+  - time: 102
     name: "Past"
     parameters:
-      c: c0 * 0.6    # Contacts per day increase from 4.4 to 6.6
+      c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM)
+
+  - time: 127
+    name: "Past"
+    parameters:
+      c: c0 * 0.6 # Contacts per day increase

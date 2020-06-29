@@ -48,18 +48,19 @@ def y_fmt(y, pos):
 
 def date_fmt(x, pos):  # formatter function takes tick label and tick position
     start = date(int(cfg['meta']['start'][0:4]), int(cfg['meta']['start'][5:7]), int(cfg['meta']['start'][8:10]))
-    return start+timedelta(days=x)
+    thisdate = start+timedelta(days=x)
+    return(thisdate.strftime("%b %Y"))
 
 if 'app' not in os.getcwd():
     os.chdir('app')
 
 
-st.title("PTTI Policy Simulator")
+st.title("UK COVID-19 Policy Simulator")
 
 st.sidebar.title("Interactive PTTI Policy Creator")
 st.sidebar.markdown(
     """
-Run different epidemic control policies for COVID-19. This uses the  
+Run different epidemic control policies for COVID-19 in the UK. This uses the  
 [PTTI](https://github.com/ptti/ptti) model.
 """
 )
@@ -90,9 +91,9 @@ end_shutdown = st.sidebar.checkbox("End Shutdown")
 if end_shutdown:
     intervention_list.append(cfg_relax)
 end_date = st.sidebar.date_input("Shutdown End Date",
-                                     value=(start+timedelta(days=199)), max_value=start+timedelta(days=cfg['meta']['tmax']))
+                                     value=(start+timedelta(days=199)), min_value=start+timedelta(days=90), max_value=start+timedelta(days=cfg['meta']['tmax']))
 
-TTI = st.sidebar.radio("Test and Trace", ['None','Untargeted','Targeted'], index=0)
+TTI = st.sidebar.radio("Test and Trace (Starting Mid-May 2020, fully in place by September 2020)", ['None','Untargeted','Targeted'], index=0)
 if TTI == 'Targeted':
     intervention_list.append(cfg_flu)
     intervention_list.append(cfg_tti)
@@ -121,13 +122,12 @@ defaults.update(cfg["parameters"])
 
 if end_shutdown:
     for i in cfg['interventions']:
-        if i['name' ]== "End Lockdown":
-            i['time'] = (end_date-start).days
+        if i['name' ]== "Relax Lockdown":
+            i['time'] = (end_date-start).days+i['delay']
         if triggers: # TODO: We need to make sure triggers don't start until after lockdown ends...
             if i['name'] == "Lockdown Trigger":
                 i['after'] = (end_date - start).days + 7  # Cannot trigger for one week.
-                pass
-            pass
+        # But lockdowns don't always trigger at first...
 
 if TTI != 'None':
     for i in cfg['interventions']:
@@ -189,53 +189,86 @@ if len(To_Graph)>0:
             C_total.append(abs(sum([x[c] for c in C_list])))
 
         df_plot_results[Compartment] = C_total.copy()
-
     plt.plot(df_plot_results)
     ax = plt.gca()
     ax.yaxis.set_major_formatter(FuncFormatter(y_fmt))
     ax.xaxis.set_major_formatter(FuncFormatter(date_fmt))
+    # ax.set_xlim([70, ax.get_xlim()[1]])
     ax.set_xlabel('Date')
     ax.set_ylabel('People')
     maxy = ax.get_ylim()[1]
     # st.write(str(maxy))
+    ax_r = ax.twinx()  # instantiate a second axes that shares the same x-axis
 
     if Graph_Interventions:
         intervention_lines = [(i['time'], i['parameters']['c']) for i in cfg['interventions'] if
                               ('c' in i['parameters'].keys() and i['name'] != 'Flu' and 'time' in i.keys())]
-
         intervention_lines_2 = [(i['time'], i['parameters']['c']) for i in events]
         intervention_lines.extend(intervention_lines_2)
         #Cantact Rate items for colors
-        c_min = 3.3
-        c_max = 8.9
+        c_min = min([c['parameters']['c'] for c in cfg['interventions'] if 'c' in c['parameters']])
+        c_max = max([c['parameters']['c'] for c in cfg['interventions'] if 'c' in c['parameters']])
         c_midpoint = 5.5
+        # for i in intervention_lines:
+        #     c = i[1]
+        #     plt.plot([i[0], i[0]], [0, maxy], lw=1.25, ls='--',  # c=(1, (c - c_min)/(c_midpoint-c_min), 0))
+        #              c=(min((c_max - c) / (c_max - c_midpoint), 1), min((c - c_min)/(c_midpoint-c_min), 1), 0))
+        #     else: # Shouldn't fix this, should use correct value
+        #         plt.plot([i[0], i[0]], [0, maxy], lw=1.25, ls='--', c=((c_max - c) / (c_max - c_midpoint), 1, 0))
+        Begin = 0
+        c = c_max
         for i in intervention_lines:
+            End = i[0]
+            #st.write(Begin, End, 3*(t[1]/full))
+            ax_r.plot([Begin, End], [-.35, -.35], lw=2, ls=':',
+                      c=(min((c_max - c) / (c_max - c_midpoint), 1), min((c - c_min)/(c_midpoint-c_min), 1), 0))
             c = i[1]
-            if c<c_midpoint: # Shouldn't fix this, should use shutdown value
-                plt.plot([i[0], i[0]], [0, maxy], lw=1.25, ls='--', c=(1, (c - c_min)/(c_midpoint-c_min), 0))
-            else: # Shouldn't fix this, should use correct value
-                plt.plot([i[0], i[0]], [0, maxy], lw=1.25, ls='--', c=((c_max - c) / (c_max - c_midpoint), 1, 0))
-    leg = plt.legend(To_Graph, loc='upper center')
-    ax_r = ax.twinx()  # instantiate a second axes that shares the same x-axis
+            Begin = End
+        ax_r.plot([Begin, ax_r.get_xlim()[1]], [-.35, -.35], lw=2, ls=':',
+                  c=(min((c_max - c) / (c_max - c_midpoint), 1), min((c - c_min) / (c_midpoint - c_min), 1), 0))
+
+    ax.legend(To_Graph, loc='upper center')
     ax_r.set_ylabel('Reproductive Number (Effective)')
-    ax_r.plot(traj[:, -1], label="R(t)", color="Grey")
-    ax_r.set_ylim([ax_r.get_ylim()[0], 5])
+    ax_r.plot(traj[:, -1], label="R(t)", color="Black")
+    ax_r.set_ylim([-.5, 5])
+    ax.set_ylim([ax.get_ylim()[0]-(ax.get_ylim()[1]-ax.get_ylim()[0])/20, ax.get_ylim()[1]]) #Give room for the indicators
     if Graph_Interventions:
-        ax_r.legend([Line2D([0], [0], c="Grey", lw=0.75, ls='-'), Line2D([0], [0], c=(0, 0, 0), lw=0.75, ls=':'),
-                          Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'), Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
-                         ["R(t)", "Test and Trace", "Close Economy", "Open Economy"], loc='upper right')
+        if TTI != 'None':
+            ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-'), Line2D([0], [0], c="Grey", lw=2.75, ls=':'),
+                              Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'), Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
+                             ["R(t)", "Test and Trace", "Economy Closed", "Economy Opened"], loc='upper right')
+            # Actually Graph TTI startup now.
+            times = [(i['time'], i['parameters']['tested'] if "tested" in i['parameters'] else i['parameters']['testedBase']) for i in cfg['interventions'] if ("Testing" in i['name'])]
+            #st.write(times)
+            start = min([time[0] for time in times])
+            full = max([T[1] for T in times])
+            #st.write(full)
+            Begin = start
+            for t in times: # Plot segments for TTI Ramp-up.
+                End = t[0]
+                #st.write(Begin, End, 3*(t[1]/full))
+                ax_r.plot([Begin, End], [-.15, -.15], lw=3*(t[1]/full), ls=':', c="Grey")
+                Begin = End
+            ax_r.plot([Begin, ax.get_xlim()[1]*.955], [-.15, -.15], lw=3, ls=':', c="Grey")
+        else:
+            ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-'),
+                         Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'),
+                         Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
+                        ["R(t)", "Close Economy", "Open Economy"], loc='upper right')
+
     else:
-        ax_r.legend([Line2D([0], [0], c="Grey", lw=0.75, ls='-')], ["R(t)"], loc='upper right')
+        ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-')], ["R(t)"], loc='upper right')
 
     st.pyplot()
 
 
 #Econ Outputs / Graph:
-st.write("Total COVID-19 Deaths: " + str(econ['Medical']['Deaths']))
+st.write("Total COVID-19 Deaths: " + f"{int(round(econ['Medical']['Deaths'],0)):,}")
+st.write("Total Economic Loss from COVID-19: " + f"{round(econ['Economic']['Total_Productivity_Loss']/1000000000):,}" + " billion GBP")
 st.write("")
-st.write("Economic Results:")
-st.write("Maximum Tracers Needed: " + str(econ['Tracing']['Max_Tracers']))
-st.write("Total Tracer Budget: " + str(econ['Tracing']['Tracing_Total_Costs']/1000000) + " million GBP")
-st.write("Total Testing Budget: " + str(econ['Testing']['Testing_Total_Costs']/1000000) + " million GBP")
-st.write("Total Economic Loss from COVID-19: " + str(econ['Economic']['Total_Productivity_Loss']/1000000) + " million GBP")
+st.write("Test and Trace Results:")
+st.write("Maximum Tracers Needed: " + f"{round(econ['Tracing']['Max_Tracers'])}")
+st.write("Total Tracer Budget: " + f"{round(econ['Tracing']['Tracing_Total_Costs']/1000000):,}" + " million GBP")
+st.write("Total Testing Budget: " + f"{round(econ['Testing']['Testing_Total_Costs']/1000000) :,}" + " million GBP")
+
 # st.write(str(econ))
