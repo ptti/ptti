@@ -1,22 +1,22 @@
 PTTI Scenario Targeted PTTI 40% Tracing Success Face Coverings Lockdown Triggers											
 Economic											
-	Total_NHS_Costs	638181587.5208203									
-	Total_Productivity_Loss	705404999999.9727									
+	Total_NHS_Costs	608416880.4165046									
+	Total_Productivity_Loss	684369285714.2598									
 Medical											
-	Cases	7689180.144593348									
-	Deaths	87014.0887268861									
-	Hospital	114050.8487553634									
-	ICU	20126.62036859354									
+	Cases	7330557.7722914									
+	Deaths	82955.76282787981									
+	Hospital	108731.53184841607									
+	ICU	19187.9173850146									
 Testing											
 	Laboratories	1	9	9	9	9					
 	Max_Laboratories	9									
-	Testing_Block_Lengths	180	180	180	180	167					
-	Testing_Costs	5249603.690879906	145161476.12511492	204020099.76956245	146237908.8768767	204005606.40838423					
-	Testing_Total_Costs	704674694.8708183									
+	Testing_Block_Lengths	180	180	180	180	176					
+	Testing_Costs	4459597.987046307	133343315.45001724	213372839.07966	136830219.26002058	216951695.63432267					
+	Testing_Total_Costs	704957667.4110668									
 Tracing											
-	Max_Supervisors	5224									
-	Max_Tracers	261158									
-	Tracers	0	33036	261158	201916	58531	76139	75441	56748	76268	76003
-	Tracing_Block_Lengths	90	90	90	90	90	90	90	90	90	77
-	Tracing_Costs	53557250.0	2726577508.0	18985211924.0	1676552598.0	557719443.0	695114667.0	689668173.0	543806694.0	696121254.0	593801292.7
-	Tracing_Total_Costs	27218130803.7									
+	Max_Supervisors	4926									
+	Max_Tracers	246291									
+	Tracers	0	43130	246291	206088	58986	59641	73149	72794	39357	72854
+	Tracing_Block_Lengths	90	90	90	90	90	90	90	90	90	86
+	Tracing_Costs	53557250.0	3553952890.0	17021134823.0	1704413214.0000002	556576308.0	561687273.0	667090197.0	664320132.0	403411221.00000006	635242164.8
+	Tracing_Total_Costs	25821385472.8									

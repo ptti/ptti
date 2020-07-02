@@ -25,26 +25,26 @@
     testedBase: 0.013257517811732965
     theta: 0.013257517811732965
   time: 199
-- after: 213
-  condition: x[IU] + x[ID] - 300000
-  direction: 1.0
-  parameters:
-    c: 3.3
-    locked: true
-  time: 216.35086918990368
-- after: 213
-  condition: x[IU] + x[ID] - 300000
-  direction: 1.0
-  parameters:
-    c: 3.3
-    locked: true
-  time: 216.3508691899167
 - parameters:
     chi: 0.0
     eta: 0.0
     testedBase: 0.04419172603910988
     theta: 0.04419172603910988
   time: 226
+- after: 213
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 228.27562962816097
+- after: 213
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 228.275631077632
 - parameters:
     chi: 0.0
     eta: 0.0
@@ -57,39 +57,46 @@
   parameters:
     c: 8.8
     locked: false
-  time: 275.0107042676057
+  time: 293.71726574181906
 - after: 226
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
     c: 8.8
     locked: false
-  time: 275.01086389346517
+  time: 293.7172657438355
 - after: 226
   condition: x[IU] + x[ID] - 40000
   direction: 1.0
   parameters:
     c: 3.3
     locked: true
-  time: 595.0661422505931
+  time: 741.5891200784806
 - after: 226
   condition: x[IU] + x[ID] - 40000
   direction: 1.0
   parameters:
     c: 3.3
     locked: true
-  time: 595.0661422516561
+  time: 741.5891200788407
+- after: 226
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 741.5891349391188
 - after: 226
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
     c: 8.8
     locked: false
-  time: 615.3925358092742
+  time: 765.9956851791418
 - after: 226
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
     c: 8.8
     locked: false
-  time: 615.3925358107526
+  time: 765.9956851793696
