@@ -1,22 +1,18 @@
 interventions:
   ## On 4th July, pubs and entertainment venues open with 1m distancing rule
-  - time: 127
+  - time: 199
     name: "Relax Lockdown"
     delay: 0
     parameters:
       c: c0 * 0.6 # Contacts per day increase
 
-  ## On 31st July, contacts increase a bit more
-  - time: 154
-    name: "Relax Lockdown"
-    delay: 27
+  ## On 31st July, contacts increase a bit more (Assumed not re-locked down)
+  - time: 226
     parameters:
       c: c0 * 0.7 # Contacts per day increase
 
   ## On 31st August, contacts increase a bit more
-  - time: 185
-    name: "Relax Lockdown"
-    delay: 58
+  - time: 257
     parameters:
       c: c0 * 0.8 # Contacts per day increase
                   # assume contacts per day won't go back up to pre-pandemic level of 11

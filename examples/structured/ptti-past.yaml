@@ -1,9 +1,8 @@
 ## Initial values and past policy changes.
 
 meta:
-  start: 2020/02/28   # ~5000 cases estimated before 28th Feb
+  start: 2019/12/18   # ~5000 cases estimated before 28th Feb
   envelope: false
-  t0: 8.5
   tmax: 895
   steps: 895
 
@@ -64,24 +63,17 @@ parameters:
 interventions:
   ## After three months, start of restrictions on 16th March. 
   ## Reduce contacts by 30%.
-  - time: 17    # 16th March 2020 (assume seeding on 18th December 2019)
-    name: "Past"
+  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
     parameters:
       c: c0 * 0.7
   ## After one more week, Lockdown, on 23rd March.
   ## Reduce contacts to ~3 per day (~70% reduction).
-  - time: 24    # 23rd March 2020 (assume seeding on 18th December 2019)
-    name: "Past"
+  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
     parameters:
-      c: c0 * 0.26 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
-  
+      c: c0 * 0.26 # Lockdown, Jarvis et al 2020: "We found a 74% reduction in the average daily number of contacts
+                  # observed per participant (from 10.8 to 2.8). We round these to 11 and 3
   ## 9th June, contacts per day only slightly increased according to CoMix data:
-  - time: 102
-    name: "Past"
+  - time: 174
     parameters:
-      c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM)
-
-  - time: 127
-    name: "Past"
-    parameters:
-      c: c0 * 0.6 # Contacts per day increase
+      c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
+                  # ~3 under lockdown to 3.8 week of 5th-12th June

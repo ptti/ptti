@@ -1,5 +1,7 @@
 interventions:
-  - time: 80
+  ## On 18th May, start contact tracing
+  ##  Targetted Testing - initial proportion of symptomatics tested during their week long illness
+  - time: 152
     name: "Targeted Testing"
     parameters:
       tested: 0.1       # ramp up testing
@@ -13,7 +15,9 @@ interventions:
                 #   with support from mobile phone apps
                 # These tracing rates continue throughout the rest of the simulation
 
-  - time: 94
+  ## On 9th June, scale up testing, and contact tracing
+  ## 9th June, contacts per day only slightly increased according to CoMix data:
+  - time: 174
     name: "Targeted Testing"
     parameters:
       tested: 0.2       # ramp up testing more      testedBase: coldflu*tested/duration
@@ -27,7 +31,7 @@ interventions:
                 #   with support from mobile phone apps
                 # These tracing rates continue throughout the rest of the simulation
   ## Scale up testing, and contact tracing further
-  - time: 122
+  - time: 199
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing
@@ -37,8 +41,9 @@ interventions:
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
             ## Tracing - as above  
+
   ##  Targetted Testing - scale up tested further still (proportion of symptomatics tested during their week long illness)
-  - time: 150
+  - time: 226
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing
@@ -47,9 +52,9 @@ interventions:
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
             ## Tracing - as above
-  ## Scale up testing, and contact tracing further
+
 ## Scale up testing, and contact tracing further
-  - time: 185
+  - time: 257
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing

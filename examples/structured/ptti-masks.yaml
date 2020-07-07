@@ -1,8 +1,7 @@
 interventions:
-  ## On 17th May, start cloth face covering (mask) wearing in public
-  - time: 151
+  ## On 4th July, start cloth face covering (mask) wearing in public
+  - time: 199
     name: "Masks"
     parameters:
           ## Face coverings
-      beta: 0.02975  # 30% reduction in Beta due to public wearing of home-made cloth face coverings
-                     # conservative assumption based on Greenhalgh & DELVE reviews
+      beta: 0.0357  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
