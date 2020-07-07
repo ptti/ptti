@@ -81,6 +81,7 @@ interventions:
       c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
                   # ~3 under lockdown to 3.8 week of 5th-12th June
 
+## Triggers are applied if the checkbox is ticked, but need to be loaded initially or they crash.
 ## Lockdown trigger - start 18th July - two weeks after entertainment venues open
 # needs to be higher than current cases to go on
   - condition: x[IU] + x[ID] - 300000

@@ -4,6 +4,7 @@ from ptti.economic import calcEconOutputs, calcArgumentsODE
 from ptti.seirct_ode import SEIRCTODEMem
 from datetime import date, datetime, timedelta
 import os
+from math import log
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
@@ -87,7 +88,7 @@ if mask:
     intervention_list.append(cfg_mask)
 
 
-end_shutdown = st.sidebar.checkbox("End Shutdown")
+end_shutdown = True #st.sidebar.checkbox("End Shutdown")
 if end_shutdown:
     intervention_list.append(cfg_relax)
 end_date = st.sidebar.date_input("Shutdown End Date",
@@ -102,8 +103,9 @@ elif TTI == 'Untargeted':
     #TTI_Launch = st.sidebar.date_input("Test and Trace Ramp-up Period (Start and End)",
     #                                 value=((start+timedelta(days=152)), start+timedelta(days=257)), max_value=start+timedelta(days=cfg['meta']['tmax']))
     # Error with too-close dates needs to be fixed before this is put in.
-TTI_chi = st.sidebar.slider("Trace Speed (chi = Percentage of traces complete on day 1)", value=0.8, min_value=0.1,
-                            max_value=1.0)
+TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", value=0.55, min_value=0.1,
+                            max_value=0.99)
+TTI_chi = -1*log(1-TTI_chi_trans)
 TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.8, min_value=0.1,
                             max_value=1.0)
                               #mouseover="System starts at 10% operational, scales to 100% over this many days."
