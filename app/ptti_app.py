@@ -76,7 +76,7 @@ cfg_flu   = os.path.join("..", "examples", "structured", "ptti-fluseason.yaml")
 # Add flu season to TTI...
 cfg_tti   = os.path.join("..", "examples", "structured", "ptti-tti.yaml")
 cfg_uti   = os.path.join("..", "examples", "structured", "ptti-uti.yaml")
-cfg_trig  = os.path.join("..", "examples", "structured", "ptti-trig.yaml")
+# cfg_trig  = os.path.join("..", "examples", "structured", "ptti-trig.yaml")
 
 intervention_list = []
 
@@ -108,17 +108,26 @@ TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)
                             max_value=1.0)
                               #mouseover="System starts at 10% operational, scales to 100% over this many days."
 triggers = st.sidebar.checkbox("Reimpose Shutdowns As Needed")
-if triggers:
-    intervention_list.append(cfg_trig)
 #dance = False
 #dance = st.sidebar.checkbox("Dance!")
 
 cfg = config_load(filename=os.path.join("..", "examples", "structured", "ptti-past.yaml"),
                   interventions=[[i, 0] for i in intervention_list])
+
 cfg["meta"]["model"] = SEIRCTODEMem
 defaults = {}
 defaults.update(cfg["initial"])
 defaults.update(cfg["parameters"])
+
+graph_end_date = st.sidebar.date_input("Graph End",
+                                     value=(start+timedelta(days=cfg['meta']['tmax'])))
+
+graph_ending = (graph_end_date-start).days
+
+if not triggers:
+    for i in cfg['interventions']:
+        if i['name' ] == "Lockdown Trigger":
+            i['after'] = 900 #Just make them never happen
 
 if end_shutdown:
     for i in cfg['interventions']:
@@ -191,8 +200,10 @@ if len(To_Graph)>0:
         df_plot_results[Compartment] = C_total.copy()
     plt.plot(df_plot_results)
     ax = plt.gca()
+    ax.set_xlim([0, graph_ending])
     ax.yaxis.set_major_formatter(FuncFormatter(y_fmt))
     ax.xaxis.set_major_formatter(FuncFormatter(date_fmt))
+    plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
     # ax.set_xlim([70, ax.get_xlim()[1]])
     ax.set_xlabel('Date')
     ax.set_ylabel('People')
