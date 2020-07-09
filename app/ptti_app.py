@@ -135,9 +135,9 @@ if end_shutdown:
     for i in cfg['interventions']:
         if i['name' ]== "Relax Lockdown":
             i['time'] = (end_date-start).days+i['delay']
-        if triggers: # TODO: We need to make sure triggers don't start until after lockdown ends...
+        if triggers: # This works now.
             if i['name'] == "Lockdown Trigger":
-                i['after'] = (end_date - start).days + 7  # Cannot trigger for one week.
+                i['after'] = (end_date - start).days
         # But lockdowns don't always trigger at first...
 
 if TTI != 'None':
