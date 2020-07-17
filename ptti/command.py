@@ -85,6 +85,8 @@ def command():
                         help="Store time axis as dates")
     parser.add_argument("-sp", "--save-param", type=str, nargs="+", default=[],
                         help="Parameters to save a time series of")
+    parser.add_argument("-i", "--interventions", default=[], nargs="*",
+                        help="YAML file describing extra interventions")
 
     args = parser.parse_args()
 
@@ -92,7 +94,7 @@ def command():
                     format='%(asctime)s - %(name)s:%(levelname)s - %(message)s')
 
     def mkcfg(sample):
-        cfg = config_load(args.yaml, sample=sample)
+        cfg = config_load(args.yaml, sample=sample, interventions=args.interventions)
 
         for meta in ("model", "tmax", "steps", "samples", "output", "date"):
             arg = getattr(args, meta)
