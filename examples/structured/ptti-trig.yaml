@@ -1,3 +1,4 @@
+interventions:
 ## Lockdown trigger - needs to be higher than current cases to go on
   - condition: x[IU] + x[ID] - 410000
     name: "Lockdown Trigger"
