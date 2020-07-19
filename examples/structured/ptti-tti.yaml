@@ -54,7 +54,7 @@ interventions:
             ## Tracing - as above
 
 ## Scale up testing, and contact tracing further
-  - time: 257
+  - time: 257.02
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing
