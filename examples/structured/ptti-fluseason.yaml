@@ -1,12 +1,9 @@
 
 interventions:      
-
   - time: 154
     name: "Flu"
     parameters:
       coldflu: 0.02     # prevalence of symptomatic cold & flu in May
-      tested: 0.0001       # proportion of symptomatic who are tested (this is the same for
-                        #    symptomatic Covid and coldflu because they are indistinguishable)
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
