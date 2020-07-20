@@ -95,41 +95,26 @@ interventions:
     parameters:
       c: c0 * 0.4 # Projected slow increase in contacts per day
 
-  ## 31st August
-  - time: 257
-    parameters:
-      c: c0 * 0.45 # Projected slow increase in contacts per day
-
-  ## 30th September
-  - time: 287
-    parameters:
-      c: c0 * 0.5 # Projected slow increase in contacts per day
-
-  ## 31st October
-  - time: 318
-    parameters:
-      c: c0 * 0.6 # Projected slow increase in contacts per day
-
-## Lockdown trigger - start 14th August
+## Lockdown trigger - start 1st August
 # needs to be higher than current cases to go on
-  - condition: x[IU] + x[ID] - 300000
-    after: 250
+  - condition: x[IU] + x[ID] - 200000
+    after: 227
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
       locked: True
 
-## Lockdown triggers - start from 30th August
+## Lockdown triggers - start from 14th August
 ## Release lockdown when below 10k cases
   - condition: x[IU] + x[ID] - 10000
-    after: 266
+    after: 250
     direction: -1.0
     parameters:
       c: c0 * 0.6 # Lockdown release - only to 60% of baseline contacts because of new lockdown
       locked: False
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
-    after: 266
+    after: 250
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
