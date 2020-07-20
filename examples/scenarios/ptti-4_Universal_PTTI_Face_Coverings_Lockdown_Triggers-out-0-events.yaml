@@ -35,20 +35,6 @@
     testedBase: 0.0029461150692739924
     theta: 0.0029461150692739924
   time: 257
-- after: 227
-  condition: x[IU] + x[ID] - 250000
-  direction: 1.0
-  parameters:
-    c: 3.3
-    locked: true
-  time: 269.5985972879382
-- after: 227
-  condition: x[IU] + x[ID] - 250000
-  direction: 1.0
-  parameters:
-    c: 3.3
-    locked: true
-  time: 269.5985986520812
 - parameters:
     c: 5.5
     chi: 0.8
@@ -56,6 +42,20 @@
     testedBase: 0.007365287673184981
     theta: 0.007365287673184981
   time: 287
+- after: 227
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 295.80170981294054
+- after: 227
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 295.8017098129432
 - parameters:
     c: 6.6
     chi: 0.8
@@ -63,13 +63,6 @@
     testedBase: 0.014730575346369961
     theta: 0.014730575346369961
   time: 318
-- after: 227
-  condition: x[IU] + x[ID] - 250000
-  direction: 1.0
-  parameters:
-    c: 3.3
-    locked: true
-  time: 326.06691327918924
 - parameters:
     c: 7.699999999999999
     chi: 0.8
@@ -90,11 +83,11 @@
   parameters:
     c: 6.6
     locked: false
-  time: 418.6163285663631
+  time: 425.03060823327394
 - after: 266
   condition: x[IU] + x[ID] - 10000
   direction: -1.0
   parameters:
     c: 6.6
     locked: false
-  time: 418.61654872459235
+  time: 425.0306082335688
