@@ -8,8 +8,8 @@
 ##
 
 meta:
-  title: PTTI Scenario No TTI Lockdown Triggers
-  output: ptti-scenario-No_TTI-Lockdown-Triggers-out
+  title: PTTI 1 No TTI Lockdown Triggers
+  output: ptti-1-No_TTI-Lockdown-Triggers-out
   start: 2019/12/18
   #t0: 8.5
   envelope: false
