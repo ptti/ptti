@@ -25,7 +25,7 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta: 0.042   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
+  beta: 0.043   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
                 # the average daily number of contactsobserved per participant (from 10.8 to 2.8). We round these to 11 and 3
 
   ## c0 is contacts per day at baseline, pre-pandemic

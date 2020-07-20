@@ -97,7 +97,7 @@ interventions:
 
 ## Lockdown trigger - start 1st August
 # needs to be higher than current cases to go on
-  - condition: x[IU] + x[ID] - 200000
+  - condition: x[IU] + x[ID] - 250000
     after: 227
     direction: 1.0
     parameters:
