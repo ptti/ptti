@@ -8,7 +8,7 @@ ptti-scenario-4d-Trig40 ptti-scenario-4d-Trig50 ptti-scenario-4d-Trig60 ptti-sce
 ptti-scenario-3b-Trig10 ptti-scenario-3b-Trig20 ptti-scenario-3b-Trig30 \
 ptti-scenario-3b-Trig30-3mo ptti-scenario-3b-Trig00-3mo ptti-scenario-3b-Trig00
 
-SCENARIOS?= ptti-scenario-No_TTI ptti-scenario-No_TTI_Lockdown_Triggers \
+#SCENARIOS?= ptti-scenario-No_TTI ptti-scenario-No_TTI_Lockdown_Triggers \
 ptti-scenario-Targeted_PTTI ptti-scenario-Targeted_PTTI_Face_Coverings \
 ptti-scenario-Targeted_PTTI_Face_Coverings_Lockdown_Triggers \
 ptti-scenario-Targeted_PTTI_Lockdown_Triggers \
@@ -22,6 +22,10 @@ ptti-scenario-Untargeted_PTTI_Lockdown_Triggers \
 ptti-scenario-Untargeted_PTTI_TracingSuccess0_Face_Coverings_Lockdown_Triggers \
 ptti-scenario-Untargeted_PTTI_TracingSuccess30_Face_Coverings_Lockdown_Triggers \
 ptti-scenario-Untargeted_to_Targeted_PTTI_Face_Coverings_Lockdown_Triggers
+
+SCENARIOS?= ptti-1_No_TTI_Lockdown_Triggers \
+ptti-2_Universal_PTTI ptti-3_Universal_PTTI_Face_Coverings ptti-4_Universal_PTTI_Face_Coverings_Lockdown_Triggers \
+ptti-5_Targeted_TTI ptti-6_Targeted_TTI_Face_Coverings ptti-7_Targeted_TTI_Face_Coverings_Lockdown_Triggers
 
 PYTHON=python3
 
