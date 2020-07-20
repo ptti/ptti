@@ -1,0 +1,171 @@
+- parameters:
+    c: 7.699999999999999
+  time: 89
+- parameters:
+    c: 2.8600000000000003
+  time: 96
+- parameters:
+    c: 3.74
+  time: 174
+- parameters:
+    c: 4.07
+  time: 199
+- parameters:
+    c: 4.4
+  time: 226
+- parameters:
+    c: 4.95
+  time: 257
+- after: 250
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 264.7280122204256
+- after: 250
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 264.72801222046814
+- parameters:
+    c: 5.5
+  time: 287
+- after: 250
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 292.9079335523081
+- after: 250
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 292.90793355407203
+- parameters:
+    c: 6.6
+  time: 318
+- after: 250
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 323.6905720092231
+- after: 250
+  condition: x[IU] + x[ID] - 300000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 323.69057202093296
+- after: 266
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 6.6
+    locked: false
+  time: 555.7884000144201
+- after: 266
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 6.6
+    locked: false
+  time: 555.7884000144207
+- after: 266
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 6.6
+    locked: false
+  time: 555.7903369541658
+- after: 266
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 590.1904774606595
+- after: 266
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 590.1904774673978
+- after: 266
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 6.6
+    locked: false
+  time: 686.524467558841
+- after: 266
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 6.6
+    locked: false
+  time: 686.5244734672103
+- after: 266
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 6.6
+    locked: false
+  time: 686.5264207111869
+- after: 266
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 721.9313141530275
+- after: 266
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 721.9313141530408
+- after: 266
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 6.6
+    locked: false
+  time: 812.5345951669032
+- after: 266
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 6.6
+    locked: false
+  time: 812.5346017256718
+- after: 266
+  condition: x[IU] + x[ID] - 10000
+  direction: -1.0
+  parameters:
+    c: 6.6
+    locked: false
+  time: 812.5366368100802
+- after: 266
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 848.5579075425194
+- after: 266
+  condition: x[IU] + x[ID] - 40000
+  direction: 1.0
+  parameters:
+    c: 3.3
+    locked: true
+  time: 848.5579083201
