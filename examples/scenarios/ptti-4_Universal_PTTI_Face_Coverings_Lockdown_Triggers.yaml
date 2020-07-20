@@ -1,0 +1,181 @@
+##
+## Universal PTTI: scale up Weekly Testing of the population, Contact Tracing and isolation of positives
+##  With Phased Lockdown release as per No TTI counterfactual
+##  With Face Coverings from 24th July
+##    and Lockdown Triggers
+
+meta:
+  title: PTTI 4 Universal PTTI Face Coverings Lockdown Triggers
+  output: ptti-4-Universal-PTTI-Face-Coverings-Lockdown-Triggers-out
+  start: 2019/12/18
+  #t0: 8.5
+  envelope: false
+  tmax: 895
+  steps: 895
+
+## Initial values for the simulation
+initial:
+  ## N is the total population
+  N:    67886011    # mid-year 2020 from: https://www.worldometers.info/world-population/uk-population/
+  ## IU is the number of unconfined, infected individuals
+  IU:   2
+
+## Parameters of the simulation.
+## All rates are per individual per day.
+parameters:
+  ## beta is the infectiousness of the disease, the
+  ## probability of infecting a contact.
+  beta: 0.042   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
+                # the average daily number of contactsobserved per participant (from 10.8 to 2.8). We round these to 11 and 3
+
+  ## c0 is contacts per day at baseline, pre-pandemic
+  c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
+  c: c0
+
+  ## alpha is the rate at which exposed individuals
+  ## (infected but not infectious) become infectious.
+  ## 5 day incubation period
+  alpha: 0.2
+
+  ## gamma is the rate at which individuals either
+  ## recover, or are taken into hospital and assumed
+  ## to be isolated. One Week.
+  gamma: 0.1429
+
+  ## kappa is the rate at which individuals leave
+  ## isolation. This is one week according to UK policy.
+  ## The WHO thinks it should be 0.0714 (14 days).
+  ## We agree with WHO and think isolation should last for 14 symptom free days
+  kappa: 0.0714
+
+  ## testedBase is the background rate of testing
+  testedBase: 0.0
+  ## theta governs testing of infectious individuals, and we start with none
+  theta: testedBase
+
+  ## chi is the rate at which contacts are traced.
+  ## Tracing is triggered by testing. Starts at none.
+  chi:   0.0
+
+  ## eta is the success rate of tracing. Starts at none
+  eta:   0.0
+
+## Exogenous interventions. The time is given in
+## simulation days.
+interventions:
+  ## After three months, start of restrictions on 16th March. 
+  ## Reduce contacts by 30%.
+  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.7
+  ## After one more week, Lockdown, on 23rd March.
+  ## Reduce contacts to ~3 per day (~70% reduction).
+  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.26 # Lockdown, Jarvis et al 2020: "We found a 74% reduction in the average daily number of contacts
+                  # observed per participant (from 10.8 to 2.8). We round these to 11 and 3
+
+  ## On 9th June, testing, and contact tracing
+  ## 9th June, contacts per day only slightly increased according to CoMix data:
+  - time: 174
+    parameters:
+      testedBase: 30000/N   # 30,000 people tested in the community per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% testing positive have contacts traced
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers and isolated
+      c: c0 * 0.34 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
+                  # ~3 under lockdown to 3.78 week of 5th-12th June
+                
+  ## On 4th July, scale up testing, and contact tracing, contacts per day increase
+  - time: 199
+    parameters:
+      testedBase: 50000/N   # 50,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% testing positive have contacts traced
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers and isolated
+      c: c0 * 0.37 # CoMix report week 15 (1-8th July): UK contacts per day is 4.05
+ 
+  ## On 24th July, face coverings mandatory in shops (as well as public transport)
+  - time: 219
+    parameters:
+      beta: 0.0357  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
+                
+  ## On 31st July, scale up testing, and contact tracing, contacts per day increase
+  - time: 226
+    parameters:
+      testedBase: 100000/N   # 100,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% testing positive have contacts traced
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers and isolated
+      c: c0 * 0.4
+
+  ## Lockdown trigger - start 14th August
+  # needs to be higher than current cases to go on
+  - condition: x[IU] + x[ID] - 300000
+    after: 250
+    direction: 1.0
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+      locked: True
+
+  ## Lockdown triggers - start from 30th August
+  ## Release lockdown when below 10k cases
+  - condition: x[IU] + x[ID] - 10000
+    after: 266
+    direction: -1.0
+    parameters:
+      c: c0 * 0.6 # Lockdown release - only to 60% of baseline contacts because of new lockdown
+      locked: False
+  ## Lockdown trigger on 40k cases
+  - condition: x[IU] + x[ID] - 40000
+    after: 266
+    direction: 1.0
+    parameters:
+      c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
+      locked: True
+
+  ## On 31st August, scale up testing, and contact tracing, contacts per day increase
+  - time: 257
+    parameters:
+      testedBase: 200000/N   # 200,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% testing positive have contacts traced
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers and isolated
+      c: c0 * 0.45
+
+  ## On 30th September, scale up testing, and contact tracing, contacts per day increase
+  - time: 287
+    parameters:
+      testedBase: 500000/N   # 500,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% testing positive have contacts traced
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers and isolated
+      c: c0 * 0.5
+
+  ## On 31st October, scale up testing, and contact tracing, contacts per day increase
+  - time: 318
+    parameters:
+      testedBase: 1000000/N   # 1,000,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% testing positive have contacts traced
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers and isolated
+      c: c0 * 0.6
+
+  ## On 30th November, scale up testing, and contact tracing, contacts per day increase
+  - time: 348
+    parameters:
+      testedBase: 3000000/N   # 3,000,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% testing positive have contacts traced
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers and isolated
+      c: c0 * 0.7
+
+
+  ## On 31st December, scale up testing, and contact tracing, contacts per day increase, both to maximum
+  - time: 379
+    parameters:
+      testedBase: 10000000/N   # 10,000,000 people tested per day in the UK
+      theta: testedBase
+      chi: 0.8  # 80% testing positive have contacts traced
+      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers and isolated
+      c: c0 * 0.8
