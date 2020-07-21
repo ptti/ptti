@@ -275,17 +275,17 @@ We therefore conclude that the following are *consistent with* the data:
      of December 2019.
   3. The reproduction number for a completely susceptible population in the
      absence of any interventions is about 3.3, implying an appropriate value
-     for *β* in our full model (*c* equal to 13 without interventions) of 0.036.
+     for *β* in our full model (*c* equal to 11 without interventions) of 0.0435.
 
 Acknowledging the uncertainty in the data, and inherent in our reasoning above,
-we also conduct a sensitivity analysis, exploring scenarios where infectiousness
+we also conducted a sensitivity analysis, exploring scenarios where infectiousness
 is slightly below, and slightly above this value to ascertain the effectiveness
-of the measures that we propose here.
+of the measures that we propose here in fitting observed deaths in June 2020.
 
 Fitting can be verified by downloading the mortality data from the
 [data.gov.uk coronavirus web site] and running the command,
 ```sh
-ptti-fit -y fitting.yaml --dgu coronavirus-deaths_latest.csv --mask c theta --ifr 0.01
+ptti-fit -y fitting.yaml --dgu coronavirus-deaths_latest.csv --mask c theta --ifr 0.011
 ```
 where `fitting.yaml` is the [fitting scenario] in the `examples/` subdirectory
 of the [PTTI software] distribution.

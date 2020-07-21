@@ -159,6 +159,7 @@ cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))
 # NOTE: The first four interventions are fixed past events.
 Graph_Interventions = st.sidebar.checkbox("Graph Interventions", value=True)
 
+# To_Graph = ["Exposed", "Infected", "Recovered"]
 To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infected", "Recovered", "Isolated"],
                                   default=["Infected", "Isolated"])
 
@@ -272,6 +273,10 @@ if len(To_Graph)>0:
     else:
         ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-')], ["R(t)"], loc='upper right')
 
+    if round(econ['Tracing']['Max_Tracers'])>1000000: # Infeasible Number of Tracers.
+        plt.text(0.025, 0.965, 'Tracing Program \n Infeasibly Large', horizontalalignment='left',
+                 verticalalignment='top', transform=ax_r.transAxes,bbox=dict(facecolor='red', alpha=0.5))
+
     st.pyplot()
 
 
@@ -283,5 +288,6 @@ st.write("Test and Trace Results:")
 st.write("Maximum Tracers Needed: " + f"{round(econ['Tracing']['Max_Tracers'])}")
 st.write("Total Tracer Budget: " + f"{round(econ['Tracing']['Tracing_Total_Costs']/1000000):,}" + " million GBP")
 st.write("Total Testing Budget: " + f"{round(econ['Testing']['Testing_Total_Costs']/1000000) :,}" + " million GBP")
-
+st.write("Maximum Daily Tests: " + f"{round(econ['Testing']['Max_Laboratories']*10*2*9*2*96) :,}")
+st.write(econ['Economic']['Contacts'])
 # st.write(str(econ))

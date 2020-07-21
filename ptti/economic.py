@@ -191,8 +191,10 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced):
 
     total_GDP = sum(Daily_GDP)
 
+
     output['Economic'] = {}
     output['Economic']['Total_NHS_Costs'] = nhs_costs
+    output['Economic']['Contacts'] = contacts
     output['Economic']['Total_Productivity_Loss'] = (No_Pandemic_GDP-total_GDP)
 
     return output
