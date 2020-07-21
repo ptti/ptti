@@ -18,7 +18,7 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta: 0.042
+  beta: 0.0435
   ## c0 is contacts per day at baseline, pre-pandemic
   c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
   c: c0
@@ -78,34 +78,38 @@ interventions:
   - time: 174
     name: "Past"
     parameters:
-      c: c0 * 0.35 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
+      c: c0 * 0.34 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
                   # ~3 under lockdown to 3.8 week of 5th-12th June
+  ## On 4th July, pubs and entertainment venues open with new 1m distancing rule
+  - time: 199
+    name: "Past"
+    parameters:
+      c: c0 * 0.37 # CoMix report week 15 (1-8th July): UK contacts per day is 4.05
 
 ## Triggers are applied if the checkbox is ticked, but need to be loaded initially or they crash.
-## Lockdown trigger - start 18th July - two weeks after entertainment venues open
+
+## Lockdown trigger - start 1st August
 # needs to be higher than current cases to go on
   - condition: x[IU] + x[ID] - 300000
     name: "Lockdown Trigger"
-    after: 213
+    after: 227
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
       locked: True
-
-## Lockdown triggers - start from 31st July
-## Release lockdown when below 10k cases
+  ## Lockdown triggers - start from 30th August
+  ## Release lockdown when below 10k cases
   - condition: x[IU] + x[ID] - 10000
     name: "Lockdown Trigger"
-    after: 226
+    after: 266
     direction: -1.0
     parameters:
-      c: c0 * 0.8 # Lockdown release
+      c: c0 * 0.6 # Lockdown release - only to 60% of baseline contacts because of new lockdown
       locked: False
-
-## Lockdown trigger on 40k cases
+  ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
     name: "Lockdown Trigger"
-    after: 226
+    after: 266
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts

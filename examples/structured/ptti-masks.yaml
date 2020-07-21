@@ -4,4 +4,4 @@ interventions:
     name: "Masks"
     parameters:
           ## Face coverings
-      beta: 0.0357  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
+      beta: 0.036975  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
