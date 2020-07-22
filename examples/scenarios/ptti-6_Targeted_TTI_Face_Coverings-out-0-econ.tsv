@@ -1,0 +1,22 @@
+PTTI 6 Targeted TTI Face Coverings											
+Economic											
+	Total_NHS_Costs	1344616997.1860816									
+	Total_Productivity_Loss	601643571428.5215									
+Medical											
+	Cases	16200721.73659922									
+	Deaths	183334.37533249392									
+	Hospital	240299.48964166507									
+	ICU	42405.7922897056									
+Testing											
+	Laboratories	1	9	9	9	9					
+	Max_Laboratories	9									
+	Testing_Block_Lengths	180	180	180	180	176					
+	Testing_Costs	2455097.7113464614	111540197.06896457	213431509.81723276	135726614.26482153	210731532.56727427					
+	Testing_Total_Costs	673884951.4296396									
+Tracing											
+	Max_Supervisors	11433									
+	Max_Tracers	571624									
+	Tracers	0	49200	65340	11458	9600	63614	365042	571624	552766	284696
+	Tracing_Block_Lengths	90	90	90	90	90	90	90	90	90	86
+	Tracing_Costs	53557250.0	4051451250.0	1741078520.0	128716074.00000001	114218100.0	535689342.0	25114527926.0	19914869472.0	4512026898.0	2312708835.2
+	Tracing_Total_Costs	58478843667.2									
