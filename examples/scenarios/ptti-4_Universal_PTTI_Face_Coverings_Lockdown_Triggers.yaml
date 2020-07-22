@@ -98,7 +98,7 @@ interventions:
   ## On 24th July, face coverings mandatory in shops (as well as public transport)
   - time: 219
     parameters:
-      beta: 0.03045  # 30% reduction in Beta due to public wearing of (home-made) cloth face coverings
+      beta: 0.036975  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
                 
   ## On 31st July, scale up testing, and contact tracing, contacts per day increase
   - time: 226
