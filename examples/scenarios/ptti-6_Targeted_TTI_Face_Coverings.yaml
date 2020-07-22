@@ -25,9 +25,9 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  #beta: 0.0435   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
+  beta: 0.0435   # based on model fitting, c=3 during lockdown as per Jarvis et al 2020: "We found a 74% reduction in
                 # the average daily number of contactsobserved per participant (from 10.8 to 2.8). We round these to 11 and 3
-  beta: 0.0609  # with gamma change beta has to change too to get same R0 of 3.3: beta changed to 0.0435*7/5
+
   ## c0 is contacts per day at baseline, pre-pandemic
   c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
   c: c0
@@ -35,13 +35,13 @@ parameters:
   ## alpha is the rate at which exposed individuals
   ## (infected but not infectious) become infectious.
   ## 5 day incubation period
-  alpha: 0.2
-
+  #alpha: 0.2
+  alpha: 0.333  # changed to 3 days
   ## gamma is the rate at which individuals either
   ## recover, or are taken into hospital and assumed
   ## to be isolated. One Week.
-  #gamma: 0.1429
-  gamma: 0.2  # changed to 5 days
+  gamma: 0.1429
+
   ## kappa is the rate at which individuals leave
   ## isolation. This is one week according to UK policy.
   ## The WHO thinks it should be 0.0714 (14 days).
@@ -113,7 +113,7 @@ interventions:
   ## On 24th July, face coverings mandatory in shops (as well as public transport)
   - time: 219
     parameters:
-      beta: 0.051765  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
+      beta: 0.036975  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
 
   ## On 31st July, scale up testing, and contact tracing, contacts per day increase
     ##  Targetted Testing - maximum proportion (50%) of symptomatics tested
