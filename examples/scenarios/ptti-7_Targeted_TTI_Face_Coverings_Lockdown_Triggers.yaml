@@ -9,7 +9,7 @@ meta:
   title: PTTI 7 Targeted TTI Face Coverings Lockdown Triggers
   output: ptti-7-Targeted-TTI-Face-Coverings Lockdown Triggers-out
   start: 2019/12/18
-  t0: 8.5
+  #t0: 8.5
   envelope: false
   tmax: 895
   steps: 895
@@ -36,8 +36,8 @@ parameters:
   ## alpha is the rate at which exposed individuals
   ## (infected but not infectious) become infectious.
   ## 5 day incubation period
-  #alpha: 0.2
-  alpha: 0.333  # changed to 3 days
+  alpha: 0.2
+
   ## gamma is the rate at which individuals either
   ## recover, or are taken into hospital and assumed
   ## to be isolated. One Week.
