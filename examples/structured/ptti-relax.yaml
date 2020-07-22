@@ -17,7 +17,7 @@ interventions:
     name: "Relax Lockdown"
     delay: 88.01
     parameters:
-      c: c: c0 * 0.5
+      c: c0 * 0.5
 
   - time: 318.01
     name: "Relax Lockdown"
