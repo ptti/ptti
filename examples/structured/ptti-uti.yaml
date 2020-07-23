@@ -1,37 +1,44 @@
 interventions:
-  - time: 152
-    name: "Untargeted Testing"
-    parameters:
-      testedBase: 100000/N   # 100,000 people tested per day in the UK
-      theta: testedBase
-      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers,
-                #   with support from mobile phone apps
-                # These tracing rates continue throughout the rest of the simulation
-      chi: 0.8  # 80% of the ~3000 cases per day (1% of tested) have contacts traced
-                # 18,000 contact tracers starting on this date should be able to
-                #   trace 'all' (eta) contacts in one day in teams of 6 for each case
-
   - time: 174
     name: "Untargeted Testing"
       ## Targeted Testing
     parameters:
-      testedBase: 300000/N   # 300,000 people tested per day in the UK
+      testedBase: 30000/N   # 300,000 people tested per day in the UK
       theta: testedBase
 
   - time: 199
     name: "Untargeted Testing"  
     parameters:
-      testedBase: 900000/N   # 900,000 people tested per day in the UK
+      testedBase: 50000/N   # 900,000 people tested per day in the UK
       theta: testedBase
+ 
   ## Scale up testing, and contact tracing further
   - time: 226
     name: "Untargeted Testing"
     parameters:
-      testedBase: 3000000/N   # 3,000,000 people tested per day in the UK
+      testedBase: 100000/N
       theta: testedBase
       
   - time: 247
     name: "Untargeted Testing"
     parameters:
-      testedBase: 9000000/N   # 9,000,000 people tested per day in the UK (
+      testedBase: 200000/N   # 200,000 people tested per day in the UK
+      theta: testedBase
+      
+  - time: 287
+    name: "Untargeted Testing"
+    parameters:
+      testedBase: 500000/N   # 500,000 people tested per day in the UK
+      theta: testedBase
+
+  - time: 318
+    name: "Untargeted Testing"
+    parameters:
+      testedBase: 1000000/N   # 1,000,000 people tested per day in the UK
+      theta: testedBase
+
+  - time: 348
+    name: "Untargeted Testing"
+    parameters:
+      testedBase: 3000000/N   # 3,000,000 people tested per day in the UK
       theta: testedBase

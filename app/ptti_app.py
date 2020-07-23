@@ -102,7 +102,7 @@ elif TTI == 'Untargeted':
     # Error with too-close dates needs to be fixed before this is put in.
 TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", value=0.55, min_value=0.1,
                             max_value=0.99)
-TTI_chi = -1*log(1-TTI_chi_trans)
+TTI_chi = round(-1*log(1-TTI_chi_trans),2)
 TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.8, min_value=0.1,
                             max_value=1.0)
                               #mouseover="System starts at 10% operational, scales to 100% over this many days."
@@ -315,8 +315,10 @@ st.write("Total Economic Loss from COVID-19: " + f"{round(econ['Economic']['Tota
 st.write("")
 st.write("Test and Trace Results:")
 st.write("Maximum Tracers Needed: " + f"{round(econ['Tracing']['Max_Tracers'])}")
-st.write("Total Tracer Budget: " + f"{round(econ['Tracing']['Tracing_Total_Costs']/1000000):,}" + " million GBP")
-st.write("Total Testing Budget: " + f"{round(econ['Testing']['Testing_Total_Costs']/1000000) :,}" + " million GBP")
+st.write("Total Tracer Budget: " + f"{round(econ['Tracing']['Tracing_Total_Costs']/1000000000):,}" + " billion GBP")
+st.write("Total Testing Budget: " + f"{round(econ['Testing']['Testing_Total_Costs']/1000000000) :,}" + " billion GBP")
 st.write("Maximum Daily Tests: " + f"{round(econ['Testing']['Max_Laboratories']*10*2*9*2*96) :,}")
-st.write(econ['Economic']['Contacts'])
+# st.write(econ['Economic']['Contacts'])
+st.write("Chi:" + str(TTI_chi) )
+st.write("Chi_T:" + str(TTI_chi_trans) )
 # st.write(str(econ))

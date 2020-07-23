@@ -52,11 +52,11 @@ parameters:
   eta:   0.0
 
   ## default testing rate (proportion of symptomatics)
-  tested: 0.8   
+  #tested: 0.8   
   ## 50% of SARS-Cov-2 infected (IU) have symptoms
-  symptomatic: 0.5 
+  #symptomatic: 0.5 
   ## average duration of symptomatic illness(coldflu or Covid combined)
-  duration: 7
+  #duration: 7
 
 ## Exogenous interventions. The time is given in
 ## simulation days.
@@ -86,6 +86,12 @@ interventions:
     parameters:
       c: c0 * 0.37 # CoMix report week 15 (1-8th July): UK contacts per day is 4.05
 
+  ## 31st July
+  - time: 226
+    name: "Now"
+    parameters:
+      c: c0 * 0.4 # Projected slow increase in contacts per day
+
 ## Triggers are applied if the checkbox is ticked, but need to be loaded initially or they crash.
 
 ## Lockdown trigger - start 1st August
@@ -101,7 +107,7 @@ interventions:
   ## Release lockdown when below 10k cases
   - condition: x[IU] + x[ID] - 10000
     name: "Lockdown Trigger"
-    after: 266
+    after: 250
     direction: -1.0
     parameters:
       c: c0 * 0.6 # Lockdown release - only to 60% of baseline contacts because of new lockdown
@@ -109,7 +115,7 @@ interventions:
   ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
     name: "Lockdown Trigger"
-    after: 266
+    after: 250
     direction: 1.0
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
