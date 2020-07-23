@@ -10,11 +10,13 @@ import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.ticker import FuncFormatter
 # import matplotlib.colors as mcolors
-# import matplotlib.dates as mdates
+# import matplotlib.dates as m/dates
 from pandas import DataFrame as pd_df
 import streamlit as st
 # from plotting.py import yaml_plot_defaults
 
+if 'app' not in os.getcwd():
+    os.chdir('app')
 
 @st.cache(suppress_st_warning=True) #Enable caching to get this to run faster, esp. for pre-run scenarios.
 def cachedRun(*av, **kw):
@@ -52,8 +54,6 @@ def date_fmt(x, pos):  # formatter function takes tick label and tick position
     thisdate = start+timedelta(days=x)
     return(thisdate.strftime("%b %Y"))
 
-if 'app' not in os.getcwd():
-    os.chdir('app')
 
 
 st.title("UK COVID-19 Policy Simulator")
@@ -69,28 +69,25 @@ Run different epidemic control policies for COVID-19 in the UK. This uses the
 
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
 
-cfg = config_load(os.path.join("..", "examples", "structured", "ptti-past.yaml"))
+cfg = config_load(os.path.join("..", "examples", "structured", "ptti-past.yaml")) # To pull basics - actual load below.
+start = date(int(cfg['meta']['start'][0:4]), int(cfg['meta']['start'][5:7]), int(cfg['meta']['start'][8:10]))
+
 
 cfg_mask = os.path.join("..", "examples", "structured", "ptti-masks.yaml")
 cfg_relax = os.path.join("..", "examples", "structured", "ptti-relax.yaml")
-cfg_flu   = os.path.join("..", "examples", "structured", "ptti-fluseason.yaml")
+cfg_flu = os.path.join("..", "examples", "structured", "ptti-fluseason.yaml")
 # Add flu season to TTI...
-cfg_tti   = os.path.join("..", "examples", "structured", "ptti-tti.yaml")
-cfg_uti   = os.path.join("..", "examples", "structured", "ptti-uti.yaml")
+cfg_tti = os.path.join("..", "examples", "structured", "ptti-tti.yaml")
+cfg_uti = os.path.join("..", "examples", "structured", "ptti-uti.yaml")
 # cfg_trig  = os.path.join("..", "examples", "structured", "ptti-trig.yaml")
 
 intervention_list = []
-
-start = date(int(cfg['meta']['start'][0:4]), int(cfg['meta']['start'][5:7]), int(cfg['meta']['start'][8:10]))
+intervention_list.append(cfg_relax)
 
 mask = st.sidebar.checkbox("Wear Masks")
 if mask:
     intervention_list.append(cfg_mask)
 
-
-end_shutdown = True #st.sidebar.checkbox("End Shutdown")
-if end_shutdown:
-    intervention_list.append(cfg_relax)
 end_date = st.sidebar.date_input("Shutdown End Date",
                                      value=(start+timedelta(days=199)), min_value=start+timedelta(days=90), max_value=start+timedelta(days=cfg['meta']['tmax']))
 
@@ -126,19 +123,33 @@ graph_end_date = st.sidebar.date_input("Graph End",
 
 graph_ending = (graph_end_date-start).days
 
+for i in cfg['interventions']:
+    if i['name'] == "Relax Lockdown":
+        i['time'] = (end_date - start).days + i['delay']
+    if triggers:  # This works now.
+        if i['name'] == "Lockdown Trigger":
+            i['after'] = (end_date - start).days
+
+cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))) #Otherwise, time changes can make things go backwards.
+# Now check for overlapping day issues:
+intervention_times = [i['time'] for i in cfg['interventions'] if 'time' in i.keys()]
+duplicates = [x for n, x in enumerate(intervention_times) if x in intervention_times[:n]]
+if len(duplicates) > 0:
+    # Create new intervention to build up from parts...
+    for t in duplicates:
+        to_merge = [i for i in [i for i in cfg['interventions'] if 'time' in i.keys()] if i['time']==t]
+        merged_intervention = dict()
+        merged_intervention['time'] = t
+        merged_intervention['name'] = " ".join([i['name'] for i in to_merge])
+        merged_intervention['parameters'] = to_merge[0]['parameters']
+        for i in to_merge[1:]:
+            merged_intervention['parameters'].update(i['parameters'])
+
+
 if not triggers:
     for i in cfg['interventions']:
-        if i['name' ] == "Lockdown Trigger":
-            i['after'] = 900 #Just make them never happen
-
-if end_shutdown:
-    for i in cfg['interventions']:
-        if i['name' ]== "Relax Lockdown":
-            i['time'] = (end_date-start).days+i['delay']
-        if triggers: # This works now.
-            if i['name'] == "Lockdown Trigger":
-                i['after'] = (end_date - start).days
-        # But lockdowns don't always trigger at first...
+        if i['name'] == "Lockdown Trigger":
+            i['after'] = 900  # Just make them never happen
 
 if TTI != 'None':
     for i in cfg['interventions']:
@@ -147,7 +158,25 @@ if TTI != 'None':
             i['parameters']['eta'] = TTI_eta
             # Set dates? No - Not currently allowing rollout speed changes.
 
-cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))) #Otherwise, time changes can make things go backwards.
+if not triggers:
+    for i in cfg['interventions']:
+        if i['name'] == "Lockdown Trigger":
+            i['after'] = 900  # Just make them never happen
+
+for i in cfg['interventions']:
+    if i['name'] == "Relax Lockdown":
+        i['time'] = (end_date - start).days + i['delay']
+    if triggers:  # This works now.
+        if i['name'] == "Lockdown Trigger":
+            i['after'] = (end_date - start).days
+    # But lockdowns don't always trigger at first...
+
+if TTI != 'None':
+    for i in cfg['interventions']:
+        if "Testing" in i['name']:
+            i['parameters']['chi'] = TTI_chi
+            i['parameters']['eta'] = TTI_eta
+            # Set dates? No - Not currently allowing rollout speed changes.
 
 # to_run = st.sidebar.button("Run Model")
 # model_load_state = st.info(f"Loading policy '{base_policy}'...")
@@ -179,11 +208,11 @@ Model_Today = (Today-start).days
 # samples = [(i, cfg) for i in range(cfg["meta"]["samples"])]
 
 traj, events, paramtraj = cachedRun(**cfg["meta"], **cfg)
-Latest_run = True
+#Latest_run = True
 
 econ_args = calcArgumentsODE(traj, paramtraj, cfg)
 econ = calcEconOutputs(**econ_args)
-Update_Graph=True
+#Update_Graph=True
 # st.write(str(events))
 
 if len(To_Graph)>0:
