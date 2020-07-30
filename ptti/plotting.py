@@ -51,7 +51,7 @@ def plot(model, output, plots, title, envelope=True, start=None, **unused):
     colours = [mcolors.to_rgb(c) for c in mcolors.TABLEAU_COLORS.values()]
 
     arrays = [np.loadtxt(tsvfile, delimiter="\t")
-              for tsvfile in glob("{}*.tsv".format(output))]
+              for tsvfile in glob("{}*[0-9].tsv".format(output))]
     times = [a[:,0] for a in arrays]
     trajectories = [a[:,1:] for a in arrays]
 
