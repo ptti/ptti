@@ -71,10 +71,10 @@ HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; borde
 cfg = config_load(os.path.join("..", "examples", "structured", "ptti-past.yaml")) # To pull basics - actual load below.
 start = date(int(cfg['meta']['start'][0:4]), int(cfg['meta']['start'][5:7]), int(cfg['meta']['start'][8:10]))
 
-
 cfg_mask = os.path.join("..", "examples", "structured", "ptti-masks.yaml") # Need High / Low Compliance.
-cfg_relax = os.path.join("..", "examples", "structured", "ptti-relax.yaml")  # Need to change to Phased vs. Full.
-cfg_reopen = os.path.join("..", "examples", "structured", "ptti-reopen.yaml")  # Need to change to Phased vs. Full.
+
+cfg_relax = os.path.join("..", "examples", "structured", "ptti-relax.yaml")
+cfg_reopen = os.path.join("..", "examples", "structured", "ptti-reopen.yaml")
 cfg_flu = os.path.join("..", "examples", "structured", "ptti-fluseason.yaml")
 # Add flu season to TTI...
 cfg_tti = os.path.join("..", "examples", "structured", "ptti-tti.yaml")
@@ -83,7 +83,6 @@ cfg_uti = os.path.join("..", "examples", "structured", "ptti-uti.yaml")
 cfg_drug = os.path.join("..", "examples", "structured", "ptti-drug.yaml") # To Do: 50% effective, available @Date X.
 
 intervention_list = []
-intervention_list.append(cfg_relax)
 
 mask = st.sidebar.checkbox("Wear Masks")
 if mask:
@@ -98,19 +97,21 @@ elif TTI == 'Full Reopening':
 
 end_date = st.sidebar.date_input("Shutdown End Date",
                                      value=(start+timedelta(days=199)), min_value=start+timedelta(days=90), max_value=start+timedelta(days=cfg['meta']['tmax']))
-
 drug = st.sidebar.checkbox("Treatment Becomes Available")
 
-TTI = st.sidebar.radio("Test and Trace (Starting Mid-May 2020, fully in place by September 2020)", ['No TTI','Universal','Targeted'], index=0)
-if TTI == 'Targeted':
+TTI = st.sidebar.radio("Test and Trace (Starting June 2020, fully in place by September 2020)", ['No TTI','Universal Testing','Targeted Test and Trace'], index=0)
+if TTI == 'Targeted Test and Trace':
     intervention_list.append(cfg_flu)
     intervention_list.append(cfg_tti)
-elif TTI == 'Universal':
+elif TTI == 'Universal Testing':
     intervention_list.append(cfg_uti)
-
 
 if drug == True:
     intervention_list.append(cfg_drug)
+
+
+# st.write(intervention_list)
+
 
 #TTI_Launch = st.sidebar.date_input("Test and Trace Ramp-up Period (Start and End)",
 #                                 value=((start+timedelta(days=152)), start+timedelta(days=257)), max_value=start+timedelta(days=cfg['meta']['tmax']))
@@ -124,9 +125,10 @@ TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)
 #dance = False
 #dance = st.sidebar.checkbox("Dance!")
 
-st.write("Scenario:" + TTI + (" PTTI" if TTI != "No TTI" else "") +  (" Face Coverings" if mask else "") + (" Delayed" if end_date>start+timedelta(days=199) else "") + \
-(" by " + str(round((end_date - (start+timedelta(days=199))).days/7,1)) + " Weeks" if end_date>start+timedelta(days=199) else "")
+Scenario_Title = ("Scenario:" + TTI + (" Face Coverings" if mask else "") + (" Delayed" if end_date > start+timedelta(days=258) else "") + \
+(" by " + str(round((end_date - (start+timedelta(days=258))).days/7,1)) + " Weeks" if end_date>start+timedelta(days=199) else "")
 + ("" if (TTI_chi==0.8==TTI_eta) else " with modified test and trace system"))
+st.write(Scenario_Title)
 
 
 #cfg2 = config_load(filename=os.path.join("..", "examples", "scenarios", "ptti-2_Universal_PTTI.yaml"))
@@ -282,6 +284,8 @@ if len(To_Graph)>0:
         ax_r.plot([Begin, ax_r.get_xlim()[1]], [-.35, -.35], lw=2, ls=':',
                   c=(min((c_max - c) / (c_max - c_midpoint), 1), min((c - c_min) / (c_midpoint - c_min), 1), 0))
 
+    # plt.title(label=Scenario_Title)
+    #plt.title()
     ax.legend(To_Graph, loc='upper center')
     ax_r.set_ylabel('Reproductive Number (Effective)')
     ax_r.plot(traj[:, -1], label="R(t)", color="Black")
@@ -338,3 +342,6 @@ st.write("Maximum Tracers Needed: " + f"{round(econ['Tracing']['Max_Tracers']/10
 st.write("Total Tracer Budget: " + f"{round(econ['Tracing']['Tracing_Total_Costs']/1000000000,1):,}" + " billion GBP")
 st.write("Total Testing Budget: " + f"{round(econ['Testing']['Testing_Total_Costs']/1000000000,1) :,}" + " billion GBP")
 st.write("Maximum Daily Tests: " + f"{round(econ['Testing']['Max_Laboratories']*10*2*9*2*96) :,}")
+
+
+# st.write(cfg['interventions'])

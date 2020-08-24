@@ -92,4 +92,4 @@ interventions:
   - time: 226
     name: "Now"
     parameters:
-      c: c0 * 0.4 # Projected slow increase in contacts per day
+      c: c0 * 0.4 # Slow increase in contacts per day

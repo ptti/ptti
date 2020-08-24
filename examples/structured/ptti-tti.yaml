@@ -13,6 +13,7 @@ interventions:
                 #
       eta: 0.47 # 47% of contacts for each case successfully traced by contact tracers,
                 #  This now matches current success rates.
+
   ## Scale up testing, and contact tracing further
   - time: 199
     name: "Targeted Testing"
