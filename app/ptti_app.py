@@ -85,10 +85,10 @@ cfg_drug = os.path.join("..", "examples", "structured", "ptti-drug.yaml") # To D
 intervention_list = []
 
 
-TTI = st.sidebar.radio("How Shutdown is Ended", ['Phased Relaxation','Full Reopening'], index=0)
-if TTI == 'Phased Relaxation':
+Relax = st.sidebar.radio("How Shutdown is Ended", ['Phased Relaxation','Full Reopening'], index=0)
+if Relax == 'Phased Relaxation':
     intervention_list.append(cfg_relax)
-elif TTI == 'Full Reopening':
+elif Relax == 'Full Reopening':
     intervention_list.append(cfg_reopen)
 
 end_date = st.sidebar.date_input("Shutdown End Date",
@@ -101,13 +101,15 @@ if TTI == 'Targeted Test and Trace':
 elif TTI == 'Universal Testing':
     intervention_list.append(cfg_uti)
 
-Mask_Compliance = st.sidebar.radio("Mask Compliance Rates", ['Lower Compliance','Current Level','Very High Compliance'], index=1)
+Mask_Compliance = st.sidebar.radio("Mask Compliance", ['Lower','Moderate','Very High'], index=1)
 intervention_list.append(cfg_mask) # We have masks no matter what. The question is what level they are used.
 
-drug = st.sidebar.checkbox("Treatment Becomes Available")
+drug = st.sidebar.checkbox("Treatment Becomes Available (Not implemented)")
 if drug == True:
     intervention_list.append(cfg_drug)
 
+fixed_y = st.sidebar.checkbox("Fixed maximum y-axis")
+log_y = st.sidebar.checkbox("Log-scale y-axis")
 
 
 
@@ -126,11 +128,10 @@ TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)
 #dance = False
 #dance = st.sidebar.checkbox("Dance!")
 
-Scenario_Title = (TTI + " Mask " + Mask_Compliance + \
-                  (("\n Delayed by " + str(round((end_date - (start+timedelta(days=258))).days/7,1)) + " Weeks")
+Scenario_Title = (Relax + (("with delay of " + str(round((end_date - (start+timedelta(days=258))).days/7,1)) + " Weeks\n")
                    if end_date > start+timedelta(days=258) else "") + \
+                  " with " + TTI + " and " + Mask_Compliance + " Mask Compliance" + \
                   ("" if ((TTI_chi==0.8) & (TTI_eta==0.47)) else "\n with modified parameters"))
-# st.write(Scenario_Title)
 
 
 #cfg2 = config_load(filename=os.path.join("..", "examples", "scenarios", "ptti-2_Universal_PTTI.yaml"))
@@ -150,11 +151,11 @@ for i in cfg['interventions']:
 
 for i in cfg['interventions']:
     if i['name'] == "Future Mask Compliance":
-        if Mask_Compliance == 'Current Level':  # 30% reduction
+        if Mask_Compliance == 'Moderate':  # 30% reduction
             i['parameters']['beta'] = cfg["parameters"]['beta'] * 0.7  # 30% reduction
-        if Mask_Compliance == 'Lower Compliance':
+        if Mask_Compliance == 'Lower':
             i['parameters']['beta'] = cfg["parameters"]['beta'] * 0.85 # 15% reduction
-        if Mask_Compliance == 'Very High Compliance':
+        if Mask_Compliance == 'Very High':
             i['parameters']['beta'] = cfg["parameters"]['beta'] * 0.5 # 50% reduction
 
 # Now fix overlapping day issues:
@@ -264,6 +265,15 @@ if len(To_Graph)>0:
     # ax.set_xlim([70, ax.get_xlim()[1]])
     ax.set_xlabel('Date')
     ax.set_ylabel('People')
+    miny = ax.get_ylim()[0]
+    if log_y:
+        ax.semilogy()
+        miny = 1
+    elif Graph_Interventions:
+        miny = ax.get_ylim()[0]-300000
+    if fixed_y:
+        maxy = 10000000 # 10m.
+        ax.set_ylim(miny, maxy)
     maxy = ax.get_ylim()[1]
     # st.write(str(maxy))
     ax_r = ax.twinx()  # instantiate a second axes that shares the same x-axis
