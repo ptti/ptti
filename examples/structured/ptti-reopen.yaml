@@ -5,4 +5,4 @@ interventions:
     name: "Relax Lockdown"
     delay: 59
     parameters:
-      c: c0
+      c: c0 * 0.8

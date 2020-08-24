@@ -84,10 +84,6 @@ cfg_drug = os.path.join("..", "examples", "structured", "ptti-drug.yaml") # To D
 
 intervention_list = []
 
-mask = st.sidebar.checkbox("Wear Masks")
-if mask:
-    intervention_list.append(cfg_mask)
-
 
 TTI = st.sidebar.radio("How Shutdown is Ended", ['Phased Relaxation','Full Reopening'], index=0)
 if TTI == 'Phased Relaxation':
@@ -96,8 +92,7 @@ elif TTI == 'Full Reopening':
     intervention_list.append(cfg_reopen)
 
 end_date = st.sidebar.date_input("Shutdown End Date",
-                                     value=(start+timedelta(days=199)), min_value=start+timedelta(days=90), max_value=start+timedelta(days=cfg['meta']['tmax']))
-drug = st.sidebar.checkbox("Treatment Becomes Available")
+                                     value=(start+timedelta(days=258)), min_value=start+timedelta(days=90), max_value=start+timedelta(days=cfg['meta']['tmax']))
 
 TTI = st.sidebar.radio("Test and Trace (Starting June 2020, fully in place by September 2020)", ['No TTI','Universal Testing','Targeted Test and Trace'], index=0)
 if TTI == 'Targeted Test and Trace':
@@ -106,8 +101,14 @@ if TTI == 'Targeted Test and Trace':
 elif TTI == 'Universal Testing':
     intervention_list.append(cfg_uti)
 
+Mask_Compliance = st.sidebar.radio("Mask Compliance Rates", ['Lower Compliance','Current Level','Very High Compliance'], index=1)
+intervention_list.append(cfg_mask) # We have masks no matter what. The question is what level they are used.
+
+drug = st.sidebar.checkbox("Treatment Becomes Available")
 if drug == True:
     intervention_list.append(cfg_drug)
+
+
 
 
 # st.write(intervention_list)
@@ -125,10 +126,11 @@ TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)
 #dance = False
 #dance = st.sidebar.checkbox("Dance!")
 
-Scenario_Title = ("Scenario:" + TTI + (" Face Coverings" if mask else "") + (" Delayed" if end_date > start+timedelta(days=258) else "") + \
-(" by " + str(round((end_date - (start+timedelta(days=258))).days/7,1)) + " Weeks" if end_date>start+timedelta(days=199) else "")
-+ ("" if (TTI_chi==0.8==TTI_eta) else " with modified test and trace system"))
-st.write(Scenario_Title)
+Scenario_Title = (TTI + " Mask " + Mask_Compliance + \
+                  (("\n Delayed by " + str(round((end_date - (start+timedelta(days=258))).days/7,1)) + " Weeks")
+                   if end_date > start+timedelta(days=258) else "") + \
+                  ("" if ((TTI_chi==0.8) & (TTI_eta==0.47)) else "\n with modified parameters"))
+# st.write(Scenario_Title)
 
 
 #cfg2 = config_load(filename=os.path.join("..", "examples", "scenarios", "ptti-2_Universal_PTTI.yaml"))
@@ -145,6 +147,15 @@ for i in cfg['interventions']:
     if "Relax Lockdown" in i['name']:
         i['time'] = (end_date - start).days + i['delay'] # This applies to reopening AND relaxation.
         # (There is no "remained locked down" option now.)
+
+for i in cfg['interventions']:
+    if i['name'] == "Future Mask Compliance":
+        if Mask_Compliance == 'Current Level':  # 30% reduction
+            i['parameters']['beta'] = cfg["parameters"]['beta'] * 0.7  # 30% reduction
+        if Mask_Compliance == 'Lower Compliance':
+            i['parameters']['beta'] = cfg["parameters"]['beta'] * 0.85 # 15% reduction
+        if Mask_Compliance == 'Very High Compliance':
+            i['parameters']['beta'] = cfg["parameters"]['beta'] * 0.5 # 50% reduction
 
 # Now fix overlapping day issues:
 intervention_times = [i['time'] for i in cfg['interventions'] if 'time' in i.keys()]
@@ -284,7 +295,7 @@ if len(To_Graph)>0:
         ax_r.plot([Begin, ax_r.get_xlim()[1]], [-.35, -.35], lw=2, ls=':',
                   c=(min((c_max - c) / (c_max - c_midpoint), 1), min((c - c_min) / (c_midpoint - c_min), 1), 0))
 
-    # plt.title(label=Scenario_Title)
+    plt.suptitle(t=Scenario_Title)
     #plt.title()
     ax.legend(To_Graph, loc='upper center')
     ax_r.set_ylabel('Reproductive Number (Effective)')

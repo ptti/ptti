@@ -5,3 +5,9 @@ interventions:
     parameters:
           ## Face coverings
       beta: 0.036975  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
+  - time: 248
+    name: "Future Mask Compliance"
+    parameters:
+      ## Face coverings
+      #Baseline beta: 0.0435
+      beta: 0.036975  # 15% reduction in Beta due to public wearing of (home-made) cloth face coverings
