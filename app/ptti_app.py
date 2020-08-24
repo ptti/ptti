@@ -3,6 +3,7 @@ from ptti.model import runModel
 from ptti.economic import calcEconOutputs, calcArgumentsODE
 from ptti.seirct_ode import SEIRCTODEMem
 from datetime import date, datetime, timedelta
+from collections import OrderedDict
 import os
 from math import log
 import numpy as np
@@ -57,14 +58,12 @@ def date_fmt(x, pos):  # formatter function takes tick label and tick position
 
 
 st.title("UK COVID-19 Policy Simulator")
-
-st.sidebar.title("Interactive PTTI Policy Creator")
-st.sidebar.markdown(
+st.markdown(
     """
-Run different epidemic control policies for COVID-19 in the UK. This uses the  
-[PTTI](https://github.com/ptti/ptti) model.
+Compare COVID-19 control policies in the UK using the  [PTTI](https://github.com/ptti/ptti) model.
 """
 )
+st.sidebar.title("COVID-19 Policy Choices")
 
 
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem; margin-bottom: 2.5rem">{}</div>"""
@@ -73,13 +72,15 @@ cfg = config_load(os.path.join("..", "examples", "structured", "ptti-past.yaml")
 start = date(int(cfg['meta']['start'][0:4]), int(cfg['meta']['start'][5:7]), int(cfg['meta']['start'][8:10]))
 
 
-cfg_mask = os.path.join("..", "examples", "structured", "ptti-masks.yaml")
-cfg_relax = os.path.join("..", "examples", "structured", "ptti-relax.yaml")
+cfg_mask = os.path.join("..", "examples", "structured", "ptti-masks.yaml") # Need High / Low Compliance.
+cfg_relax = os.path.join("..", "examples", "structured", "ptti-relax.yaml")  # Need to change to Phased vs. Full.
+cfg_reopen = os.path.join("..", "examples", "structured", "ptti-reopen.yaml")  # Need to change to Phased vs. Full.
 cfg_flu = os.path.join("..", "examples", "structured", "ptti-fluseason.yaml")
 # Add flu season to TTI...
 cfg_tti = os.path.join("..", "examples", "structured", "ptti-tti.yaml")
 cfg_uti = os.path.join("..", "examples", "structured", "ptti-uti.yaml")
-# cfg_trig  = os.path.join("..", "examples", "structured", "ptti-trig.yaml")
+#Removed Triggered shutdowns
+cfg_drug = os.path.join("..", "examples", "structured", "ptti-drug.yaml") # To Do: 50% effective, available @Date X.
 
 intervention_list = []
 intervention_list.append(cfg_relax)
@@ -88,27 +89,47 @@ mask = st.sidebar.checkbox("Wear Masks")
 if mask:
     intervention_list.append(cfg_mask)
 
+
+TTI = st.sidebar.radio("How Shutdown is Ended", ['Phased Relaxation','Full Reopening'], index=0)
+if TTI == 'Phased Relaxation':
+    intervention_list.append(cfg_relax)
+elif TTI == 'Full Reopening':
+    intervention_list.append(cfg_reopen)
+
 end_date = st.sidebar.date_input("Shutdown End Date",
                                      value=(start+timedelta(days=199)), min_value=start+timedelta(days=90), max_value=start+timedelta(days=cfg['meta']['tmax']))
 
-TTI = st.sidebar.radio("Test and Trace (Starting Mid-May 2020, fully in place by September 2020)", ['None','Untargeted','Targeted'], index=0)
+drug = st.sidebar.checkbox("Treatment Becomes Available")
+
+TTI = st.sidebar.radio("Test and Trace (Starting Mid-May 2020, fully in place by September 2020)", ['No TTI','Universal','Targeted'], index=0)
 if TTI == 'Targeted':
     intervention_list.append(cfg_flu)
     intervention_list.append(cfg_tti)
-elif TTI == 'Untargeted':
+elif TTI == 'Universal':
     intervention_list.append(cfg_uti)
-    #TTI_Launch = st.sidebar.date_input("Test and Trace Ramp-up Period (Start and End)",
-    #                                 value=((start+timedelta(days=152)), start+timedelta(days=257)), max_value=start+timedelta(days=cfg['meta']['tmax']))
-    # Error with too-close dates needs to be fixed before this is put in.
+
+
+if drug == True:
+    intervention_list.append(cfg_drug)
+
+#TTI_Launch = st.sidebar.date_input("Test and Trace Ramp-up Period (Start and End)",
+#                                 value=((start+timedelta(days=152)), start+timedelta(days=257)), max_value=start+timedelta(days=cfg['meta']['tmax']))
+# Error with too-close dates needs to be fixed before this is put in.
+
 TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", value=0.55, min_value=0.1,
                             max_value=0.99)
 TTI_chi = round(-1*log(1-TTI_chi_trans),2)
-TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.8, min_value=0.1,
-                            max_value=1.0)
-                              #mouseover="System starts at 10% operational, scales to 100% over this many days."
-triggers = st.sidebar.checkbox("Reimpose Shutdowns As Needed")
+TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.47, min_value=0.1,
+                            max_value=0.8)
 #dance = False
 #dance = st.sidebar.checkbox("Dance!")
+
+st.write("Scenario:" + TTI + (" PTTI" if TTI != "No TTI" else "") +  (" Face Coverings" if mask else "") + (" Delayed" if end_date>start+timedelta(days=199) else "") + \
+(" by " + str(round((end_date - (start+timedelta(days=199))).days/7,1)) + " Weeks" if end_date>start+timedelta(days=199) else "")
++ ("" if (TTI_chi==0.8==TTI_eta) else " with modified test and trace system"))
+
+
+#cfg2 = config_load(filename=os.path.join("..", "examples", "scenarios", "ptti-2_Universal_PTTI.yaml"))
 
 cfg = config_load(filename=os.path.join("..", "examples", "structured", "ptti-past.yaml"),
                   interventions=[[i, 0] for i in intervention_list])
@@ -118,60 +139,46 @@ defaults = {}
 defaults.update(cfg["initial"])
 defaults.update(cfg["parameters"])
 
-graph_end_date = st.sidebar.date_input("Graph End",
-                                     value=(start+timedelta(days=cfg['meta']['tmax'])))
-
-graph_ending = (graph_end_date-start).days
-
 for i in cfg['interventions']:
-    if i['name'] == "Relax Lockdown":
-        i['time'] = (end_date - start).days + i['delay']
-    if triggers:  # This works now.
-        if i['name'] == "Lockdown Trigger":
-            i['after'] = (end_date - start).days
+    if "Relax Lockdown" in i['name']:
+        i['time'] = (end_date - start).days + i['delay'] # This applies to reopening AND relaxation.
+        # (There is no "remained locked down" option now.)
 
-cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))) #Otherwise, time changes can make things go backwards.
-# Now check for overlapping day issues:
+# Now fix overlapping day issues:
 intervention_times = [i['time'] for i in cfg['interventions'] if 'time' in i.keys()]
 duplicates = [x for n, x in enumerate(intervention_times) if x in intervention_times[:n]]
-if len(duplicates) > 0:
-    # Create new intervention to build up from parts...
-    for t in duplicates:
-        to_merge = [i for i in [i for i in cfg['interventions'] if 'time' in i.keys()] if i['time']==t]
-        merged_intervention = dict()
-        merged_intervention['time'] = t
-        merged_intervention['name'] = " ".join([i['name'] for i in to_merge])
-        merged_intervention['parameters'] = to_merge[0]['parameters']
-        for i in to_merge[1:]:
-            merged_intervention['parameters'].update(i['parameters'])
+
+for i in cfg['interventions']:
+    if 'time' in i.keys():
+        if i['time'] in duplicates:
+            for i_dup in cfg['interventions']:
+                if i_dup != i:
+                    if 'time' in i_dup.keys():
+                        if i['time'] == i_dup['time']:
+                            i['parameters'].update(i_dup['parameters'])
+                            i['name'] = i['name'] + " " + i_dup['name']
+                            cfg['interventions'].remove(i_dup)
 
 
-if not triggers:
-    for i in cfg['interventions']:
-        if i['name'] == "Lockdown Trigger":
-            i['after'] = 900  # Just make them never happen
+for i in cfg['interventions']: #Run a second time to clean up a weird issue.
+    if 'time' in i.keys():
+        if i['time'] in duplicates:
+            for i_dup in cfg['interventions']:
+                if i_dup != i:
+                    if 'time' in i_dup.keys():
+                        if i['time'] == i_dup['time']:
+                            i['parameters'].update(i_dup['parameters'])
+                            i['name'] = i['name'] + " " + i_dup['name']
+                            cfg['interventions'].remove(i_dup)
 
-if TTI != 'None':
-    for i in cfg['interventions']:
-        if "Testing" in i['name']:
-            i['parameters']['chi'] = TTI_chi
-            i['parameters']['eta'] = TTI_eta
-            # Set dates? No - Not currently allowing rollout speed changes.
+cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))) #Otherwise, time changes can make things go backwards.
 
-if not triggers:
-    for i in cfg['interventions']:
-        if i['name'] == "Lockdown Trigger":
-            i['after'] = 900  # Just make them never happen
 
 for i in cfg['interventions']:
     if i['name'] == "Relax Lockdown":
         i['time'] = (end_date - start).days + i['delay']
-    if triggers:  # This works now.
-        if i['name'] == "Lockdown Trigger":
-            i['after'] = (end_date - start).days
-    # But lockdowns don't always trigger at first...
 
-if TTI != 'None':
+if TTI != 'No TTI':
     for i in cfg['interventions']:
         if "Testing" in i['name']:
             i['parameters']['chi'] = TTI_chi
@@ -186,7 +193,12 @@ if TTI != 'None':
 # We want to show the intervention details and timing.
 # For preconfigured interventions, For now only allow changing times.
 # NOTE: The first four interventions are fixed past events.
+graph_end_date = st.sidebar.date_input("Graph End",
+                                     value=(start+timedelta(days=cfg['meta']['tmax'])))
+graph_ending = (graph_end_date-start).days
+
 Graph_Interventions = st.sidebar.checkbox("Graph Interventions", value=True)
+
 
 # To_Graph = ["Exposed", "Infected", "Recovered"]
 To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infected", "Recovered", "Isolated"],
@@ -276,7 +288,7 @@ if len(To_Graph)>0:
     ax_r.set_ylim([-.5, 5])
     ax.set_ylim([ax.get_ylim()[0]-(ax.get_ylim()[1]-ax.get_ylim()[0])/20, ax.get_ylim()[1]]) #Give room for the indicators
     if Graph_Interventions:
-        if TTI != 'None':
+        if TTI != 'No TTI':
             ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-'), Line2D([0], [0], c="Grey", lw=2.75, ls=':'),
                               Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'), Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
                              ["R(t)", "Test and Trace", "Economy Closed", "Economy Opened"], loc='upper right')
@@ -309,16 +321,20 @@ if len(To_Graph)>0:
     st.pyplot()
 
 
+#Debug:
+#st.write(intervention_list)
+#st.write(cfg['interventions'])
+#st.write("Chi:" + str(TTI_chi) )
+#st.write("Chi_T:" + str(TTI_chi_trans) )
+# st.write(str(econ))
+
+
 #Econ Outputs / Graph:
-st.write("Total COVID-19 Deaths: " + f"{int(round(econ['Medical']['Deaths'],0)):,}")
-st.write("Total Economic Loss from COVID-19: " + f"{round(econ['Economic']['Total_Productivity_Loss']/1000000000):,}" + " billion GBP")
+st.write("Total COVID-19 Deaths: " + f"{int(round(econ['Medical']['Deaths']/10000,0))*10000:,}")
+st.write("Total Economic Loss from COVID-19: " + f"{round(econ['Economic']['Total_Productivity_Loss']/100000000000)*100:,}" + " billion GBP")
 st.write("")
 st.write("Test and Trace Results:")
-st.write("Maximum Tracers Needed: " + f"{round(econ['Tracing']['Max_Tracers'])}")
-st.write("Total Tracer Budget: " + f"{round(econ['Tracing']['Tracing_Total_Costs']/1000000000):,}" + " billion GBP")
-st.write("Total Testing Budget: " + f"{round(econ['Testing']['Testing_Total_Costs']/1000000000) :,}" + " billion GBP")
+st.write("Maximum Tracers Needed: " + f"{round(econ['Tracing']['Max_Tracers']/10000)*10}" + " thousand")
+st.write("Total Tracer Budget: " + f"{round(econ['Tracing']['Tracing_Total_Costs']/1000000000,1):,}" + " billion GBP")
+st.write("Total Testing Budget: " + f"{round(econ['Testing']['Testing_Total_Costs']/1000000000,1) :,}" + " billion GBP")
 st.write("Maximum Daily Tests: " + f"{round(econ['Testing']['Max_Laboratories']*10*2*9*2*96) :,}")
-# st.write(econ['Economic']['Contacts'])
-st.write("Chi:" + str(TTI_chi) )
-st.write("Chi_T:" + str(TTI_chi_trans) )
-# st.write(str(econ))

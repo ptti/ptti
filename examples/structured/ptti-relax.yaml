@@ -1,15 +1,9 @@
 interventions:
-  ## On 31st July, contacts increase a bit more (Assumed not re-locked down)
-  - time: 226
-    delay: 27
-    name: "Relax Lockdown"
-    parameters:
-      c: c0 * 0.4 # Contacts per day increase
 
-  ## On 31st August, contacts increase a bit more
-  - time: 257
+  ## On Sep 1, contacts increase a bit more
+  - time: 258
     name: "Relax Lockdown"
-    delay: 58
+    delay: 59
     parameters:
       c: c0 * 0.45
 

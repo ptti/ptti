@@ -1,0 +1,8 @@
+interventions:
+
+  ## On Sep 1, full reopening
+  - time: 258
+    name: "Relax Lockdown"
+    delay: 59
+    parameters:
+      c: c0

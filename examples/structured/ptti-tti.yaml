@@ -1,35 +1,18 @@
 interventions:
-  ## On 18th May, start contact tracing
-  ##  Targetted Testing - initial proportion of symptomatics tested during their week long illness
-  - time: 152
-    name: "Targeted Testing"
-    parameters:
-      tested: 0.1       # ramp up testing
-      coldflu: 0.02     # prevalence of symptomatic cold & flu in May
-      testedBase: coldflu*tested/duration
-      thetaI: symptomatic*tested/duration
-      theta: testedBase + (1-testedBase)*thetaI
-            ## Tracing
-      chi: 0.8  #  trace 80% of the eta contacts who will be traced in one day with teams of tracers
-      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers,
-                #   with support from mobile phone apps
-                # These tracing rates continue throughout the rest of the simulation
-
   ## On 9th June, scale up testing, and contact tracing
   ## 9th June, contacts per day only slightly increased according to CoMix data:
   - time: 174
     name: "Targeted Testing"
     parameters:
-      tested: 0.2       # ramp up testing more      testedBase: coldflu*tested/duration
+      tested: 0.18       # ramp up testing to 18%
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
             ## Tracing
       chi: 0.8  #  trace 80% of the eta contacts who will be traced in one day with teams of tracers
                 #
-      eta: 0.8  # 80% of contacts for each case successfully traced by contact tracers,
-                #   with support from mobile phone apps
-                # These tracing rates continue throughout the rest of the simulation
+      eta: 0.47 # 47% of contacts for each case successfully traced by contact tracers,
+                #  This now matches current success rates.
   ## Scale up testing, and contact tracing further
   - time: 199
     name: "Targeted Testing"
@@ -54,7 +37,7 @@ interventions:
             ## Tracing - as above
 
 ## Scale up testing, and contact tracing further
-  - time: 257.02
+  - time: 257
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing
