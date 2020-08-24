@@ -33,6 +33,9 @@ eta:
 chi:
   descr:   tracing rate
   default: 0.25
+ifr:
+  descr:   infection fatality rate
+  default: 0.01
 """
 
 

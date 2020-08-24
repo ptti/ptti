@@ -42,6 +42,11 @@ yaml_plot_defaults = """
   timeseries:
     - title: Reproduction Number
       columns: [-1]
+- name: deaths
+  title: Deaths
+  timeseries:
+    - title: Deaths
+      columns: [M]
 """
 
 plot_defaults = yaml.load(yaml_plot_defaults, yaml.FullLoader)

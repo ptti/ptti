@@ -30,6 +30,8 @@ yaml_seirct_obs = """
   descr: traceable and susceptible
 - name:  CIR
   descr: traceable and exposed
+- name:  M
+  descr: dead
 """
 
 class SEIRCTODEMem(Model):
@@ -64,6 +66,7 @@ class SEIRCTODEMem(Model):
         gamma = self.gamma
         theta = self.theta
         kappa = self.kappa
+        ifr   = self.ifr
 
         return (
             ('SU*IU:SU=>EU', beta*c/N),
@@ -72,8 +75,10 @@ class SEIRCTODEMem(Model):
             ('EU:EU=>IU', alpha),
             ('ED:ED=>ID', alpha),
 
-            ('IU:IU=>RU', gamma),
-            ('ID:ID=>RD', gamma),
+            ('IU:IU=>RU', gamma*(1-ifr)),
+            ('ID:ID=>RD', gamma*(1-ifr)),
+            ('IU:IU=>M', gamma*ifr),
+            ('ID:ID=>M', gamma*ifr),
 
             ('RD:RD=>RU', kappa),
 
@@ -118,7 +123,6 @@ class SEIRCTODEMem(Model):
         traj = self.cm.integrate(t, y0, events=self.conditions, ivpargs={"max_step": 1.0})
 
         return (t, traj["y"], (traj["y"][-1, :], N))
-
 
 
 yaml_seir_obs = """
