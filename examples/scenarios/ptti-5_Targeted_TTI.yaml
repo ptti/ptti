@@ -72,9 +72,14 @@ parameters:
 ## Exogenous interventions. The time is given in
 ## simulation days.
 interventions:
-  ## After three months, start of restrictions on 16th March. 
+  ## After three months, start of restrictions on 16th March.
   ## Reduce contacts by 30%.
   - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+    parameters:
+      c: c0 * 0.7
+  ## After one more week, Lockdown, on 23rd March.
+  ## Reduce contacts to ~3 per day (~70% reduction).
+  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
     parameters:
       c: c0 * 0.26 # Lockdown, Jarvis et al 2020: "We found a 74% reduction in the average daily number of contacts
                   # observed per participant (from 10.8 to 2.8). We round these to 11 and 3
