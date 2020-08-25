@@ -14,7 +14,6 @@ from matplotlib.ticker import FuncFormatter
 # import matplotlib.dates as m/dates
 from pandas import DataFrame as pd_df
 import streamlit as st
-# from plotting.py import yaml_plot_defaults
 
 if 'app' not in os.getcwd():
     os.chdir('app')
@@ -215,8 +214,17 @@ Graph_Interventions = st.sidebar.checkbox("Graph Interventions", value=True)
 
 
 # To_Graph = ["Exposed", "Infected", "Recovered"]
-To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infected", "Recovered", "Isolated"],
-                                  default=["Infected", "Isolated"])
+To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infectious", "Recovered", "Isolated", "Dead"],
+                                  default=["Infectious", "Isolated", "Dead"])
+
+Graph_Columns = {
+  "Susceptible": ["SU", "SD"],
+  "Exposed": ["EU", "ED"],
+  "Infectious": ["IU", "ID"],
+  "Removed": ["RU", "RD"],
+  "Isolated": ["SD", "ED", "ID", "RD"],
+  "Dead": ["M"]
+}
 
 # Intervention_Start = st.sidebar.date_input("Intervention Start (Not working.)")
 
@@ -246,14 +254,10 @@ if len(To_Graph)>0:
     df_plot_results = pd_df()
     Out_Columns = [col['name'] for col in cfg['meta']['model'].observables]
     for Compartment in To_Graph:
-        if Compartment == "Isolated":
-            C_list = [i+1 for i in range(len(Out_Columns)) if Out_Columns[i][1]=="D"]
-        else:
-            Leftmost = Compartment[0]
-            C_list = [i+1 for i in range(len(Out_Columns)) if Out_Columns[i][0] == Leftmost]
+        C_list = Graph_Columns[Compartment]
         C_total = list()
         for x in traj:
-            C_total.append(abs(sum([x[c] for c in C_list])))
+            C_total.append(abs(sum([x[cfg['meta']['model'].colindex(c) + 1] for c in C_list])))
 
         df_plot_results[Compartment] = C_total.copy()
     plt.plot(df_plot_results)
