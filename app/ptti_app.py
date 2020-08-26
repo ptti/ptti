@@ -360,7 +360,7 @@ if len(To_Graph)>0:
 
 #Econ Outputs / Graph:
 st.write("Total COVID-19 Deaths: " + f"{int(round(econ['Medical']['Deaths']/10000,0))*10000:,}")
-st.write("Total Economic Loss from COVID-19: " + f"{round(econ['Economic']['Total_Productivity_Loss']/100000000000)*100:,}" + " billion GBP")
+st.write("Total Economic Loss from COVID-19: " + f"{round(econ['Economic']['Total_Productivity_Loss']/10000000000)*10:,}" + " billion GBP")
 st.write("")
 st.write("Test and Trace Results:")
 st.write("Maximum Tracers Needed: " + f"{round(econ['Tracing']['Max_Tracers']/10000)*10}" + " thousand")
@@ -368,5 +368,6 @@ st.write("Total Tracer Budget: " + f"{round(econ['Tracing']['Tracing_Total_Costs
 st.write("Total Testing Budget: " + f"{round(econ['Testing']['Testing_Total_Costs']/1000000000,1) :,}" + " billion GBP")
 st.write("Maximum Daily Tests: " + f"{round(econ['Testing']['Max_Laboratories']*10*2*9*2*96) :,}")
 
+st.write(econ['Economic']['Contacts'])
 
 # st.write(cfg['interventions'])

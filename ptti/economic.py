@@ -46,7 +46,7 @@ def calcArgumentsODE(traj, paramtraj, cfg):
 
     cpm = {}
     par = {}
-    for c in ('SU', 'EU', 'IU', 'ID', 'RU', 'RD'):
+    for c in ('SU', 'SD', 'EU', 'ED', 'IU', 'ID', 'RU', 'RD'):
         i = model.colindex(c)
         cpm[c] = interp1d(time, traj[:, i], kind='nearest')(days)
     for p in ('theta', 'c', 'eta', 'gamma', 'chi', 'testedBase'):
@@ -68,11 +68,13 @@ def calcArgumentsODE(traj, paramtraj, cfg):
     args['traced'] = cpm['IU']*par['theta']*par['c']*avg_inftime
     args['recovered'] = cpm['RU']+cpm['RD']
     args['infected'] = cpm['IU']+cpm['ID']
+    args['isolated'] = cpm['SD'] + cpm['ED'] + cpm['ID'] + cpm['RD']
+    args['population'] = cfg['initial']['N']
 
     return args
 
 
-def calcEconOutputs(time, contacts, infected, recovered, tested, traced):
+def calcEconOutputs(time, contacts, infected, recovered, tested, traced, isolated, population):
 
     output = {}
     days = len(time)
@@ -183,8 +185,12 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced):
     Daily_GDP = []
     Economy_Fraction_Daily = []
     Daily_GDP_Base = econ_inputs['Shutdown']['UK_GDP_Monthly'] / 30
+    Isolated_Fraction = isolated / population # Each person in isolation is a fraction of the economy fully closed.
+    # print(Isolated_Fraction)
+    #Contacts_effective = contacts*
     Shutdown_Fraction = 1 - (contacts-econ_inputs['Shutdown']['UK_Shutdown_Contacts'])/(
-        econ_inputs['Shutdown']['UK_Open_Contacts'] - econ_inputs['Shutdown']['UK_Shutdown_Contacts'])
+        econ_inputs['Shutdown']['UK_Open_Contacts'] - econ_inputs['Shutdown']['UK_Shutdown_Contacts'])*(1-Isolated_Fraction)
+
     Daily_GDP = (1 - Shutdown_Fraction *
                  econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'])*Daily_GDP_Base
     No_Pandemic_GDP = days * Daily_GDP_Base
@@ -194,7 +200,8 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced):
 
     output['Economic'] = {}
     output['Economic']['Total_NHS_Costs'] = nhs_costs
-    #output['Economic']['Contacts'] = contacts
+    output['Economic']['Contacts'] = contacts
+    output['Economic']['Isolated'] = isolated
     output['Economic']['Total_Productivity_Loss'] = (No_Pandemic_GDP-total_GDP)
 
     return output
