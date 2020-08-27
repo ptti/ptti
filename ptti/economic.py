@@ -64,8 +64,8 @@ def calcArgumentsODE(traj, paramtraj, cfg):
     args = {'time': days}
     args['contacts'] = par['c']
     args['tested'] = cpm['IU']*par['theta'] + (cpm['SU']+cpm['EU']+cpm['RU'])*par['testedBase']
-    # traced are: the number of contacts of infectives that have been tested
-    args['traced'] = cpm['IU']*par['theta']*par['c']*avg_inftime
+    # traced are: the number of contacts of infectives that have been tested - IF tracing is done, i.e. if chi > 0.
+    args['traced'] = cpm['IU']*par['theta']*par['c']*avg_inftime * (par['chi'] > 0)
     args['recovered'] = cpm['RU']+cpm['RD']
     args['infected'] = cpm['IU']+cpm['ID']
     args['isolated'] = cpm['SD'] + cpm['ED'] + cpm['ID'] + cpm['RD']
@@ -103,9 +103,10 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced, isolate
 
         # Hiring costs
         costs = (new_tracers+new_supervisors)*econ_inputs['Trace']['Tracer_Initial_Cost']
+
         # Daily costs
         costs += (max_supervisors*econ_inputs['Trace']['Supervisor_Daily_Cost'] +
-                  tracers*econ_inputs['Trace']['Tracer_Daily_Cost'] + 
+                  tracers*econ_inputs['Trace']['Tracer_Daily_Cost'] +
                   econ_inputs['Trace']['Total_Team_Lead_Daily_Cost'] +
                   econ_inputs['Trace']['Tracing_Daily_Public_Communications_Costs'])*n
 
@@ -119,6 +120,7 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced, isolate
     # All of this only applies if we have tracing at all...
     if max(traced) == 0:
         tracing_costs = [0 for tc in tracing_costs]
+        print("No Tracing! -- No Tracing! -- No Tracing! -- No Tracing! -- No Tracing! -- No Tracing! -- No Tracing!")
 
     output['Tracing'] = {}
     output['Tracing']['Tracing_Block_Lengths'] = [tb[1] for tb in tracing_blocks]
@@ -187,12 +189,12 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced, isolate
     Daily_GDP_Base = econ_inputs['Shutdown']['UK_GDP_Monthly'] / 30
     Isolated_Fraction = isolated / population # Each person in isolation is a fraction of the economy fully closed.
     # print(Isolated_Fraction)
-    #Contacts_effective = contacts*
+
     Shutdown_Fraction = 1 - (contacts-econ_inputs['Shutdown']['UK_Shutdown_Contacts'])/(
-        econ_inputs['Shutdown']['UK_Open_Contacts'] - econ_inputs['Shutdown']['UK_Shutdown_Contacts'])*(1-Isolated_Fraction)
+        econ_inputs['Shutdown']['UK_Open_Contacts'] - econ_inputs['Shutdown']['UK_Shutdown_Contacts'])
 
     Daily_GDP = (1 - Shutdown_Fraction *
-                 econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'])*Daily_GDP_Base
+                 econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'])*(1-Isolated_Fraction)*Daily_GDP_Base
     No_Pandemic_GDP = days * Daily_GDP_Base
 
     total_GDP = sum(Daily_GDP)

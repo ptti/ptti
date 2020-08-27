@@ -83,7 +83,6 @@ cfg_drug = os.path.join("..", "examples", "structured", "ptti-drug.yaml") # To D
 
 intervention_list = []
 
-
 Relax = st.sidebar.radio("How Shutdown is Ended", ['Phased Relaxation','Full Reopening'], index=0)
 if Relax == 'Phased Relaxation':
     intervention_list.append(cfg_relax)
@@ -100,8 +99,11 @@ if TTI == 'Targeted Test and Trace':
 elif TTI == 'Universal Testing':
     intervention_list.append(cfg_uti)
 
-Mask_Compliance = st.sidebar.radio("Mask Compliance", ['Lower','Moderate','Very High'], index=1)
+
 intervention_list.append(cfg_mask) # We have masks no matter what. The question is what level they are used.
+Mask_Compliance='Moderate'
+
+Mask_Compliance = st.sidebar.radio("Mask Compliance", ['Lower','Moderate','Very High'], index=1)
 
 drug = st.sidebar.checkbox("Treatment Becomes Available (Not implemented)")
 if drug == True:
@@ -111,13 +113,13 @@ fixed_y = st.sidebar.checkbox("Fixed maximum y-axis")
 log_y = st.sidebar.checkbox("Log-scale y-axis")
 
 
-
 # st.write(intervention_list)
 
 
 #TTI_Launch = st.sidebar.date_input("Test and Trace Ramp-up Period (Start and End)",
 #                                 value=((start+timedelta(days=152)), start+timedelta(days=257)), max_value=start+timedelta(days=cfg['meta']['tmax']))
 # Error with too-close dates needs to be fixed before this is put in.
+
 
 TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", value=0.55, min_value=0.1,
                             max_value=0.99)
@@ -148,6 +150,7 @@ for i in cfg['interventions']:
         i['time'] = (end_date - start).days + i['delay'] # This applies to reopening AND relaxation.
         # (There is no "remained locked down" option now.)
 
+# Mask_Compliance = 'Moderate'
 for i in cfg['interventions']:
     if i['name'] == "Future Mask Compliance":
         if Mask_Compliance == 'Moderate':  # 30% reduction
@@ -191,7 +194,7 @@ for i in cfg['interventions']:
     if i['name'] == "Relax Lockdown":
         i['time'] = (end_date - start).days + i['delay']
 
-if TTI != 'No TTI':
+if TTI == 'Targeted Test and Trace':
     for i in cfg['interventions']:
         if "Testing" in i['name']:
             i['parameters']['chi'] = TTI_chi
@@ -370,4 +373,4 @@ st.write("Maximum Daily Tests: " + f"{round(econ['Testing']['Max_Laboratories']*
 
 st.write(econ['Economic']['Contacts'])
 
-# st.write(cfg['interventions'])
+st.write(cfg)
