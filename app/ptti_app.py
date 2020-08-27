@@ -360,17 +360,29 @@ if len(To_Graph)>0:
 #st.write("Chi_T:" + str(TTI_chi_trans) )
 # st.write(str(econ))
 
+from math import log10, floor
+def round_sigfigs(x,n,i=False):
+    if i:
+        return int(round(x, int(floor(log10(abs(x))))*-1+(n-1)))
+    else:
+        return round(x, int(floor(log10(abs(x)))) * -1 + (n - 1))
 
 #Econ Outputs / Graph:
-st.write("Total COVID-19 Deaths: " + f"{int(round(econ['Medical']['Deaths']/10000,0))*10000:,}")
-st.write("Total Economic Loss from COVID-19: " + f"{round(econ['Economic']['Total_Productivity_Loss']/10000000000)*10:,}" + " billion GBP")
+st.write("Total COVID-19 Deaths: " + f"{int(round_sigfigs(econ['Medical']['Deaths'],2)):,}")
+st.write("Total Economic Loss from COVID-19: " + f"{round_sigfigs(econ['Economic']['Total_Productivity_Loss']/1000000000,3, True):,}" + " billion GBP")
 st.write("")
 st.write("Test and Trace Results:")
-st.write("Total Tracer Budget: " + f"{round(econ['Tracing']['Tracing_Total_Costs']/1000000000,1):,}" + " billion GBP")
-st.write("Maximum Tracers Needed: " + f"{round(econ['Tracing']['Max_Tracers']/10000)*10}" + " thousand")
-st.write("Total Testing Budget: " + f"{round(econ['Testing']['Testing_Total_Costs']/1000000000,1) :,}" + " billion GBP")
-st.write("Maximum Daily Tests: " + f"{round(econ['Testing']['Max_Laboratories']*10*2*9*2*96) :,}")
-
+if econ['Tracing']['Tracing_Total_Costs'] < 1: # No costs.
+    st.write("No Tracing")
+else:
+    st.write("Total Tracer Budget: " + f"{round_sigfigs(econ['Tracing']['Tracing_Total_Costs']/1000000000,2):,}" + " billion GBP")
+    st.write("Maximum Tracers Needed: " + f"{round_sigfigs(econ['Tracing']['Max_Tracers']/1000,2,True)}" + " thousand")
+st.write("Total Testing Budget: " + f"{round_sigfigs(econ['Testing']['Testing_Total_Costs']/1000000000,3) :,}" + " billion GBP")
+if econ['Testing']['Max_Laboratories']*10*2*9*2*96 > 1000000:
+    st.write("Maximum Daily Tests: " + f"{int(round_sigfigs(econ['Testing']['Max_Laboratories']*10*2*9*2*96,2,True)/1000000) :,}" + " million")
+else:
+    st.write(
+        "Maximum Daily Tests: " + f"{int(round_sigfigs(econ['Testing']['Max_Laboratories'] * 10 * 2 * 9 * 2 * 96, 2) / 1000) :,}" + " thousand")
 # st.write(econ['Economic']['Contacts'])
 
 # st.write(cfg)
