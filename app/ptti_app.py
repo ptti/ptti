@@ -214,7 +214,7 @@ graph_end_date = st.sidebar.date_input("Graph End",
 graph_ending = (graph_end_date-start).days
 
 Graph_Interventions = st.sidebar.checkbox("Graph Interventions", value=True)
-
+Graph_Rt = st.sidebar.checkbox("Graph R_t", value=True)
 
 # To_Graph = ["Exposed", "Infected", "Recovered"]
 To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infectious", "Recovered", "Isolated", "Dead"],
@@ -228,6 +228,8 @@ Graph_Columns = {
   "Isolated": ["SD", "ED", "ID", "RD"],
   "Dead": ["M"]
 }
+
+
 
 # Intervention_Start = st.sidebar.date_input("Intervention Start (Not working.)")
 
@@ -315,15 +317,22 @@ if len(To_Graph)>0:
     plt.suptitle(t=Scenario_Title)
     #plt.title()
     ax.legend(To_Graph, loc='upper center')
-    ax_r.set_ylabel('Reproductive Number (Effective)')
-    ax_r.plot(traj[:, -1], label="R(t)", color="Black")
+    if Graph_Rt:
+        ax_r.set_ylabel('Reproductive Number (Effective)')
+        ax_r.plot(traj[:, -1], label="R(t)", color="Black")
     ax_r.set_ylim([-.5, 5])
     ax.set_ylim([ax.get_ylim()[0]-(ax.get_ylim()[1]-ax.get_ylim()[0])/20, ax.get_ylim()[1]]) #Give room for the indicators
     if Graph_Interventions:
         if TTI != 'No TTI':
-            ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-'), Line2D([0], [0], c="Grey", lw=2.75, ls=':'),
+            if Graph_Rt:
+                ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-'), Line2D([0], [0], c="Grey", lw=2.75, ls=':'),
                               Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'), Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
                              ["R(t)", "Test and Trace", "Economy Closed", "Economy Opened"], loc='upper right')
+            else:
+                ax_r.legend([Line2D([0], [0], c="Grey", lw=2.75, ls=':'),
+                             Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'),
+                             Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
+                            ["Test and Trace", "Economy Closed", "Economy Opened"], loc='upper right')
             # Actually Graph TTI startup now.
             times = [(i['time'], i['parameters']['tested'] if "tested" in i['parameters'] else i['parameters']['testedBase']) for i in cfg['interventions'] if ("Testing" in i['name'])]
             #st.write(times)
@@ -338,12 +347,18 @@ if len(To_Graph)>0:
                 Begin = End
             ax_r.plot([Begin, ax.get_xlim()[1]*.955], [-.15, -.15], lw=3, ls=':', c="Grey")
         else:
-            ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-'),
+            if Graph_Rt:
+                ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-'),
                          Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'),
                          Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
                         ["R(t)", "Close Economy", "Open Economy"], loc='upper right')
+            else:
+                ax_r.legend([Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'),
+                             Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
+                            ["Close Economy", "Open Economy"], loc='upper right')
 
-    else:
+
+    elif Graph_Rt:
         ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-')], ["R(t)"], loc='upper right')
 
     if round(econ['Tracing']['Max_Tracers'])>1000000: # Infeasible Number of Tracers.
@@ -365,7 +380,10 @@ def round_sigfigs(x,n,i=False):
     if i:
         return int(round(x, int(floor(log10(abs(x))))*-1+(n-1)))
     else:
-        return round(x, int(floor(log10(abs(x)))) * -1 + (n - 1))
+        if x != 0:
+            return round(x, int(floor(log10(abs(x)))) * -1 + (n - 1))
+        else:
+            return 0
 
 #Econ Outputs / Graph:
 st.write("Total COVID-19 Deaths: " + f"{int(round_sigfigs(econ['Medical']['Deaths'],2)):,}")
