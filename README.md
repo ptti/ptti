@@ -111,6 +111,12 @@ just as well use [gnuplot]. Some example plots:
 
 <image src="https://github.com/ptti/ptti/raw/master/examples/example-infections.png" width="300" /><image src="https://github.com/ptti/ptti/raw/master/examples/example-removed.png" width="300" />
 
+
+## Webapp
+
+Installation and usage instructions for the webapp version can be found [in the app folder](app/README.md).
+
+
 ## Advanced usage
 
 The `ptti` program accepts several command-line arguments that modify
