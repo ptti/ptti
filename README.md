@@ -114,7 +114,7 @@ just as well use [gnuplot]. Some example plots:
 
 ## Webapp
 
-Installation and usage instructions for the webapp version can be found [in the app folder](app/README.md).
+Installation and usage instructions for the webapp version can be found [in the app folder](app).
 
 
 ## Advanced usage
