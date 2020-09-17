@@ -170,7 +170,8 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced, isolate
     icu = recovered[-1]*econ_inputs['Medical']['ICU_Fraction']
     hospital = recovered[-1]*econ_inputs['Medical']['Hospitalised_Fraction'] - recovered[-1]*econ_inputs['Medical']['ICU_Fraction']  # Hospital non-ICU
     cases = recovered[-1] - deaths - hospital - icu
-    nhs_costs = recovered[-1]*econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered']
+    daily_nhs_costs = recovered*econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered']
+    nhs_costs = sum(daily_nhs_costs)
     #prod_costs = recovered[-1]*econ_inputs['Medical']['Total_Productivity_Loss_Per_Recovered']
 
     output['Medical'] = {}
@@ -202,6 +203,28 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced, isolate
     output['Economic']['Contacts'] = contacts
     output['Economic']['Isolated'] = isolated
     output['Economic']['Total_Productivity_Loss'] = (No_Pandemic_GDP-total_GDP)
+
+    # Compute daily costs
+    output['Daily'] = {}
+
+    output['Daily']['Tracing'] = []
+    for block in range(len(output['Tracing']['Tracing_Block_Lengths'])):
+        block_length = output['Tracing']['Tracing_Block_Lengths'][block]
+        block_cost =  output['Tracing']['Tracing_Costs'][block]
+        daily_cost = block_cost/block_length
+        output['Daily']['Tracing'].extend([daily_cost]*block_length)
+
+    output['Daily']['Testing'] = []
+    for block in range(len(output['Testing']['Testing_Block_Lengths'])):
+        block_length = output['Testing']['Testing_Block_Lengths'][block]
+        block_cost =  output['Testing']['Testing_Costs'][block]
+        daily_cost = block_cost/block_length
+        output['Daily']['Testing'].extend([daily_cost]*block_length)
+
+    output['Daily']['Tracing'] = np.array(output['Daily']['Tracing'])
+    output['Daily']['Testing'] = np.array(output['Daily']['Testing'])
+    output['Daily']['NHS'] = daily_nhs_costs
+    output['Daily']['Productivity_Loss'] = Daily_GDP_Base - Daily_GDP
 
     return output
 
