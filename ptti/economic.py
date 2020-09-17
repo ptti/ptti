@@ -166,12 +166,14 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced, isolate
     output['Testing']['Testing_Total_Costs'] = sum(testing_costs)
 
     # Deaths and other outcomes
-    deaths = recovered[-1]*econ_inputs['Medical']['IFR']
-    icu = recovered[-1]*econ_inputs['Medical']['ICU_Fraction']
-    hospital = recovered[-1]*econ_inputs['Medical']['Hospitalised_Fraction'] - recovered[-1]*econ_inputs['Medical']['ICU_Fraction']  # Hospital non-ICU
-    cases = recovered[-1] - deaths - hospital - icu
-    daily_nhs_costs = recovered*econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered']
-    nhs_costs = sum(daily_nhs_costs)
+    total_recovered = recovered[-1]
+    daily_recovered = np.diff(recovered, prepend=0) # Since cumulative sum
+    deaths = total_recovered*econ_inputs['Medical']['IFR']
+    icu = total_recovered*econ_inputs['Medical']['ICU_Fraction']
+    hospital = total_recovered*econ_inputs['Medical']['Hospitalised_Fraction'] - recovered[-1]*econ_inputs['Medical']['ICU_Fraction']  # Hospital non-ICU
+    cases = total_recovered - deaths - hospital - icu
+    nhs_costs = total_recovered*econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered']
+    daily_nhs_costs = daily_recovered*econ_inputs['Medical']['Total_NHS_Cost_Per_Recovered']
     #prod_costs = recovered[-1]*econ_inputs['Medical']['Total_Productivity_Loss_Per_Recovered']
 
     output['Medical'] = {}
