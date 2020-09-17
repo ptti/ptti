@@ -374,18 +374,17 @@ if len(To_Graph)>0:
                  verticalalignment='top', transform=ax_r.transAxes,bbox=dict(facecolor='red', alpha=0.5))
 
     if Graph_Economics:
-        scale_factor = 1
-        cost_tracing = econ['Daily']['Tracing']/scale_factor
-        cost_testing = econ['Daily']['Testing']/scale_factor
-        cost_nhs     = econ['Daily']['NHS']/scale_factor
-        cost_loss    = econ['Daily']['Productivity_Loss']/scale_factor
+        cost_tracing = econ['Daily']['Tracing']
+        cost_testing = econ['Daily']['Testing']
+        cost_nhs     = econ['Daily']['NHS']
+        cost_loss    = econ['Daily']['Productivity_Loss']
         ax_e.plot(cost_tracing, label='Tracing')
         ax_e.plot(cost_testing, label='Testing')
         ax_e.plot(cost_nhs, label='NHS')
         ax_e.plot(cost_loss, label='GDP')
 
         fmt_ax(ax_e)
-        ax_e.set_ylabel('Cost (GBP)')
+        ax_e.set_ylabel('Daily Cost (£)')
         ax_e.legend(loc='upper right')
 
     st.pyplot()
