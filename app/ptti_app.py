@@ -3,15 +3,12 @@ from ptti.model import runModel
 from ptti.economic import calcEconOutputs, calcArgumentsODE
 from ptti.seirct_ode import SEIRCTODEMem
 from datetime import date, datetime, timedelta
-from collections import OrderedDict
 import os
 from math import log
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.ticker import FuncFormatter
-# import matplotlib.colors as mcolors
-# import matplotlib.dates as m/dates
 from pandas import DataFrame as pd_df
 import streamlit as st
 

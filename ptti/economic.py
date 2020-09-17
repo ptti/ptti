@@ -1,6 +1,4 @@
-import yaml
 import numpy as np
-from math import ceil, exp
 from scipy.interpolate import interp1d
 from ptti.economic_data import econ_inputs
 
@@ -126,7 +124,7 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced, isolate
     output['Tracing']['Tracing_Block_Lengths'] = [tb[1] for tb in tracing_blocks]
     output['Tracing']['Tracers'] = [tb[2] for tb in tracing_blocks]
     output['Tracing']['Max_Tracers'] = max_tracers
-    output['Tracing']['Max_Supervisors'] = max_supervisors    
+    output['Tracing']['Max_Supervisors'] = max_supervisors
     output['Tracing']['Tracing_Costs'] = tracing_costs
     output['Tracing']['Tracing_Total_Costs'] = sum(tracing_costs)
 
@@ -185,7 +183,6 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced, isolate
     # Economy minimum is: econ_inputs['Shutdown']['UK_Shutdown_GDP_Penalty'], with econ_inputs['Shutdown']['UK_Shutdown_Contacts']
     # Full strength is 0 penalty at econ_inputs['Shutdown']['UK_Open_Contacts']
     Daily_GDP = []
-    Economy_Fraction_Daily = []
     Daily_GDP_Base = econ_inputs['Shutdown']['UK_GDP_Monthly'] / 30
     Isolated_Fraction = isolated / population # Each person in isolation is a fraction of the economy fully closed.
     # print(Isolated_Fraction)
