@@ -204,7 +204,7 @@ for i in cfg['interventions']: #Run a second time to clean up a weird issue.
 
 cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))) #Otherwise, time changes can make things go backwards.
 
-st.write([i for i in cfg['interventions'] if "time" in i.keys()])
+# st.write([i for i in cfg['interventions'] if "time" in i.keys()])
 
 for i in cfg['interventions']:
     if i['name'] == "Relax Lockdown":
