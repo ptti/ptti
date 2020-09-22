@@ -78,6 +78,7 @@ cfg_flu = os.path.join("..", "examples", "structured", "ptti-fluseason.yaml")
 # Add flu season to TTI...
 cfg_tti = os.path.join("..", "examples", "structured", "ptti-tti.yaml")
 cfg_uti = os.path.join("..", "examples", "structured", "ptti-uti.yaml")
+cfg_combo_tti = os.path.join("..", "examples", "structured", "ptti-combo-tti.yaml")
 #Removed Triggered shutdowns
 cfg_drug = os.path.join("..", "examples", "structured", "ptti-drug.yaml") # To Do: 50% effective, available @Date X.
 
@@ -92,23 +93,38 @@ elif Relax == 'Full Reopening':
 end_date = st.sidebar.date_input("Shutdown End Date",
                                      value=(start+timedelta(days=258)), min_value=start+timedelta(days=90), max_value=start+timedelta(days=cfg['meta']['tmax']))
 
-TTI = st.sidebar.radio("Test and Trace (Starting June 2020, fully in place by September 2020)", ['No TTI','Universal Testing','Targeted Test and Trace'], index=0)
-if TTI == 'Targeted Test and Trace':
+TTI = st.sidebar.radio("TTI (Starting June 2020, fully in place by December 2020)", ['No TTI','Universal TTI','Targeted TTI','Combined TTI'], index=0)
+if TTI == 'Targeted TTI':
     intervention_list.append(cfg_flu)
     intervention_list.append(cfg_tti)
-elif TTI == 'Universal Testing':
+elif TTI == 'Universal TTI':
     intervention_list.append(cfg_uti)
+elif TTI == 'Combined TTI':
+    intervention_list.append(cfg_flu)
+    intervention_list.append(cfg_combo_tti)
+
+UTI_End = st.sidebar.radio("Universal Testing after January 2021", ["End", "Continue"], index=1)
 
 
 intervention_list.append(cfg_mask) # We have masks no matter what. The question is what level they are used.
 Mask_Compliance='Moderate'
 
-Mask_Compliance = st.sidebar.radio("Mask Compliance", ['Lower','Moderate','Very High'], index=1)
+Mask_Compliance = st.sidebar.radio("Mask Effective Compliance (EC)", ['Lower','Moderate','Very High'], index=1)
 
-drug = st.sidebar.checkbox("Treatment Becomes Available (Not implemented)")
-if drug == True:
-    intervention_list.append(cfg_drug)
 
+
+TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", value=0.55, min_value=0.1,
+                            max_value=0.99)
+TTI_chi = round(-1*log(1-TTI_chi_trans),2)
+TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.47, min_value=0.1,
+                            max_value=0.8)
+
+
+#drug = st.sidebar.checkbox("Treatment Becomes Available (Not implemented)")
+#if drug == True:
+#    intervention_list.append(cfg_drug)
+
+st.sidebar.text("Display Options")
 fixed_y = st.sidebar.checkbox("Fixed maximum y-axis")
 log_y = st.sidebar.checkbox("Log-scale y-axis")
 
@@ -121,17 +137,12 @@ log_y = st.sidebar.checkbox("Log-scale y-axis")
 # Error with too-close dates needs to be fixed before this is put in.
 
 
-TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", value=0.55, min_value=0.1,
-                            max_value=0.99)
-TTI_chi = round(-1*log(1-TTI_chi_trans),2)
-TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.47, min_value=0.1,
-                            max_value=0.8)
 #dance = False
 #dance = st.sidebar.checkbox("Dance!")
 
 Scenario_Title = (Relax + (("with delay of " + str(round((end_date - (start+timedelta(days=258))).days/7,1)) + " Weeks\n")
                    if end_date > start+timedelta(days=258) else "") + \
-                  " with " + TTI + " and " + Mask_Compliance + " Mask Compliance" + \
+                  " with " + TTI + " and " + Mask_Compliance + " Mask EC" + \
                   ("" if ((TTI_chi==0.8) & (TTI_eta==0.47)) else "\n with modified parameters"))
 
 
@@ -160,6 +171,11 @@ for i in cfg['interventions']:
         if Mask_Compliance == 'Very High':
             i['parameters']['beta'] = cfg["parameters"]['beta'] * 0.5 # 50% reduction
 
+for i in cfg['interventions']:
+    if "End Universal Testing" in i['name']:
+        if UTI_End == "Continue":
+            i['time'] = 5000
+
 # Now fix overlapping day issues:
 intervention_times = [i['time'] for i in cfg['interventions'] if 'time' in i.keys()]
 duplicates = [x for n, x in enumerate(intervention_times) if x in intervention_times[:n]]
@@ -175,7 +191,6 @@ for i in cfg['interventions']:
                             i['name'] = i['name'] + " " + i_dup['name']
                             cfg['interventions'].remove(i_dup)
 
-
 for i in cfg['interventions']: #Run a second time to clean up a weird issue.
     if 'time' in i.keys():
         if i['time'] in duplicates:
@@ -189,12 +204,14 @@ for i in cfg['interventions']: #Run a second time to clean up a weird issue.
 
 cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))) #Otherwise, time changes can make things go backwards.
 
+st.write([i for i in cfg['interventions'] if "time" in i.keys()])
 
 for i in cfg['interventions']:
     if i['name'] == "Relax Lockdown":
         i['time'] = (end_date - start).days + i['delay']
 
-if TTI == 'Targeted Test and Trace':
+
+if TTI == 'Targeted TTI':
     for i in cfg['interventions']:
         if "Testing" in i['name']:
             i['parameters']['chi'] = TTI_chi
@@ -281,7 +298,7 @@ if len(To_Graph)>0:
     elif Graph_Interventions:
         miny = ax.get_ylim()[0]-300000
     if fixed_y:
-        maxy = 10000000 # 10m.
+        maxy = 3000000 # 3m.
         ax.set_ylim(miny, maxy)
     maxy = ax.get_ylim()[1]
     # st.write(str(maxy))
@@ -327,25 +344,29 @@ if len(To_Graph)>0:
             if Graph_Rt:
                 ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-'), Line2D([0], [0], c="Grey", lw=2.75, ls=':'),
                               Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'), Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
-                             ["R(t)", "Test and Trace", "Economy Closed", "Economy Opened"], loc='upper right')
+                             ["R(t)", "TTI", "Economy Closed", "Economy Opened"], loc='upper right')
             else:
                 ax_r.legend([Line2D([0], [0], c="Grey", lw=2.75, ls=':'),
                              Line2D([0], [0], c=(1, 0, 0), lw=1.25, ls='--'),
                              Line2D([0], [0], c=(0, 1, 0), lw=1.25, ls='--')],
-                            ["Test and Trace", "Economy Closed", "Economy Opened"], loc='upper right')
+                            ["TTI", "Economy Closed", "Economy Opened"], loc='upper right')
             # Actually Graph TTI startup now.
-            times = [(i['time'], i['parameters']['tested'] if "tested" in i['parameters'] else i['parameters']['testedBase']) for i in cfg['interventions'] if ("Testing" in i['name'])]
-            #st.write(times)
+            times = [(i['time'], i['parameters']['theta']) for i in cfg['interventions'] if 'theta' in i['parameters'].keys()]
+            # st.write(cfg['interventions'])
             start = min([time[0] for time in times])
             full = max([T[1] for T in times])
-            #st.write(full)
+            # st.write(full)
             Begin = start
+            Curr_TTI_Level = 0
+            times.insert(-1, (5000, times[-1][1])) #Go to end
             for t in times: # Plot segments for TTI Ramp-up.
-                End = t[0]
+                End = t[0] # Plot previous level until now.
                 #st.write(Begin, End, 3*(t[1]/full))
-                ax_r.plot([Begin, End], [-.15, -.15], lw=3*(t[1]/full), ls=':', c="Grey")
-                Begin = End
-            ax_r.plot([Begin, ax.get_xlim()[1]*.955], [-.15, -.15], lw=3, ls=':', c="Grey")
+                ax_r.plot([Begin, End], [-.15, -.15], ls=':', #Plot each segment as a dotted line
+                          lw=8*(0.05+4*Curr_TTI_Level),  c="Grey") # sizes from ~1 to 10, given that testing is under 20%
+                Curr_TTI_Level = t[1]
+                Begin = End # For the next iteration of the loop.
+            # ax_r.plot([Begin, ax.get_xlim()[1]*.955], [-.15, -.15], lw=8*(0.05+4*full), ls=':', c="Grey")
         else:
             if Graph_Rt:
                 ax_r.legend([Line2D([0], [0], c="Black", lw=1, ls='-'),
@@ -389,7 +410,7 @@ def round_sigfigs(x,n,i=False):
 st.write("Total COVID-19 Deaths: " + f"{int(round_sigfigs(econ['Medical']['Deaths'],2)):,}")
 st.write("Total Economic Loss from COVID-19: " + f"{round_sigfigs(econ['Economic']['Total_Productivity_Loss']/1000000000,3, True):,}" + " billion GBP")
 st.write("")
-st.write("Test and Trace Results:")
+st.write("TTI Results:")
 if econ['Tracing']['Tracing_Total_Costs'] < 1: # No costs.
     st.write("No Tracing")
 else:
@@ -401,6 +422,6 @@ if econ['Testing']['Max_Laboratories']*10*2*9*2*96 > 1000000:
 else:
     st.write(
         "Maximum Daily Tests: " + f"{int(round_sigfigs(econ['Testing']['Max_Laboratories'] * 10 * 2 * 9 * 2 * 96, 2) / 1000) :,}" + " thousand")
-# st.write(econ['Economic']['Contacts'])
+#st.write(econ['Economic']['tests'])
 
 # st.write(cfg)

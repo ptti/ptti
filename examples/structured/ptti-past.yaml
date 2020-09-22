@@ -43,6 +43,8 @@ parameters:
   testedBase: 0.0
   ## theta governs testing of infectious individuals, and we start with none
   theta: testedBase
+  ## (Extra) unversal tests.
+  theta_U: 0.0
 
   ## chi is the rate at which contacts are traced.
   ## Tracing is triggered by testing. Starts at none.
@@ -52,7 +54,7 @@ parameters:
   eta:   0.0
 
   ## default testing rate (proportion of symptomatics)
-  tested: 0.8   
+  tested: 0.8 
   ## 50% of SARS-Cov-2 infected (IU) have symptoms
   symptomatic: 0.5 
   ## average duration of symptomatic illness(coldflu or Covid combined)
@@ -66,7 +68,7 @@ interventions:
   - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
     name: "Past"
     parameters:
-      c: c0 * 0.7
+      c: c0 * 0.7 
   ## After one more week, Lockdown, on 23rd March.
   ## Reduce contacts to ~3 per day (~70% reduction).
 

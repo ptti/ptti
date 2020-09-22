@@ -3,48 +3,54 @@ interventions:
     name: "Untargeted Testing"
       ## Targeted Testing
     parameters:
-      testedBase: 30000/N   # 300,000 people tested per day in the UK
-      theta: testedBase
+      theta_U: 30000/N   # 30,000 people tested per day in the UK
+      theta: theta_U
 
   - time: 199
     name: "Untargeted Testing"  
     parameters:
-      testedBase: 50000/N   # 900,000 people tested per day in the UK
-      theta: testedBase
+      theta_U: 50000/N   # 50,000 people tested per day in the UK
+      theta: theta_U
  
   ## Scale up testing, and contact tracing further
   - time: 226
     name: "Untargeted Testing"
     parameters:
-      testedBase: 100000/N
-      theta: testedBase
+      theta_U: 100000/N
+      theta: theta_U
       
   - time: 257
     name: "Untargeted Testing"
     parameters:
-      testedBase: 200000/N   # 200,000 people tested per day in the UK
-      theta: testedBase
+      theta_U: 200000/N   # 200,000 people tested per day in the UK
+      theta: theta_U
       
   - time: 287
     name: "Untargeted Testing"
     parameters:
-      testedBase: 500000/N   # 500,000 people tested per day in the UK
-      theta: testedBase
+      theta_U: 500000/N   # 500,000 people tested per day in the UK
+      theta: theta_U
 
   - time: 318
     name: "Untargeted Testing"
     parameters:
-      testedBase: 1000000/N   # 1,000,000 people tested per day in the UK
-      theta: testedBase
+      theta_U: 1000000/N   # 1,000,000 people tested per day in the UK
+      theta: theta_U
 
   - time: 348
     name: "Untargeted Testing"
     parameters:
-      testedBase: 3000000/N   # 3,000,000 people tested per day in the UK
-      theta: testedBase
+      theta_U: 3000000/N   # 3,000,000 people tested per day in the UK
+      theta: theta_U
 
   - time: 379
     name: "Untargeted Testing"
     parameters:
-      testedBase: 10000000/N   # 10,000,000 people tested per day in the UK
-      theta: testedBase
+      theta_U: 10000000/N   # 10,000,000 people tested per day in the UK
+      theta: theta_U
+
+  - time: 409
+    name: "End Universal Testing"
+    parameters:
+      theta_U: 0   # 10,000,000 people tested per day in the UK
+      theta: theta_U

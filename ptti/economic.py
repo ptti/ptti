@@ -49,7 +49,7 @@ def calcArgumentsODE(traj, paramtraj, cfg):
     for c in ('SU', 'SD', 'EU', 'ED', 'IU', 'ID', 'RU', 'RD'):
         i = model.colindex(c)
         cpm[c] = interp1d(time, traj[:, i], kind='nearest')(days)
-    for p in ('theta', 'c', 'eta', 'gamma', 'chi', 'testedBase'):
+    for p in ('theta', 'c', 'eta', 'gamma', 'chi', 'testedBase', 'theta_U'):
         traj = paramtraj.get(p)
         if traj is not None:
             par[p] = interp1d(time, traj, kind='nearest')(days)
@@ -63,7 +63,7 @@ def calcArgumentsODE(traj, paramtraj, cfg):
     # Now derive the relevant quantities
     args = {'time': days}
     args['contacts'] = par['c']
-    args['tested'] = cpm['IU']*par['theta'] + (cpm['SU']+cpm['EU']+cpm['RU'])*par['testedBase']
+    args['tested'] = cpm['IU']*par['theta'] + (cpm['SU']+cpm['EU']+cpm['RU'])*(par['testedBase'] + par['theta_U'])
     # traced are: the number of contacts of infectives that have been tested - IF tracing is done, i.e. if chi > 0.
     args['traced'] = cpm['IU']*par['theta']*par['c']*avg_inftime * (par['chi'] > 0)
     args['recovered'] = cpm['RU']+cpm['RD']
@@ -457,10 +457,8 @@ def calcEconOutputsOld(time, trajectory, parameters, scenario):
 
     Total_Required_Tests = np.trapz(Daily_tests, time)
 
-    Testing_Costs_TimeSeries += Total_Required_Tests * \
-        econ_inputs['Test']['Cost_Per_PCR_Test']/len(time)
-    Testing_Costs += Total_Required_Tests * \
-        econ_inputs['Test']['Cost_Per_PCR_Test']
+    Testing_Costs_TimeSeries += Total_Required_Tests * econ_inputs['Test']['Cost_Per_PCR_Test']/len(time)
+    Testing_Costs += Total_Required_Tests * econ_inputs['Test']['Cost_Per_PCR_Test']
 
     # Now do the sum over periods
     Testing_Costs_Per_Period = []
