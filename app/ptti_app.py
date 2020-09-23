@@ -271,6 +271,8 @@ econ = calcEconOutputs(**econ_args)
 #Update_Graph=True
 # st.write(str(events))
 
+#st.write(paramtraj['theta_U'])
+
 if len(To_Graph)>0:
     pop = cfg['initial']['N']
     df_plot_results = pd_df()
@@ -358,7 +360,8 @@ if len(To_Graph)>0:
             # st.write(full)
             Begin = start
             Curr_TTI_Level = 0
-            times.insert(-1, (5000, times[-1][1])) #Go to end
+            times.insert(-1, (5001, times[-1][1])) #Go to end
+            times.sort()
             for t in times: # Plot segments for TTI Ramp-up.
                 End = t[0] # Plot previous level until now.
                 #st.write(Begin, End, 3*(t[1]/full))
@@ -366,6 +369,7 @@ if len(To_Graph)>0:
                           lw=8*(0.05+4*Curr_TTI_Level),  c="Grey") # sizes from ~1 to 10, given that testing is under 20%
                 Curr_TTI_Level = t[1]
                 Begin = End # For the next iteration of the loop.
+            # st.write(times)
             # ax_r.plot([Begin, ax.get_xlim()[1]*.955], [-.15, -.15], lw=8*(0.05+4*full), ls=':', c="Grey")
         else:
             if Graph_Rt:
