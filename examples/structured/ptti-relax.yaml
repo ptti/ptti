@@ -1,34 +1,28 @@
 interventions:
 
-  ## On Sep 1, contacts increase a bit more
-  - time: 258
-    name: "Relax Lockdown"
-    delay: 59
-    parameters:
-      c: c0 * 0.45
-
+  ## On Oct 1, contacts increase a bit more
   - time: 287
     name: "Relax Lockdown"
     delay: 88
     parameters:
-      c: c0 * 0.5
+      c: c0 * 0.75
 
   - time: 318
     name: "Relax Lockdown"
     delay: 119
     parameters:
-      c: c0 * 0.6
+      c: c0 * 0.8
 
   ## On 30th November, contacts per day increase
   - time: 348
     name: "Relax Lockdown"
     delay: 149
     parameters:
-      c: c0 * 0.7
+      c: c0 * 0.85
 
   ## On 31st December, contacts per day increase
   - time: 379
     name: "Relax Lockdown"
     delay: 180
     parameters:
-      c: c0 * 0.8
+      c: c0 * 0.9

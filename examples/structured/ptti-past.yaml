@@ -92,9 +92,15 @@ interventions:
 
   ## 31st July
   - time: 226
-    name: "Now"
+    name: "August"
     parameters:
-      c: c0 * 0.4 # Slow increase in contacts per day
+      c: c0 * 0.5 # Slow increase in contacts per day
+
+  ## 31st August
+  - time: 257
+    name: "September"
+    parameters:
+      c: c0 * 0.7
       
 ## Lockdown trigger - needs to be higher than current cases to go on
   - condition: x[IU] + x[ID] - 410000
