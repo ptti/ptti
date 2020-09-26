@@ -2,7 +2,7 @@ import numpy as np
 from scipy.interpolate import interp1d
 from scipy.optimize import minimize
 import matplotlib.pyplot as plt
-from ptti.config import config_load, config_save, save_human
+from ptti.config import config_load, save_human
 from ptti.model import runModel
 from ptti.seirct_ode import SEIRCTODEMem
 import logging
@@ -182,7 +182,7 @@ def command():
    tmax  = max(dead_t)
    ## one output point per day
    steps = int(tmax)
-   ## we want a time-series of 
+   ## we want a time-series of
    times = np.linspace(0, tmax, steps)
    ## interpolate the dead onto this time support
    dead_i = interp1d(dead_t, dead_d, kind="previous", bounds_error=False,

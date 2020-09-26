@@ -3,7 +3,6 @@ __all__ = ["plot", "plot_defaults"]
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 import matplotlib.dates as mdates
-from matplotlib.lines import Line2D
 
 from datetime import datetime
 import numpy as np

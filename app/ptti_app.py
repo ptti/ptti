@@ -3,15 +3,12 @@ from ptti.model import runModel
 from ptti.economic import calcEconOutputs, calcArgumentsODE
 from ptti.seirct_ode import SEIRCTODEMem
 from datetime import date, datetime, timedelta
-from collections import OrderedDict
 import os
 from math import log
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.lines import Line2D
 from matplotlib.ticker import FuncFormatter
-# import matplotlib.colors as mcolors
-# import matplotlib.dates as m/dates
 from pandas import DataFrame as pd_df
 import streamlit as st
 
@@ -30,7 +27,7 @@ def cachedRun(*av, **kw):
 
 def y_fmt(y, pos):
     decades = [1e9, 1e6, 1e3, 1e0, 1e-3, 1e-6, 1e-9 ]
-    suffix  = ["G", "M", "k", "" , "m" , "u", "n"  ]
+    suffix  = ["B", "M", "k", "" , "m" , "u", "n"  ]
     if y == 0:
         return str(0)
     for i, d in enumerate(decades):
@@ -54,6 +51,14 @@ def date_fmt(x, pos):  # formatter function takes tick label and tick position
     thisdate = start+timedelta(days=x)
     return(thisdate.strftime("%b %Y"))
 
+
+def fmt_ax(ax): # Perform all axis formatting operations
+    ax.yaxis.set_major_formatter(FuncFormatter(y_fmt))
+    ax.xaxis.set_major_formatter(FuncFormatter(date_fmt))
+    plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
+    # ax.set_xlim([70, ax.get_xlim()[1]])
+    ax.set_xlabel('Date')
+    return
 
 
 st.title("UK COVID-19 Policy Simulator")
@@ -232,6 +237,7 @@ graph_ending = (graph_end_date-start).days
 
 Graph_Interventions = st.sidebar.checkbox("Graph Interventions", value=True)
 Graph_Rt = st.sidebar.checkbox("Graph R_t", value=True)
+Graph_Economics = st.sidebar.checkbox("Graph Economics", value=True)
 
 # To_Graph = ["Exposed", "Infected", "Recovered"]
 To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infectious", "Recovered", "Isolated", "Dead"],
@@ -284,14 +290,16 @@ if len(To_Graph)>0:
             C_total.append(abs(sum([x[cfg['meta']['model'].colindex(c) + 1] for c in C_list])))
 
         df_plot_results[Compartment] = C_total.copy()
-    plt.plot(df_plot_results)
-    ax = plt.gca()
+
+    if Graph_Economics:
+        fig, (ax, ax_e) = plt.subplots(2,1, figsize=(6.4,10))
+        fig.subplots_adjust(top=0.95, hspace=0.3) # More space between
+    else:
+        fig,ax = plt.subplots()
+
+    ax.plot(df_plot_results)
     ax.set_xlim([0, graph_ending])
-    ax.yaxis.set_major_formatter(FuncFormatter(y_fmt))
-    ax.xaxis.set_major_formatter(FuncFormatter(date_fmt))
-    plt.setp(ax.get_xticklabels(), rotation=30, horizontalalignment='right')
-    # ax.set_xlim([70, ax.get_xlim()[1]])
-    ax.set_xlabel('Date')
+    fmt_ax(ax)
     ax.set_ylabel('People')
     miny = ax.get_ylim()[0]
     if log_y:
@@ -389,6 +397,20 @@ if len(To_Graph)>0:
     if round(econ['Tracing']['Max_Tracers'])>1000000: # Infeasible Number of Tracers.
         plt.text(0.025, 0.965, 'Tracing Program \n Infeasibly Large', horizontalalignment='left',
                  verticalalignment='top', transform=ax_r.transAxes,bbox=dict(facecolor='red', alpha=0.5))
+
+    if Graph_Economics:
+        cost_tracing = econ['Daily']['Tracing']
+        cost_testing = econ['Daily']['Testing']
+        cost_nhs     = econ['Daily']['NHS']
+        cost_loss    = econ['Daily']['Productivity_Loss']
+        ax_e.plot(cost_tracing, label='Tracing')
+        ax_e.plot(cost_testing, label='Testing')
+        ax_e.plot(cost_nhs, label='NHS')
+        ax_e.plot(cost_loss, label='GDP')
+
+        fmt_ax(ax_e)
+        ax_e.set_ylabel('Daily Cost (£)')
+        ax_e.legend(loc='upper right')
 
     st.pyplot()
 
