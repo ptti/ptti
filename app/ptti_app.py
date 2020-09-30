@@ -117,7 +117,7 @@ Mask_Compliance='Moderate'
 Mask_Compliance = st.sidebar.radio("Mask Effective Compliance (EC)", ['Lower','Moderate','Very High'], index=1)
 
 
-
+st.sidebar.text("For test and trace system starting Oct. 1")
 TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", value=0.55, min_value=0.1,
                             max_value=0.99)
 TTI_chi = round(-1*log(1-TTI_chi_trans),2)

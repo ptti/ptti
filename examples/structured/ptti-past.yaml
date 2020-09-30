@@ -43,10 +43,11 @@ parameters:
   testedBase: 0.0
   ## theta governs testing of infectious individuals, and we start with none
   theta: testedBase
+  
   ## (Extra) unversal tests.
   theta_U: 0.0
 
-  ## chi is the rate at which contacts are traced.
+  ## chi is the rate at which contacts are traced. (In fraction of contacts per case.)
   ## Tracing is triggered by testing. Starts at none.
   chi:   0.0
 
@@ -59,6 +60,8 @@ parameters:
   symptomatic: 0.5 
   ## average duration of symptomatic illness(coldflu or Covid combined)
   duration: 7
+  #Background rate for early days of epidemic.
+  coldflu: 0.01
 
 ## Exogenous interventions. The time is given in
 ## simulation days.
@@ -80,28 +83,54 @@ interventions:
 
   ## 9th June, contacts per day only slightly increased according to CoMix data:
   - time: 174
-    name: "Past"
-    parameters:
+    name: "June - Start Initial TTI"
+    parameters: 
       c: c0 * 0.34 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
                   # ~3 under lockdown to 3.8 week of 5th-12th June
+      tested: 0.18       # ramp up testing to 18%
+            ## Tracing
+      chi: 0.50  #  trace 50% of the eta contacts who will be traced in one day with teams of tracers
+                #
+      eta: 0.42 # 42% of contacts for each case successfully traced by contact tracers,
+
   ## On 4th July, pubs and entertainment venues open with new 1m distancing rule
   - time: 199
     name: "Past"
     parameters:
       c: c0 * 0.37 # CoMix report week 15 (1-8th July): UK contacts per day is 4.05
+      tested: 0.28       # proportion of symptomatic who are tested (this is the same for
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      eta: 0.47
+      testedBase: coldflu/duration*tested
+      # theta_U: 50000/N
+      thetaI: symptomatic/duration*tested
+      theta: testedBase + (1-testedBase)*thetaI + theta_U
 
   ## 31st July
   - time: 226
     name: "August"
     parameters:
       c: c0 * 0.5 # Slow increase in contacts per day
+      tested: 0.32
+      eta: 0.44  #  trace 50% of the eta contacts who will be traced in one day with teams of tracers
+      testedBase: coldflu*tested/duration
+      # theta_U: 100000/N
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI + theta_U
 
   ## 31st August
   - time: 257
     name: "September"
     parameters:
       c: c0 * 0.7
+      tested: 0.43
+      eta: 0.50
+      testedBase: coldflu*tested/duration
+      # theta_U: 100000/N
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI + theta_U
       
+
 ## Lockdown trigger - needs to be higher than current cases to go on
   - condition: x[IU] + x[ID] - 410000
     name: "Lockdown Trigger"
@@ -110,6 +139,7 @@ interventions:
     parameters:
       c: c0 * 0.3 # Lockdown, Jarvis et al 2020: ~70% reduction in contacts
       locked: True
+
 ## Lockdown trigger - needs to be higher than current cases to go on
   - condition: x[IU] + x[ID] - 420000
     name: "Lockdown Trigger"

@@ -1,10 +1,10 @@
 interventions:
   ## On 9th June, scale up testing, and contact tracing
   ## 9th June, contacts per day only slightly increased according to CoMix data:
-  - time: 174
+  - time: 287
     name: "Targeted Testing"
     parameters:
-      tested: 0.18       # ramp up testing to 18%
+      tested: 0.45       # ramp up testing to 18%
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
@@ -15,30 +15,19 @@ interventions:
                 #  This now matches current success rates.
 
   ## Scale up testing, and contact tracing further
-  - time: 199
+  - time: 307
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing
-      tested: 0.4       # proportion of symptomatic who are tested (this is the same for
+      tested: 0.65       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
             ## Tracing - as above  
 
-  ##  Targetted Testing - scale up tested further still (proportion of symptomatics tested during their week long illness)
-  - time: 226
-    name: "Targeted Testing"
-    parameters:
-            ## Targetted Testing
-      tested: 0.6       # nearly there...
-      testedBase: coldflu*tested/duration
-      thetaI: symptomatic*tested/duration
-      theta: testedBase + (1-testedBase)*thetaI
-            ## Tracing - as above
-
 ## Scale up testing, and contact tracing further
-  - time: 257
+  - time: 317
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing
