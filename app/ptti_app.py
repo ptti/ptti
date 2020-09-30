@@ -2,6 +2,7 @@ from ptti.config import config_load
 from ptti.model import runModel
 from ptti.economic import calcEconOutputs, calcArgumentsODE
 from ptti.seirct_ode import SEIRCTODEMem
+from ptti.fit import dgu, dgu_cases
 from datetime import date, datetime, timedelta
 import os
 from math import log
@@ -240,8 +241,8 @@ Graph_Rt = st.sidebar.checkbox("Graph R_t", value=True)
 Graph_Economics = st.sidebar.checkbox("Graph Economics", value=True)
 
 # To_Graph = ["Exposed", "Infected", "Recovered"]
-To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infectious", "Recovered", "Isolated", "Dead"],
-                                  default=["Infectious", "Isolated", "Dead"])
+To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infectious", "Recovered", "Isolated", "Dead", "Death Data"],
+                                  default=["Infectious", "Isolated", "Dead", "Death Data"])
 
 Graph_Columns = {
   "Susceptible": ["SU", "SD"],
@@ -284,6 +285,7 @@ if len(To_Graph)>0:
     df_plot_results = pd_df()
     Out_Columns = [col['name'] for col in cfg['meta']['model'].observables]
     for Compartment in To_Graph:
+        if Compartment not in Graph_Columns: continue ## data columns do not appear as compartments
         C_list = Graph_Columns[Compartment]
         C_total = list()
         for x in traj:
@@ -296,6 +298,18 @@ if len(To_Graph)>0:
         fig.subplots_adjust(top=0.95, hspace=0.3) # More space between
     else:
         fig,ax = plt.subplots()
+
+    ## add data
+    #cases = dgu_cases("coronavirus-cases_latest.csv")
+    #first_case = cases[0,0]
+    #last_case = cases[-1,0]
+    #caseplot = np.pad(cases[:,1], (first_case - 1, len(df_plot_results) - last_case), mode="edge")
+    #df_plot_results["Case Data"] = caseplot
+    deaths = dgu("coronavirus-deaths_latest.csv")
+    first_death = deaths[0,0]
+    last_death  = deaths[-1,0]
+    deathplot = np.pad(deaths[:,1], (first_death-1, len(df_plot_results) - last_death), mode="edge")
+    df_plot_results["Death Data"] = deathplot
 
     ax.plot(df_plot_results)
     ax.set_xlim([0, graph_ending])

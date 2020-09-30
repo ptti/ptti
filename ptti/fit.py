@@ -5,9 +5,12 @@ import matplotlib.pyplot as plt
 from ptti.config import config_load, save_human
 from ptti.model import runModel
 from ptti.seirct_ode import SEIRCTODEMem
+import urllib.request
+import gzip
 import logging
 import argparse
 import sys
+import os
 import csv
 import time
 
@@ -63,21 +66,50 @@ def paramArray(cfg, masked=[]):
    setp = lambda cfg, a: list(map(_ev, zip([(cfg, s) for (_, s) in param_funcs], a)))
    return getp, setp
 
-def dgu(fn):
+def dgu_cases(fn):
    """
-   Read coronavirus deaths for the UK as published by data.gov.uk
+   Read coronavirus cases for the UK as published by data.gov.uk
 
-   https://coronavirus.data.gov.uk/downloads/csv/coronavirus-deaths_latest.csv
+   https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newCasesBySpecimenDate%22:%22newCasesBySpecimenDate%22,%22cumCasesBySpecimenDate%22:%22cumCasesBySpecimenDate%22%7D&format=csv
    """
    def read_csv():
       with open(fn) as fp:
-         for aname, acode, atype, date, dead, cdead in csv.reader(fp, delimiter=','):
-            if "Area" in aname: ## header
+         for atype, aname, acode, date, cases, ccases in csv.reader(fp, delimiter=','):
+            if "area" in aname: ## header
                continue
             if acode != "K02000001": ## UK, not devolved nations
                continue
             date = time.strptime(date, "%Y-%m-%d")
-            deaths = int(cdead)
+            cases  = int(cases) if cases != "" else 0
+            ccases = int(ccases) if ccases != "" else 0
+            yield (date.tm_yday, cases, ccases)
+   return np.array(list(read_csv()))[::-1]
+
+def dgu(fn):
+   """
+   Read coronavirus deaths for the UK as published by data.gov.uk
+
+   https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newDeaths28DaysByDeathDate%22:%22newDeaths28DaysByDeathDate%22,%22cumDeaths28DaysByDeathDate%22:%22cumDeaths28DaysByDeathDate%22%7D&format=csv
+   """
+   url = "https://api.coronavirus.data.gov.uk/v1/data?filters=areaType=overview&structure=%7B%22areaType%22:%22areaType%22,%22areaName%22:%22areaName%22,%22areaCode%22:%22areaCode%22,%22date%22:%22date%22,%22newDeaths28DaysByDeathDate%22:%22newDeaths28DaysByDeathDate%22,%22cumDeaths28DaysByDeathDate%22:%22cumDeaths28DaysByDeathDate%22%7D&format=csv"
+   try:
+       os.stat(fn)
+   except IOError:
+       req = urllib.request.Request(url)
+       with urllib.request.urlopen(req) as response:
+           gzdata = response.read()
+       data = gzip.decompress(gzdata)
+       with open(fn, 'wb') as f:
+           f.write(data)
+   def read_csv():
+      with open(fn) as fp:
+         for atype, aname, acode, date, dead, cdead in csv.reader(fp, delimiter=','):
+            if "area" in aname: ## header
+               continue
+            if acode != "K02000001": ## UK, not devolved nations
+               continue
+            date = time.strptime(date, "%Y-%m-%d")
+            deaths = int(cdead) if cdead != "" else 0
             yield (date.tm_yday, deaths)
    return np.array(list(read_csv()))[::-1]
 
