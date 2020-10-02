@@ -263,9 +263,11 @@ def seirxud_abm_det(tmax=100,
     istart = np.random.choice(np.arange(N), size=I0, replace=False)
     for i in istart:
         states[i] = STATE_I
-        timeM[i, TIME_I_STATE] = tIR
-        timeM[i, TIME_I_TEST] = tUD
-        timeM[i, TIME_I_CONTACT] = tCO
+        # How long have they had it?
+        t0 = min(tIR, tUD)*np.random.random()
+        timeM[i, TIME_I_STATE] = tIR-t0
+        timeM[i, TIME_I_TEST] = tUD-t0
+        timeM[i, TIME_I_CONTACT] = tCO-np.fmod(t0, tCO)
 
     times = []
     traj = []
@@ -351,7 +353,7 @@ def seirxud_abm_det(tmax=100,
             traceable[ti] = False
             timeM[ti, TIME_I_CONTACT] = np.inf
             timeM[ti, TIME_I_TEST] = np.inf
-            if states[ti] == STATE_S:
+            if states[ti] == STATE_S or states[ti] == STATE_R:
                 timeM[ti, TIME_I_ISOL] = tDU
 
     counts = count_states(states, diagnosed, traceable)
