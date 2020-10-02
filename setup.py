@@ -77,5 +77,6 @@ setup(name='ptti',
           "ptti": ["*.ka"],
           "ptti/data": ["*.csv"],
           "examples": ["*.yaml", "*.ka"],
+          "figures": ["*.yaml", "*.py"],
       }
 )
