@@ -35,7 +35,7 @@ def figure_testing():
         cfg["meta"]["model"] = model
         cfg["parameters"]["theta"] = theta
 
-        t, traj = runModel(**cfg["meta"], **cfg)
+        t, traj, _, _ = runModel(**cfg["meta"], **cfg)
 
         E = traj[:,model.colindex("EU")]
         I = traj[:,model.colindex("IU")]
@@ -62,7 +62,7 @@ def figure_c_testing():
                 cfg["parameters"]["theta"] = theta
                 cfg["parameters"]["c"] = c
 
-                t, traj = runModel(**cfg["meta"], **cfg)
+                t, traj, _, _ = runModel(**cfg["meta"], **cfg)
 
                 R30 = traj[30, -1]
 
@@ -83,7 +83,7 @@ def figure_tracing():
         cfg["parameters"]["eta"] = eta
         cfg["parameters"]["chi"] = 0.5
 
-        t, traj = runModel(**cfg["meta"], **cfg)
+        t, traj, _, _ = runModel(**cfg["meta"], **cfg)
 
         E = traj[:,model.colindex("EU")]
         I = traj[:,model.colindex("IU")]
@@ -111,7 +111,7 @@ def figure_testing_tracing():
                 cfg["parameters"]["eta"] = eta
                 cfg["parameters"]["chi"] = 0.5
 
-                t, traj = runModel(**cfg["meta"], **cfg)
+                t, traj, _, _ = runModel(**cfg["meta"], **cfg)
 
                 R30 = traj[30, -1]
 
@@ -123,7 +123,7 @@ def _runabm(arg):
     cfg, seed = arg
     cfg["meta"]["seed"] = seed
     log.info("Starting sample {}".format(cfg["meta"]["seed"]))
-    t, traj = runModel(**cfg["meta"], **cfg)
+    t, traj, _, _ = runModel(**cfg["meta"], **cfg)
     log.info("Done sample {}".format(cfg["meta"]["seed"]))
     return t, traj
 
@@ -158,7 +158,7 @@ def compare_abm(cfg, out):
     np.savetxt(out.format("abm-std-2"), np.vstack([t, avg.T-2*std.T]).T, delimiter="\t")
 
     cfg["meta"]["model"] = SEIRCTODEMem
-    t, traj = runModel(**cfg["meta"], **cfg)
+    t, traj, _, _ = runModel(**cfg["meta"], **cfg)
     np.savetxt(out.format("ode"), np.vstack([t, traj.T]).T, delimiter="\t")
 
 def figure_abm1():
