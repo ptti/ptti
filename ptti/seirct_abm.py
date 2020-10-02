@@ -1,4 +1,4 @@
-__all__ = ['SEIRCTABM']
+__all__ = ['SEIRCTABM', 'SEIRCTABMDet']
 
 import numpy as np
 from numba import jit
@@ -46,6 +46,14 @@ INDEX_ID = 5
 INDEX_RD = 7
 
 INDEX_CT = 8
+
+# Time rows (for deterministic model)
+TIME_I_CONTACT = 0
+TIME_I_STATE = 1
+TIME_I_ISOL = 2
+TIME_I_TEST = 3
+TIME_I_TRACE = 4
+
 
 @jit(nopython=True, cache=True)
 def count_states(states, diagnosed, traceable):
@@ -107,7 +115,6 @@ def seirxud_abm_gill(tmax=10,
                      eta=0,
                      chi=0,
                      return_pcis=False):
-
 
     # Generate states
     states = np.zeros(N, dtype=np.int8)
@@ -219,6 +226,145 @@ def seirxud_abm_gill(tmax=10,
     return times, traj, pcis
 
 
+@jit(nopython=True, cache=True)
+def seirxud_abm_det(tmax=100,
+                    N=1000,
+                    I0=10,
+                    c=5,
+                    beta=0.05,
+                    alpha=0.2,
+                    gamma=0.1,
+                    theta=0.0,
+                    kappa=0.05,
+                    eta=0,
+                    chi=0,
+                    return_pcis=False):
+
+    # Times
+    tEI = 1.0/alpha if alpha > 0 else np.inf
+    tIR = 1.0/gamma if gamma > 0 else np.inf
+    tUD = 1.0/theta if theta > 0 else np.inf
+    tCO = 1.0/c if c > 0 else np.inf
+    tDU = 1.0/kappa if kappa > 0 else np.inf
+    tCT = 1.0/chi if chi > 0 else np.inf
+
+    # Generate states
+    states = np.zeros(N, dtype=np.int8)
+    # Generate diagnosed state
+    diagnosed = np.zeros(N, dtype=np.bool8)
+    # Generate traceable status
+    traceable = np.zeros(N, dtype=np.bool8)
+    # Contact matrix
+    contactM = np.zeros((N, N), dtype=np.bool8)
+    # Times matrix
+    timeM = np.zeros((N, 5)) + np.inf
+
+    # Infect I0 patients
+    istart = np.random.choice(np.arange(N), size=I0, replace=False)
+    for i in istart:
+        states[i] = STATE_I
+        timeM[i, TIME_I_STATE] = tIR
+        timeM[i, TIME_I_TEST] = tUD
+        timeM[i, TIME_I_CONTACT] = tCO
+
+    times = []
+    traj = []
+    pcis = []
+
+    t = 0
+    while t < tmax:
+
+        counts = count_states(states, diagnosed, traceable)
+        traj.append(counts)
+        times.append(t)
+
+        if return_pcis:
+            pcis.append(np.sum(np.sum(contactM, axis=0) > 0)/N)
+        else:
+            pcis.append(0)
+
+        dt = np.amin(timeM)
+        trans = np.argmin(timeM)
+
+        ti = int(trans/5)
+        ttype = trans%5
+
+        if dt == np.inf:
+            # Simulation is over!
+            break
+        elif dt < 0:
+            dt = 0
+
+        timeM[ti, ttype] = np.inf
+        t += dt
+        timeM = timeM-dt
+
+        if ttype == TIME_I_CONTACT:
+            # Contact between a random individual and a random IU
+            rndi = np.random.randint(0, N)
+            if states[ti] == STATE_I and (not diagnosed[ti]):
+                contactM[rndi, ti] = True
+                is_SU = (states[rndi] == STATE_S)*(not diagnosed[rndi])
+                if is_SU and np.random.random() <= beta:
+                    states[rndi] = STATE_E
+                    timeM[rndi, TIME_I_STATE] = tEI
+                timeM[ti, TIME_I_CONTACT] = tCO
+
+        elif ttype == TIME_I_STATE:
+            if states[ti] == STATE_E:            
+                # E becomes I
+                states[ti] = STATE_I
+                timeM[ti, TIME_I_STATE] = tIR
+                timeM[ti, TIME_I_TEST] = tUD
+                timeM[ti, TIME_I_CONTACT] = tCO
+            elif states[ti] == STATE_I:
+                states[ti] = STATE_R
+                contactM[:, ti] = False
+                timeM[ti, TIME_I_TEST] = np.inf
+                timeM[ti, TIME_I_CONTACT] = np.inf
+                if diagnosed[ti]:
+                    timeM[ti, TIME_I_ISOL] = tDU
+
+        elif ttype == TIME_I_ISOL:
+
+            if diagnosed[ti] and states[ti] != STATE_I:
+                diagnosed[ti] = False
+
+        elif ttype == TIME_I_TEST:
+
+            if states[ti] == STATE_I and (not diagnosed[ti]):
+                # Diagnosis
+                diagnosed[ti] = True
+                traceable[ti] = False
+                # Also set all those who have it as an infector as traceable
+                ctis = np.where((contactM[:, ti]*(diagnosed == 0)))[0]
+                traceable[ctis] = np.logical_or(traceable[ctis],
+                                                np.random.random(len(ctis)) < eta)
+                timeM[ti, TIME_I_CONTACT] = np.inf # No more contacts!
+                for cti in ctis:
+                    if traceable[cti]:
+                        timeM[cti, TIME_I_TRACE] = tCT
+
+        elif ttype == TIME_I_TRACE:
+            # Contact tracing
+            diagnosed[ti] = True
+            traceable[ti] = False
+            timeM[ti, TIME_I_CONTACT] = np.inf
+            timeM[ti, TIME_I_TEST] = np.inf
+            if states[ti] == STATE_S:
+                timeM[ti, TIME_I_ISOL] = tDU
+
+    counts = count_states(states, diagnosed, traceable)
+    traj.append(counts)
+    times.append(t)
+    if return_pcis:
+        pcis.append(np.sum(np.sum(contactM, axis=0) > 0)/N)
+    else:
+        pcis.append(0)
+
+    return times, traj, pcis
+
+
 class SEIRCTABM(Model):
     name = "SEIR-CT ABM"
     observables = yaml.load(yaml_obs, yaml.FullLoader)
@@ -240,13 +386,48 @@ class SEIRCTABM(Model):
                                              eta=self.eta, chi=self.chi)
         traj = np.array(traj).T
 
-
         intptraj = interp1d(times, traj, kind="previous", bounds_error=False,
-                            fill_value=(traj[:, 0], traj[:,-1]))(t)
+                            fill_value=(traj[:, 0], traj[:, -1]))(t)
 
         if return_pcis:
             intppcis = interp1d(tr[0], pcis, kind="previous", bounds_error=False,
-                               fill_value=(pcis[0], pcis[-1]))(t)
+                                fill_value=(pcis[0], pcis[-1]))(t)
+
+            return t, (intptraj.T, intppcis), state
+        else:
+            return t, intptraj.T, state
+
+
+class SEIRCTABMDet(Model):
+    name = "SEIR-CT ABM Deterministic"
+    observables = yaml.load(yaml_obs, yaml.FullLoader)
+
+    def initial_conditions(self, N, IU=None):
+        if IU is None:
+            IU = int(0.01 * N)
+        return (N, IU)
+
+    def run(self, t0, tmax, tsteps, state, return_pcis=False):
+        N, I0 = state
+        t = np.linspace(t0, tmax, tsteps)
+
+        dt = t[1]-t[0]
+
+        times, traj, pcis = seirxud_abm_det(tmax=t[-1],
+                                            N=N, I0=I0,
+                                            c=self.c, beta=self.beta,
+                                            alpha=self.alpha, gamma=self.gamma,
+                                            theta=self.theta, kappa=self.kappa,
+                                            eta=self.eta, chi=self.chi)
+
+        traj = np.array(traj).T
+
+        intptraj = interp1d(times, traj, kind="previous", bounds_error=False,
+                            fill_value=(traj[:, 0], traj[:, -1]))(t)
+
+        if return_pcis:
+            intppcis = interp1d(tr[0], pcis, kind="previous", bounds_error=False,
+                                fill_value=(pcis[0], pcis[-1]))(t)
 
             return t, (intptraj.T, intppcis), state
         else:

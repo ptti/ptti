@@ -140,6 +140,22 @@ class SEIRODE(Model):
     name = "SEIR ODE"
     observables = yaml.load(yaml_seir_obs, yaml.FullLoader)
 
+    @property
+    def pcols(self):
+        """
+        Method supporting computation of R(t): return column indexes
+        representing individuals. These should sum to N.
+        """
+        return tuple(self.colindex(c) for c in ("SU", "EU", "IU", "RU"))
+
+    @property
+    def icols(self):
+        """
+        Method supporting computation of R(t): return column indexes
+        for all infectious individuals
+        """
+        return (self.colindex("IU"),)
+
     def initial_conditions(self, N, **o):
         """
         Populate the initial condition vector from the given data.

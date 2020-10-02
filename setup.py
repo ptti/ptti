@@ -67,6 +67,7 @@ setup(name='ptti',
           'models': [
               'SEIRODE      = ptti.mshim:SEIRODE',
               'SEIRCTABM    = ptti.mshim:SEIRCTABM',
+              'SEIRCTABMDet = ptti.mshim:SEIRCTABMDet',
               'SEIRCTODEMem = ptti.mshim:SEIRCTODEMem',
               'SEIRCTKappa  = ptti.mshim:SEIRCTKappa',
               'SEIRCTNet    = ptti.mshim:SEIRCTNet',

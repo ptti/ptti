@@ -25,6 +25,11 @@ except:
     SEIRCTABM = None
 
 try:
+    from ptti.seirct_abm import SEIRCTABMDet
+except:
+    SEIRCTABMDet = None
+
+try:
     from ptti.seirct_kappa import SEIRCTKappa
 except:
     SEIRCTKappa = None
