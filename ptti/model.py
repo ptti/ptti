@@ -257,8 +257,10 @@ def runModel(model, t0, tmax, steps, parameters={}, initial={}, interventions=[]
          be the last column.
       - `seed` the random seed to set at the beginning of the simulation.
 
-    Returns a tuple `(t, traj)` where `t` is the sequence of times, and `traj`
-    is the sequence of observables produced by the model.
+    Returns a tuple `(t, traj, events, paramtraj)` where `t` is the sequence of
+    times, `traj` is the sequence of observables produced by the model, and
+    `events` and `paramtraj` are events and parameter changes produced by
+    interventions. 
     """
     np.random.seed(seed)
 
