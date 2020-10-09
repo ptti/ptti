@@ -141,3 +141,6 @@ cython_debug/
 benchmarks/*-out-*
 !benchmarks/*-out-abm-*
 /economics/
+
+# Figures
+figures/*.tsv
