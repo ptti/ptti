@@ -124,7 +124,7 @@ TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", valu
 TTI_chi = round(-1*log(1-TTI_chi_trans),2)
 TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.47, min_value=0.1,
                             max_value=0.8)
-TTI_theta = st.sidebar.slider("Maximum targetted testing rate", value=0.8, min_value=0.0, max_value=1.0)
+TTI_theta = st.sidebar.slider("Maximum testing rate", value=0.1, min_value=0.0, max_value=1.0)
 
 #drug = st.sidebar.checkbox("Treatment Becomes Available (Not implemented)")
 #if drug == True:
@@ -216,11 +216,14 @@ for i in cfg['interventions']:
     if i['name'] == "Relax Lockdown":
         i['time'] = (end_date - start).days + i['delay']
 
+cfg['parameters']['theta'] *= TTI_theta
+for i in cfg['interventions']:
+    if 'theta' in i['parameters']:
+        i['parameters']['theta'] *= TTI_theta
 
 if TTI in ('Targeted TTI', 'Combined TTI'):
     for i in cfg['interventions']:
         if "Testing" in i['name']:
-            i['parameters']['theta'] *= TTI_theta
             i['parameters']['chi'] = TTI_chi
             i['parameters']['eta'] = TTI_eta
             # Set dates? No - Not currently allowing rollout speed changes.
