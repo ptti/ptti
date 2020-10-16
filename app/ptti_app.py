@@ -119,12 +119,13 @@ Mask_Compliance = st.sidebar.radio("Mask Effective Compliance (EC)", ['Lower','M
 
 
 st.sidebar.text("For test and trace system starting Oct. 1")
-TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", value=0.55, min_value=0.1,
+TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", value=0.55, min_value=0.0,
                             max_value=0.99)
 TTI_chi = round(-1*log(1-TTI_chi_trans),2)
-TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.47, min_value=0.1,
-                            max_value=0.8)
-TTI_theta = st.sidebar.slider("Maximum testing rate", value=0.1, min_value=0.0, max_value=1.0)
+TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.47, min_value=0.0,
+                            max_value=1.0)
+TTI_tscale = st.sidebar.slider("Targeted testing scaling factor", value=0.8, min_value=0.0, max_value=1.0)
+TTI_uscale = st.sidebar.slider("Universal testing scaling factor", value=1.0, min_value=0.0, max_value=1.0)
 
 #drug = st.sidebar.checkbox("Treatment Becomes Available (Not implemented)")
 #if drug == True:
@@ -155,7 +156,8 @@ Scenario_Title = (Relax + (("with delay of " + str(round((end_date - (start+time
 #cfg2 = config_load(filename=os.path.join("..", "examples", "scenarios", "ptti-2_Universal_PTTI.yaml"))
 
 cfg = config_load(filename=os.path.join("..", "examples", "structured", "ptti-past.yaml"),
-                  interventions=[[i, 0] for i in intervention_list])
+                  interventions=[[i, 0] for i in intervention_list],
+		  override={"tscale": TTI_tscale, "uscale": TTI_uscale })
 
 cfg["meta"]["model"] = SEIRCTODEMem
 defaults = {}
@@ -215,11 +217,6 @@ cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))
 for i in cfg['interventions']:
     if i['name'] == "Relax Lockdown":
         i['time'] = (end_date - start).days + i['delay']
-
-cfg['parameters']['theta'] *= TTI_theta
-for i in cfg['interventions']:
-    if 'theta' in i['parameters']:
-        i['parameters']['theta'] *= TTI_theta
 
 if TTI in ('Targeted TTI', 'Combined TTI'):
     for i in cfg['interventions']:
