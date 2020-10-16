@@ -39,7 +39,7 @@ def y_fmt(y, pos):
                 return '{val:d} {suffix}'.format(val=int(val), suffix=suffix[i])
             else:
                 if signf == 1:
-                    print(val, signf)
+                    #print(val, signf)
                     if str(val).split(".")[1] == "0":
                        return '{val:d} {suffix}'.format(val=int(round(val)), suffix=suffix[i])
                 tx = "{"+"val:.{signf}f".format(signf = signf) +"} {suffix}"
@@ -124,7 +124,7 @@ TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", valu
 TTI_chi = round(-1*log(1-TTI_chi_trans),2)
 TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.47, min_value=0.1,
                             max_value=0.8)
-
+TTI_theta = st.sidebar.slider("Maximum targetted testing rate", value=0.8, min_value=0.0, max_value=1.0)
 
 #drug = st.sidebar.checkbox("Treatment Becomes Available (Not implemented)")
 #if drug == True:
@@ -217,9 +217,10 @@ for i in cfg['interventions']:
         i['time'] = (end_date - start).days + i['delay']
 
 
-if TTI == 'Targeted TTI':
+if TTI in ('Targeted TTI', 'Combined TTI'):
     for i in cfg['interventions']:
         if "Testing" in i['name']:
+            i['parameters']['theta'] *= TTI_theta
             i['parameters']['chi'] = TTI_chi
             i['parameters']['eta'] = TTI_eta
             # Set dates? No - Not currently allowing rollout speed changes.
