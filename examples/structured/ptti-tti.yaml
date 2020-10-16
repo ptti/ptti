@@ -4,7 +4,7 @@ interventions:
   - time: 287
     name: "Targeted Testing"
     parameters:
-      tested: 0.45       # ramp up testing to 18%
+      tested: tscale * 0.56       # ramp up testing to 18%
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI
@@ -19,7 +19,7 @@ interventions:
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing
-      tested: 0.65       # proportion of symptomatic who are tested (this is the same for
+      tested: tscale * 0.81       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
@@ -31,7 +31,7 @@ interventions:
     name: "Targeted Testing"
     parameters:
             ## Targetted Testing
-      tested: 0.8       # proportion of symptomatic who are tested (this is the same for
+      tested: tscale       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration

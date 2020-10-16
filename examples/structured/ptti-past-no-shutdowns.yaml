@@ -54,8 +54,12 @@ parameters:
   ## eta is the success rate of tracing. Starts at none
   eta:   0.0
 
+  ## scaling for targeted and universal testing
+  tscale: 0.8
+  uscale: 1.0
+
   ## default testing rate (proportion of symptomatics)
-  tested: 0.8 
+  tested: tscale
   ## 50% of SARS-Cov-2 infected (IU) have symptoms
   symptomatic: 0.5 
   ## average duration of symptomatic illness(coldflu or Covid combined)
@@ -87,7 +91,7 @@ interventions:
     parameters: 
       c: c0 * 0.34 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
                   # ~3 under lockdown to 3.8 week of 5th-12th June
-      tested: 0.18       # ramp up testing to 18%
+      tested: tscale * 0.22       # ramp up testing to 18%
             ## Tracing
       chi: 0.50  #  trace 50% of the eta contacts who will be traced in one day with teams of tracers
                 #
@@ -98,11 +102,11 @@ interventions:
     name: "Past"
     parameters:
       c: c0 * 0.37 # CoMix report week 15 (1-8th July): UK contacts per day is 4.05
-      tested: 0.28       # proportion of symptomatic who are tested (this is the same for
+      tested: tscale * 0.35       # proportion of symptomatic who are tested (this is the same for
                         #    symptomatic Covid and coldflu because they are indistinguishable)
       eta: 0.47
       testedBase: coldflu/duration*tested
-      # theta_U: 50000/N
+      # theta_U: uscale * 50000/N
       thetaI: symptomatic/duration*tested
       theta: testedBase + (1-testedBase)*thetaI + theta_U
 
@@ -111,10 +115,10 @@ interventions:
     name: "August"
     parameters:
       c: c0 * 0.5 # Slow increase in contacts per day
-      tested: 0.32
+      tested: tscale * 0.40
       eta: 0.44  #  trace 50% of the eta contacts who will be traced in one day with teams of tracers
       testedBase: coldflu*tested/duration
-      # theta_U: 100000/N
+      # theta_U: uscale * 100000/N
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI + theta_U
 
@@ -123,9 +127,9 @@ interventions:
     name: "September"
     parameters:
       c: c0 * 0.7
-      tested: 0.43
+      tested: tscale * 0.54
       eta: 0.50
       testedBase: coldflu*tested/duration
-      # theta_U: 100000/N
+      # theta_U: uscale * 100000/N
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI + theta_U
