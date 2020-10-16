@@ -36,7 +36,7 @@ def numpy_funcs():
     return {f: getattr(np.random, f) for f in funcs}
 
 
-def config_load(filename=None, interventions=None, sample=0, defaults={}):
+def config_load(filename=None, interventions=None, sample=0, defaults={}, override={}):
     """
     Load a YAML configuration file, supporting evaluation of some expressions and
     sensible defaults. The defaults are:
@@ -91,13 +91,13 @@ def config_load(filename=None, interventions=None, sample=0, defaults={}):
 
         # compute global parameters
         if k == "parameters":
-            v.update(_eval_params(v, gvars))
+            v.update(_eval_params(v, gvars, override))
 
         if k == "interventions":
             for intv in v:
                 for ik, iv in intv.items():
                     if ik == "parameters":
-                        iv.update(_eval_params(iv, gvars))
+                        iv.update(_eval_params(iv, gvars, override))
 
     # set some defaults
     cfg.setdefault("meta", {})
@@ -137,13 +137,15 @@ def config_load(filename=None, interventions=None, sample=0, defaults={}):
     return cfg
 
 
-def _eval_params(d, gvars):
+def _eval_params(d, gvars, override):
     """
     Warning, mutates the gvars dictionary by adding parameters into it
     """
     params = {}
     for k, v in d.items():
-        if isinstance(v, str):
+        if k in override:
+            params[k] = override[k]
+        elif isinstance(v, str):
             params[k] = eval(v, gvars)
         else:
             params[k] = v
