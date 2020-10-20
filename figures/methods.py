@@ -223,4 +223,4 @@ if __name__ == '__main__':
     figure_testing_tracing()
     figure_abm2()
     figure_abm3()
-    #figure_abm4()
+    figure_abm4()
