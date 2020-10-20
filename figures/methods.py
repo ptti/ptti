@@ -7,7 +7,7 @@
 from ptti.config import config_load
 from ptti.model import runModel
 from ptti.seirct_ode import SEIRCTODEMem
-from ptti.seirct_abm import SEIRCTABM
+from ptti.seirct_abm import SEIRCTABM, SEIRCTABMDet
 
 from multiprocessing import Pool
 import logging as log
@@ -202,6 +202,20 @@ def figure_abm3():
     prun_abm(mkcfg, "strongtesting")
     compare_abm(mkcfg, "strongtesting")
 
+def figure_abm4():
+    def mkcfg():
+        cfg = basic_config()
+        cfg["meta"]["model"] = SEIRCTABMDet
+        cfg["initial"]["N"] = 1000
+        cfg["initial"]["IU"] = 10
+        cfg["parameters"]["theta"] = 0.1428
+        cfg["parameters"]["eta"] = 0.5
+        cfg["parameters"]["chi"] = 0.5
+        return cfg
+
+    prun_abm(mkcfg, "deterministic")
+    compare_abm(mkcfg, "deterministic")
+
 if __name__ == '__main__':
     figure_testing()
     figure_c_testing()
@@ -209,3 +223,4 @@ if __name__ == '__main__':
     figure_testing_tracing()
     figure_abm2()
     figure_abm3()
+    #figure_abm4()
