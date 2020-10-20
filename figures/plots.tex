@@ -1,0 +1,88 @@
+\documentclass{article}
+\usepackage[landscape,top=0.85in,left=0.75in,right=0.75in,footskip=0.75in]{geometry}
+
+\usepackage{pttiplots}
+\usetikzlibrary{external}
+\tikzexternalize
+\begin{document}
+
+\plotTestingEI
+\plotTestingR
+\plotTracingEI
+\plotTracingR
+
+\plotTestingCTheta
+
+\plotTestingTracing
+
+% \noindent\resizebox{\textwidth}{!}{
+%   \plotABM{1}{bmark-sweet-out}{Susceptible and unconfined}
+%   \plotABM{3}{bmark-sweet-out}{Exposed and unconfined}
+%   \plotABM{5}{bmark-sweet-out}{Infectious and unconfined}
+%   \plotABM{7}{bmark-sweet-out}{Removed and unconfined}
+% }
+% \par\noindent
+% \resizebox{\textwidth}{!}{
+%   \plotABM{2}{bmark-sweet-out}{Susceptible and isolated}
+%   \plotABM{4}{bmark-sweet-out}{Exposed and isolated}
+%   \plotABM{6}{bmark-sweet-out}{Infectious and isolated}
+%   \plotABM{8}{bmark-sweet-out}{Removed and isolated}
+% }
+
+
+%\noindent\resizebox{\textwidth}{!}{
+%  \plotLowTheta{bmark-highct-verylowtest-out}
+%  \plotABM{3}{bmark-highct-verylowtest-out}{Exposed and unconfined}
+%  \plotABM{5}{bmark-highct-verylowtest-out}{Infectious and unconfined}
+%  \plotABM{7}{bmark-highct-verylowtest-out}{Removed and unconfined}
+%}
+%\par\noindent
+%\resizebox{\textwidth}{!}{
+%  \plotABM{2}{bmark-highct-verylowtest-out}{Susceptible and isolated}
+%  \plotABM{4}{bmark-highct-verylowtest-out}{Exposed and isolated}
+%  \plotABM{6}{bmark-highct-verylowtest-out}{Infectious and isolated}
+%  \plotABM{8}{bmark-highct-verylowtest-out}{Removed and isolated}
+%}
+
+
+% \plotSuperCT{bmark-superct-out}
+
+% \par\noindent\plotrel
+% \plotdev
+
+% \noindent\resizebox{\textwidth}{!}{
+%   \plottsrel{10}
+%   \plottsdev{10}
+%   \plottsrel{20}
+%   \plottsdev{20}
+% }
+% \par\noindent\resizebox{\textwidth}{!}{
+%   \plottsrel{30}
+%   \plottsdev{30}
+%   \plottsrel{40}
+%   \plottsdev{40}
+% }
+
+\plotABM{1}{lowtheta}{Susceptible and unconfined}
+\plotABM{3}{lowtheta}{Exposed and unconfined}
+\plotABM{5}{lowtheta}{Infectious and unconfined}
+\plotABM{7}{lowtheta}{Removed and unconfined}
+\plotABM{2}{lowtheta}{Susceptible and isolated}
+\plotABM{4}{lowtheta}{Exposed and isolated}
+\plotABM{6}{lowtheta}{Infectious and isolated}
+\plotABM{8}{lowtheta}{Removed and isolated}
+
+\plotABM{1}{strongtesting}{Susceptible and unconfined}
+\plotABM{3}{strongtesting}{Exposed and unconfined}
+\plotABM{5}{strongtesting}{Infectious and unconfined}
+\plotABM{7}{strongtesting}{Removed and unconfined}
+\plotABM{2}{strongtesting}{Susceptible and isolated}
+\plotABM{4}{strongtesting}{Exposed and isolated}
+\plotABM{6}{strongtesting}{Infectious and isolated}
+\plotABM{8}{strongtesting}{Removed and isolated}
+
+
+%\par\noindent\plotDiscussionEI
+%\par\noindent\plotDiscussionR
+
+\end{document}

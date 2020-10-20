@@ -145,21 +145,22 @@ def prun_abm(mkcfg, out):
         np.savetxt("{}-{}.traj".format(out, i), traj, delimiter="\t")
         np.savetxt("{}-{}.t".format(out, i), t, delimiter="\t")
 
-def compare_abm(cfg, out):
+def compare_abm(mkcfg, out):
     t = [np.loadtxt(f, delimiter="\t") for f in glob("{}*.t".format(out))][0]
     trajectories = [np.loadtxt(f, delimiter="\t") for f in glob("{}*.traj".format(out))]
 
     avg = np.average(trajectories, axis=0)
     std = np.std(trajectories, axis=0)
-    np.savetxt(out.format("abm-avg"), np.vstack([t, avg.T]).T, delimiter="\t")
-    np.savetxt(out.format("abm-std+1"), np.vstack([t, avg.T+std.T]).T, delimiter="\t")
-    np.savetxt(out.format("abm-std-1"), np.vstack([t, avg.T-std.T]).T, delimiter="\t")
-    np.savetxt(out.format("abm-std+2"), np.vstack([t, avg.T+2*std.T]).T, delimiter="\t")
-    np.savetxt(out.format("abm-std-2"), np.vstack([t, avg.T-2*std.T]).T, delimiter="\t")
+    np.savetxt("{}-{}.tsv".format(out, "abm-avg"), np.vstack([t, avg.T]).T, delimiter="\t")
+    np.savetxt("{}-{}.tsv".format(out, "abm-std"), np.vstack([t, avg.T+std.T]).T, delimiter="\t")
+    np.savetxt("{}-{}.tsv".format(out, "abm-nstd"), np.vstack([t, avg.T-std.T]).T, delimiter="\t")
+    np.savetxt("{}-{}.tsv".format(out, "abm-stdstd"), np.vstack([t, avg.T+2*std.T]).T, delimiter="\t")
+    np.savetxt("{}-{}.tsv".format(out, "abm-nstdstd"), np.vstack([t, avg.T-2*std.T]).T, delimiter="\t")
 
+    cfg = mkcfg()
     cfg["meta"]["model"] = SEIRCTODEMem
     t, traj, _, _ = runModel(**cfg["meta"], **cfg)
-    np.savetxt(out.format("ode"), np.vstack([t, traj.T]).T, delimiter="\t")
+    np.savetxt("{}-ode.tsv".format(out), np.vstack([t, traj.T]).T, delimiter="\t")
 
 def figure_abm1():
     cfg = basic_config()
@@ -176,6 +177,7 @@ def figure_abm1():
 def figure_abm2():
     def mkcfg():
         cfg = basic_config()
+        cfg["meta"]["model"] = SEIRCTABM
         cfg["initial"]["N"] = 1000
         cfg["initial"]["IU"] = 10
         cfg["parameters"]["theta"] = 0.0001
@@ -183,11 +185,13 @@ def figure_abm2():
         cfg["parameters"]["chi"] = 1.0
         return cfg
 
-    compare_abm(mkcfg, "ABM 2", "lowtheta-{}-1.tsv")
+    prun_abm(mkcfg, "lowtheta")
+    compare_abm(mkcfg, "lowtheta")
 
 def figure_abm3():
     def mkcfg():
         cfg = basic_config()
+        cfg["meta"]["model"] = SEIRCTABM
         cfg["initial"]["N"] = 1000
         cfg["initial"]["IU"] = 10
         cfg["parameters"]["theta"] = 2.0
@@ -195,13 +199,13 @@ def figure_abm3():
         cfg["parameters"]["chi"] = 2.0
         return cfg
 
-    compare_abm(mkcfg, "ABM 2", "strongtesting-{}-1.tsv")
+    prun_abm(mkcfg, "strongtesting")
+    compare_abm(mkcfg, "strongtesting")
 
 if __name__ == '__main__':
     figure_testing()
     figure_c_testing()
     figure_tracing()
     figure_testing_tracing()
-    compare_abm(figure_abm1, "compare")
     figure_abm2()
     figure_abm3()

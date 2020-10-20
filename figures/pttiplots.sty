@@ -1,0 +1,331 @@
+\ProvidesPackage{pttiplots}
+\RequirePackage{pgfplots}
+\usepgfplotslibrary{fillbetween}
+
+\newcommand{\plotTestingEI}{%
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=\textwidth, height=0.5\textwidth,
+      xmin=0, xmax=300, ymin=0, ymax=21000000,
+      ylabel={$E(t)+I(t)$},
+      xticklabels=\none,
+      cycle list name=exotic, no markers,
+      legend style={at={(0.5,1.1)}, anchor=south, legend columns=6},
+      ]
+      \addplot+ table[x index=0, y index=1] {testing-theta.tsv};\addlegendentry{$\theta = 0.00$}
+      \addplot+ table[x index=0, y index=2] {testing-theta.tsv};\addlegendentry{$\theta = 0.05$}
+      \addplot+ table[x index=0, y index=3] {testing-theta.tsv};\addlegendentry{$\theta = 0.10$}
+      \addplot+ table[x index=0, y index=4] {testing-theta.tsv};\addlegendentry{$\theta = 0.15$}
+      \addplot+ table[x index=0, y index=5] {testing-theta.tsv};\addlegendentry{$\theta = 0.20$}
+      \addplot+ table[x index=0, y index=6] {testing-theta.tsv};\addlegendentry{$\theta = 0.25$}
+      \addplot+ table[x index=0, y index=7] {testing-theta.tsv};\addlegendentry{$\theta = 0.30$}
+      \addplot+ table[x index=0, y index=8] {testing-theta.tsv};\addlegendentry{$\theta = 0.35$}
+      \addplot+ table[x index=0, y index=9] {testing-theta.tsv};\addlegendentry{$\theta = 0.40$}
+      \addplot+ table[x index=0, y index=10] {testing-theta.tsv};\addlegendentry{$\theta = 0.45$}
+      \addplot+ table[x index=0, y index=11] {testing-theta.tsv};\addlegendentry{$\theta = 0.50$}
+      \addplot+ table[x index=0, y index=12] {testing-theta.tsv};\addlegendentry{$\theta = 0.55$}
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plotTestingR}{%
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=\textwidth, height=0.4\textwidth,
+      xmin=0, xmax=300, ymin=0, ymax=3,
+      xlabel={$t$}, ylabel={$R(t)$},
+      cycle list name=exotic, no markers,
+      ]
+      \addplot+ table[x index=0, y index=1] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=2] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=3] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=4] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=5] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=6] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=7] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=8] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=9] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=10] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=11] {testing-r.tsv};
+      \addplot+ table[x index=0, y index=12] {testing-r.tsv};
+      \addplot[red,thick] coordinates {(0,1) (300,1)};
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plotTestingCTheta}{
+  \begin{tikzpicture}
+    \begin{axis}[
+      xlabel={$c$ -- daily contact rate}, ylabel={$\theta^{-1}$ -- test interval},
+      ytick={0, 0.07143, 0.1429, 0.2857, 0.4, 0.5},
+      xtick align=outside,
+      ytick align=outside,
+      axis y line*=left,
+      yticklabels={$\infty$, $14$, $7$, $3\frac{1}{2}$, $2\frac{1}{2}$, $2$},
+      view={0}{90},no markers,colorbar=true,colormap/hot,
+      colorbar style={title={$R(30)$}},
+      ]
+      \addplot3+[surf,shader=flat] table[x index=1, y index=0, z index=2] {c-testing.tsv};
+      \addplot[red] coordinates {(4.33,0) (20,0.5171)};
+    \end{axis}
+  \end{tikzpicture}
+  
+}
+
+\newcommand{\plotTestingTracing}{
+  \begin{tikzpicture}
+    \begin{axis}[
+      ylabel={$\theta^{-1}$ -- test interval},
+      xlabel={$\eta$ -- tracing success rate},
+      ytick={0, 0.07143, 0.1429, 0.2857, 0.4, 0.5},
+      xtick align=outside,
+      ytick align=outside,
+      axis y line*=left,
+      yticklabels={$\infty$, $14$, $7$, $3\frac{1}{2}$, $2\frac{1}{2}$, $2$},
+      view={0}{90},no markers,colorbar=true,colormap/hot,
+      colorbar style={title={$R(30)$}},
+      ]
+      \addplot3+[surf,shader=flat] table[x index=1, y index=0, z index=2] {testing-tracing.tsv};
+%      \addplot[red] coordinates {(4.33,0) (19.48,0.5)};
+    \end{axis}
+  \end{tikzpicture}
+}
+  
+\newcommand{\plotTracingEI}{%
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=\textwidth, height=0.5\textwidth,
+      xmin=0, xmax=300, ymin=0, ymax=11000000,
+      ylabel={$E(t)+I(t)$},
+      xticklabels=\none,
+      cycle list name=exotic, no markers,
+      legend style={at={(0.5,1.1)}, anchor=south, legend columns=6},
+      ]
+      \addplot+ table[x index=0, y index=1] {tracing-theta.tsv};\addlegendentry{$\eta = 0.00$}
+      \addplot+ table[x index=0, y index=2] {tracing-theta.tsv};\addlegendentry{$\eta = 0.10$}
+      \addplot+ table[x index=0, y index=3] {tracing-theta.tsv};\addlegendentry{$\eta = 0.20$}
+      \addplot+ table[x index=0, y index=4] {tracing-theta.tsv};\addlegendentry{$\eta = 0.30$}
+      \addplot+ table[x index=0, y index=5] {tracing-theta.tsv};\addlegendentry{$\eta = 0.40$}
+      \addplot+ table[x index=0, y index=6] {tracing-theta.tsv};\addlegendentry{$\eta = 0.50$}
+      \addplot+ table[x index=0, y index=7] {tracing-theta.tsv};\addlegendentry{$\eta = 0.60$}
+      \addplot+ table[x index=0, y index=8] {tracing-theta.tsv};\addlegendentry{$\eta = 0.70$}
+      \addplot+ table[x index=0, y index=9] {tracing-theta.tsv};\addlegendentry{$\eta = 0.80$}
+      \addplot+ table[x index=0, y index=10] {tracing-theta.tsv};\addlegendentry{$\eta = 0.90$}
+      \addplot+ table[x index=0, y index=11] {tracing-theta.tsv};\addlegendentry{$\eta = 1.00$}
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plotTracingR}{%
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=\textwidth, height=0.4\textwidth,
+      xmin=0, xmax=300, ymin=0, ymax=3,
+      xlabel={$t$}, ylabel={$R(t)$},
+      cycle list name=exotic, no markers,
+      ]
+      \addplot+ table[x index=0, y index=1] {tracing-r.tsv};
+      \addplot+ table[x index=0, y index=2] {tracing-r.tsv};
+      \addplot+ table[x index=0, y index=3] {tracing-r.tsv};
+      \addplot+ table[x index=0, y index=4] {tracing-r.tsv};
+      \addplot+ table[x index=0, y index=5] {tracing-r.tsv};
+      \addplot+ table[x index=0, y index=6] {tracing-r.tsv};
+      \addplot+ table[x index=0, y index=7] {tracing-r.tsv};
+      \addplot+ table[x index=0, y index=8] {tracing-r.tsv};
+      \addplot+ table[x index=0, y index=9] {tracing-r.tsv};
+      \addplot+ table[x index=0, y index=10] {tracing-r.tsv};
+      \addplot+ table[x index=0, y index=11] {tracing-r.tsv};
+      \addplot[red,thick] coordinates {(0,1) (300,1)};
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plotABM}[3]{%
+  \begin{tikzpicture}
+    \begin{axis}[
+      cycle list name=exotic, no markers,
+      xmin=0, ymin=0, xmax=180, ylabel={#3},
+      ]
+      \addplot+[forget plot, orange, very thick]      table[x index=0, y index=#1] {#2-ode.tsv};
+      \addplot+[forget plot, teal, name path=avg]     table[x index=0, y index=#1] {#2-abm-avg.tsv};
+      \addplot+[forget plot, teal, name path=std]     table[x index=0, y index=#1] {#2-abm-std.tsv};
+      \addplot+[forget plot, teal, name path=nstd]    table[x index=0, y index=#1] {#2-abm-nstd.tsv};
+      \addplot+[forget plot, teal, name path=stdstd]  table[x index=0, y index=#1] {#2-abm-stdstd.tsv};
+      \addplot+[forget plot, teal, name path=nstdstd] table[x index=0, y index=#1] {#2-abm-nstdstd.tsv};
+      \addplot[forget plot, teal!20, draw=none]       fill between[of=std and avg];
+      \addplot[forget plot, teal!20, draw=none]       fill between[of=nstd and avg];
+      \addplot[forget plot, teal!10, draw=none]       fill between[of=std and stdstd];
+      \addplot[forget plot, teal!10, draw=none]       fill between[of=nstd and nstdstd];
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plotLowTheta}[1]{%
+  \begin{tikzpicture}
+    \begin{axis}[
+      cycle list name=exotic, no markers,
+      xmin=0, ymin=0, xmax=180, ylabel={Susceptible and unconfined}
+      ]
+      \addplot+[red, very thick]   table[x index=0, y index=9] {#1-0.tsv};\addlegendentry{\small Susceptible and traceable}
+      \addplot+[orange, very thick] table[x index=0, y index=1] {#1-0.tsv};
+      \addplot+[teal, name path=avg]     table[x index=0, y index=1] {#1-abm-avg.tsv};
+      \addplot+[forget plot, teal, name path=std]     table[x index=0, y index=1] {#1-abm-std.tsv};
+      \addplot+[forget plot, teal, name path=nstd]    table[x index=0, y index=1] {#1-abm-nstd.tsv};
+      \addplot+[forget plot, teal, name path=stdstd]  table[x index=0, y index=1] {#1-abm-stdstd.tsv};
+      \addplot+[forget plot, teal, name path=nstdstd] table[x index=0, y index=1] {#1-abm-nstdstd.tsv};
+      \addplot[forget plot, teal!20, draw=none]       fill between[of=std and avg];
+      \addplot[forget plot, teal!20, draw=none]       fill between[of=nstd and avg];
+      \addplot[forget plot, teal!10, draw=none]       fill between[of=std and stdstd];
+      \addplot[forget plot, teal!10, draw=none]       fill between[of=nstd and nstdstd];
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plotSuperCT}[1]{%
+  \begin{tikzpicture}
+    \begin{axis}[
+      cycle list name=exotic, no markers,
+      xmin=0, ymin=0, xmax=60,
+      ]
+      \addplot+[orange, very thick] table[x index=0, y index=1] {#1-0.tsv};%\addlegendentry{\small Susceptible and unconfined}
+      \addplot+[red, very thick]   table[x index=0, y index=9] {#1-0.tsv};%\addlegendentry{\small Susceptible and traceable}
+      \addplot+[teal, name path=avg]     table[x index=0, y index=1] {#1-abm-avg.tsv};
+      \addplot+[forget plot, teal, name path=std]     table[x index=0, y index=1] {#1-abm-std.tsv};
+      \addplot+[forget plot, teal, name path=nstd]    table[x index=0, y index=1] {#1-abm-nstd.tsv};
+      \addplot+[forget plot, teal, name path=stdstd]  table[x index=0, y index=1] {#1-abm-stdstd.tsv};
+      \addplot+[forget plot, teal, name path=nstdstd] table[x index=0, y index=1] {#1-abm-nstdstd.tsv};
+      \addplot[forget plot, teal!20, draw=none]       fill between[of=std and avg];
+      \addplot[forget plot, teal!20, draw=none]       fill between[of=nstd and avg];
+      \addplot[forget plot, teal!10, draw=none]       fill between[of=std and stdstd];
+      \addplot[forget plot, teal!10, draw=none]       fill between[of=nstd and nstdstd];
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plotrel}{
+  \begin{tikzpicture}
+    \begin{axis}[
+      xmin=10000, xmax=40000, ymin=0, ymax=1,
+      xlabel={$N$}, ylabel={$\textrm{err}_\textrm{rel}$},
+      cycle list name=exotic, no markers,
+      legend style={at={(0.5,0.8)}, anchor=south, legend columns=4},
+      ]
+      \addplot+ table[x index=0, y index=1] {abm1-relerrors.tsv};\addlegendentry{$S_U$}
+      \addplot+ table[x index=0, y index=2] {abm1-relerrors.tsv};\addlegendentry{$S_D$}
+      \addplot+ table[x index=0, y index=3] {abm1-relerrors.tsv};\addlegendentry{$E_U$}
+      \addplot+ table[x index=0, y index=4] {abm1-relerrors.tsv};\addlegendentry{$E_D$}
+      \addplot+ table[x index=0, y index=5] {abm1-relerrors.tsv};\addlegendentry{$I_U$}
+      \addplot+ table[x index=0, y index=6] {abm1-relerrors.tsv};\addlegendentry{$I_D$}
+      \addplot+ table[x index=0, y index=7] {abm1-relerrors.tsv};\addlegendentry{$R_U$}
+      \addplot+ table[x index=0, y index=8] {abm1-relerrors.tsv};\addlegendentry{$R_D$}
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plotdev}{
+  \begin{tikzpicture}
+    \begin{axis}[
+      xmin=10000, xmax=40000, ymin=0, ymax=4,
+      xlabel={$N$}, ylabel={$\textrm{err}_\sigma$},
+      cycle list name=exotic, no markers,
+      legend style={at={(0.5,0.8)}, anchor=south, legend columns=4},
+      ]
+      \addplot+ table[x index=0, y index=1] {abm1-stderrors.tsv};\addlegendentry{$S_U$}
+      \addplot+ table[x index=0, y index=2] {abm1-stderrors.tsv};\addlegendentry{$S_D$}
+      \addplot+ table[x index=0, y index=3] {abm1-stderrors.tsv};\addlegendentry{$E_U$}
+      \addplot+ table[x index=0, y index=4] {abm1-stderrors.tsv};\addlegendentry{$E_D$}
+      \addplot+ table[x index=0, y index=5] {abm1-stderrors.tsv};\addlegendentry{$I_U$}
+      \addplot+ table[x index=0, y index=6] {abm1-stderrors.tsv};\addlegendentry{$I_D$}
+      \addplot+ table[x index=0, y index=7] {abm1-stderrors.tsv};\addlegendentry{$R_U$}
+      \addplot+ table[x index=0, y index=8] {abm1-stderrors.tsv};\addlegendentry{$R_D$}
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plottsrel}[1]{
+  \begin{tikzpicture}
+    \begin{axis}[
+      xmin=30, xmax=600,
+      xlabel={$t$}, ylabel={$\textrm{err}_\textrm{rel}$ ($N = #1k$)},
+      cycle list name=exotic, no markers,
+      legend style={at={(0.5,1.0)}, anchor=south, legend columns=4},
+      ]
+      \addplot+ table[x index=0, y index=1] {abm1-ode-#1k-0-relerr.tsv};\addlegendentry{$S_U$}
+      \addplot+ table[x index=0, y index=2] {abm1-ode-#1k-0-relerr.tsv};\addlegendentry{$S_D$}
+      \addplot+ table[x index=0, y index=3] {abm1-ode-#1k-0-relerr.tsv};\addlegendentry{$E_U$}
+      \addplot+ table[x index=0, y index=4] {abm1-ode-#1k-0-relerr.tsv};\addlegendentry{$E_D$}
+      \addplot+ table[x index=0, y index=5] {abm1-ode-#1k-0-relerr.tsv};\addlegendentry{$I_U$}
+      \addplot+ table[x index=0, y index=6] {abm1-ode-#1k-0-relerr.tsv};\addlegendentry{$I_D$}
+      \addplot+ table[x index=0, y index=7] {abm1-ode-#1k-0-relerr.tsv};\addlegendentry{$R_U$}
+      \addplot+ table[x index=0, y index=8] {abm1-ode-#1k-0-relerr.tsv};\addlegendentry{$R_D$}
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plottsdev}[1]{
+  \begin{tikzpicture}
+    \begin{axis}[
+      xmin=30, xmax=600,
+      xlabel={$t$}, ylabel={$\textrm{err}_\sigma$ ($N = #1k$)},
+      cycle list name=exotic, no markers,
+      legend style={at={(0.5,1.0)}, anchor=south, legend columns=4},
+      ]
+      \addplot+ table[x index=0, y index=1] {abm1-ode-#1k-0-stderr.tsv};\addlegendentry{$S_U$}
+      \addplot+ table[x index=0, y index=2] {abm1-ode-#1k-0-stderr.tsv};\addlegendentry{$S_D$}
+      \addplot+ table[x index=0, y index=3] {abm1-ode-#1k-0-stderr.tsv};\addlegendentry{$E_U$}
+      \addplot+ table[x index=0, y index=4] {abm1-ode-#1k-0-stderr.tsv};\addlegendentry{$E_D$}
+      \addplot+ table[x index=0, y index=5] {abm1-ode-#1k-0-stderr.tsv};\addlegendentry{$I_U$}
+      \addplot+ table[x index=0, y index=6] {abm1-ode-#1k-0-stderr.tsv};\addlegendentry{$I_D$}
+      \addplot+ table[x index=0, y index=7] {abm1-ode-#1k-0-stderr.tsv};\addlegendentry{$R_U$}
+      \addplot+ table[x index=0, y index=8] {abm1-ode-#1k-0-stderr.tsv};\addlegendentry{$R_D$}
+    \end{axis}
+  \end{tikzpicture}
+}
+
+
+\newcommand{\plotDiscussionEI}{%
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=\textwidth, height=0.5\textwidth,
+      xmin=0, xmax=360, ymin=0, ymax=100000,
+      ylabel={\small Infectious individuals},
+      xtick={0,30,60,90,120,150,180,210,240,270,300,330,360},
+      xticklabels={},
+      cycle list name=exotic, no markers,
+      ]
+      \addplot+ table[x index=0, y index=5] {ptti-discussion-0.tsv};\addlegendentry{Unconfined};
+      \addplot+ table[x index=0, y index=6] {ptti-discussion-0.tsv};\addlegendentry{Isolated};
+      \addplot[dashed] coordinates {(90,0) (90,100000)};
+      \addplot[dashed] coordinates {(150,0) (150,100000)};
+      \addplot[dashed] coordinates {(210,0) (210,100000)};
+      \node (lockdown) at (axis cs:35,30000) { Lockdown };
+      \path (lockdown) edge[->,shorten >=2mm,=>stealth mode] (axis cs:90,0);
+      \node (tt) at (axis cs:120,40000) { \parbox{1.5cm}{\centering Testing \& Tracing} };
+      \path (tt) edge[->,shorten >=2mm,=>stealth mode] (axis cs:150,0);
+      \node (relax) at (axis cs:240,30000) { \parbox{2cm}{\centering Light\\Distancing} };
+      \path (relax) edge[->,shorten >=2mm,=>stealth mode] (axis cs:210,0);
+    \end{axis}
+  \end{tikzpicture}
+}
+
+\newcommand{\plotDiscussionR}{%
+  \begin{tikzpicture}
+    \begin{axis}[
+      width=\textwidth, height=0.35\textwidth,
+      xmin=0, xmax=360, ymin=0, ymax=3.5,
+      ylabel={\small Reproduction number},
+      xtick={0,30,60,90,120,150,180,210,240,270,300,330,360},
+      cycle list name=exotic, no markers,
+      ]
+      \addplot+ table[x index=0, y index=13] {ptti-discussion-0.tsv};
+      \addplot[red,dashed] coordinates {(0,1) (360,1)};
+      \addplot[dashed] coordinates {(90,0) (90,3.5)};
+      \addplot[dashed] coordinates {(150,0) (150,3.5)};
+      \addplot[dashed] coordinates {(210,0) (210,3.5)};
+    \end{axis}
+  \end{tikzpicture}
+}
+
+%%% Local Variables:
+%%% TeX-master: "plots"
+%%% End:
