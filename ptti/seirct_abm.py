@@ -235,18 +235,24 @@ def seirxud_abm_det(tmax=100,
                     alpha=0.2,
                     gamma=0.1,
                     theta=0.0,
+                    theta0=-1,
                     kappa=0.05,
                     eta=0,
                     chi=0,
                     return_pcis=False):
+    
+    theta0 = max(theta, theta0) # Can't be smaller than theta
 
     # Times
     tEI = 1.0/alpha if alpha > 0 else np.inf
     tIR = 1.0/gamma if gamma > 0 else np.inf
-    tUD = 1.0/theta if theta > 0 else np.inf
+    tUD = 1.0/theta0 if theta0 > 0 else np.inf
     tCO = 1.0/c if c > 0 else np.inf
     tDU = 1.0/kappa if kappa > 0 else np.inf
     tCT = 1.0/chi if chi > 0 else np.inf
+
+    # Probability of testing
+    ptest = theta/(theta0 if theta0 > 0 else 1)
 
     # Generate states
     states = np.zeros(N, dtype=np.int8)
@@ -266,7 +272,8 @@ def seirxud_abm_det(tmax=100,
         # How long have they had it?
         t0 = min(tIR, tUD)*np.random.random()
         timeM[i, TIME_I_STATE] = tIR-t0
-        timeM[i, TIME_I_TEST] = tUD-t0
+        if np.random.random() < ptest:
+            timeM[i, TIME_I_TEST] = tUD-t0
         timeM[i, TIME_I_CONTACT] = tCO-np.fmod(t0, tCO)
 
     times = []
@@ -317,7 +324,8 @@ def seirxud_abm_det(tmax=100,
                 # E becomes I
                 states[ti] = STATE_I
                 timeM[ti, TIME_I_STATE] = tIR
-                timeM[ti, TIME_I_TEST] = tUD
+                if np.random.random() < ptest:
+                    timeM[ti, TIME_I_TEST] = tUD
                 timeM[ti, TIME_I_CONTACT] = tCO
             elif states[ti] == STATE_I:
                 states[ti] = STATE_R
@@ -419,7 +427,8 @@ class SEIRCTABMDet(Model):
                                             N=N, I0=I0,
                                             c=self.c, beta=self.beta,
                                             alpha=self.alpha, gamma=self.gamma,
-                                            theta=self.theta, kappa=self.kappa,
+                                            theta=self.theta, theta0=self.theta0,
+                                            kappa=self.kappa,
                                             eta=self.eta, chi=self.chi)
 
         traj = np.array(traj).T

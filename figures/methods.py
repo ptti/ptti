@@ -208,7 +208,8 @@ def figure_abm4():
         cfg["meta"]["model"] = SEIRCTABMDet
         cfg["initial"]["N"] = 1000
         cfg["initial"]["IU"] = 10
-        cfg["parameters"]["theta"] = 0.1428
+        cfg["parameters"]["theta"] = 0.1429
+        cfg["parameters"]["theta0"] = 0.1429*2
         cfg["parameters"]["eta"] = 0.5
         cfg["parameters"]["chi"] = 0.5
         return cfg

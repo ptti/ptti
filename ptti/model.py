@@ -24,6 +24,9 @@ gamma:
 theta:
   descr:   testing rate
   default: 0.0714
+theta0:
+  descr:   base testing rate
+  default: 0.0714
 kappa:
   descr:   isolation exit rate
   default: 0.0714

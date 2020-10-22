@@ -144,3 +144,11 @@ benchmarks/*-out-*
 
 # Figures
 figures/*.tsv
+figures/*.t
+figures/*.traj
+figures/*.pdf
+figures/*.md5
+figures/*.dep
+figures/*.dpth
+figures/*.aux
+figures/*.auxlock
