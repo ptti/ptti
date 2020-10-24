@@ -206,8 +206,10 @@ def figure_abm4():
     def mkcfg():
         cfg = basic_config()
         cfg["meta"]["model"] = SEIRCTABMDet
-        cfg["initial"]["N"] = 1000
-        cfg["initial"]["IU"] = 10
+        cfg["meta"]["tmax"] = 600
+        cfg["meta"]["steps"] = 600
+        cfg["initial"]["N"] = 10000
+        cfg["initial"]["IU"] = 100
         cfg["parameters"]["theta"] = 0.1429
         cfg["parameters"]["theta0"] = 0.1429*2
         cfg["parameters"]["eta"] = 0.5
@@ -217,11 +219,29 @@ def figure_abm4():
     prun_abm(mkcfg, "deterministic")
     compare_abm(mkcfg, "deterministic")
 
+def figure_abm5():
+    def mkcfg():
+        cfg = basic_config()
+        cfg["meta"]["model"] = SEIRCTABMDet
+        cfg["meta"]["tmax"] = 120
+        cfg["meta"]["steps"] = 120
+        cfg["initial"]["N"] = 10000
+        cfg["initial"]["IU"] = 100
+        cfg["parameters"]["theta"] = 0.4
+        cfg["parameters"]["theta0"] = 0.4
+        cfg["parameters"]["eta"] = 0.5
+        cfg["parameters"]["chi"] = 0.5
+        return cfg
+
+    prun_abm(mkcfg, "deterministic-strong")
+    compare_abm(mkcfg, "deterministic-strong")
+
 if __name__ == '__main__':
-    figure_testing()
-    figure_c_testing()
-    figure_tracing()
-    figure_testing_tracing()
-    figure_abm2()
-    figure_abm3()
-    figure_abm4()
+    # figure_testing()
+    # figure_c_testing()
+    # figure_tracing()
+    # figure_testing_tracing()
+    # figure_abm2()
+    # figure_abm3()
+    #figure_abm4()
+    figure_abm5()
