@@ -6,13 +6,19 @@
 \tikzexternalize
 \begin{document}
 
+\tikzsetnextfilename{plotTestingEI}
 \plotTestingEI
+\tikzsetnextfilename{plotTestingR}
 \plotTestingR
+\tikzsetnextfilename{plotTracingEI}
 \plotTracingEI
+\tikzsetnextfilename{plotTracingR}
 \plotTracingR
 
+\tikzsetnextfilename{plotTestingC}
 \plotTestingCTheta
 
+\tikzsetnextfilename{plotTestingTracing}
 \plotTestingTracing
 
 % \noindent\resizebox{\textwidth}{!}{
@@ -64,24 +70,40 @@
 % }
 
 \clearpage
-\plotABM{1}{lowtheta}{Susceptible and unconfined}{teal}
-\plotABM{3}{lowtheta}{Exposed and unconfined}{teal}
-\plotABM{5}{lowtheta}{Infectious and unconfined}{teal}
-\plotABM{7}{lowtheta}{Removed and unconfined}{teal}
-\plotABM{2}{lowtheta}{Susceptible and isolated}{teal}
-\plotABM{4}{lowtheta}{Exposed and isolated}{teal}
-\plotABM{6}{lowtheta}{Infectious and isolated}{teal}
-\plotABM{8}{lowtheta}{Removed and isolated}{teal}
+\tikzsetnextfilename{plotABMSU}
+\plotABM{1}{normalabm}{Susceptible and unconfined}{teal}
+\tikzsetnextfilename{plotABMEU}
+\plotABM{3}{normalabm}{Exposed and unconfined}{teal}
+\tikzsetnextfilename{plotABMIU}
+\plotABM{5}{normalabm}{Infectious and unconfined}{teal}
+\tikzsetnextfilename{plotABMRU}
+\plotABM{7}{normalabm}{Removed and unconfined}{teal}
+\tikzsetnextfilename{plotABMSD}
+\plotABM{2}{normalabm}{Susceptible and isolated}{teal}
+\tikzsetnextfilename{plotABMED}
+\plotABM{4}{normalabm}{Exposed and isolated}{teal}
+\tikzsetnextfilename{plotABMID}
+\plotABM{6}{normalabm}{Infectious and isolated}{teal}
+\tikzsetnextfilename{plotABMRD}
+\plotABM{8}{normalabm}{Removed and isolated}{teal}
 
 \clearpage
-\plotABM{1}{strongtesting}{Susceptible and unconfined}{teal}
-\plotABM{3}{strongtesting}{Exposed and unconfined}{teal}
-\plotABM{5}{strongtesting}{Infectious and unconfined}{teal}
-\plotABM{7}{strongtesting}{Removed and unconfined}{teal}
-\plotABM{2}{strongtesting}{Susceptible and isolated}{teal}
-\plotABM{4}{strongtesting}{Exposed and isolated}{teal}
-\plotABM{6}{strongtesting}{Infectious and isolated}{teal}
-\plotABM{8}{strongtesting}{Removed and isolated}{teal}
+\tikzsetnextfilename{plotPathSU}
+\plotABM{1}{lowtheta}{Susceptible and unconfined}{teal}
+\tikzsetnextfilename{plotPathEU}
+\plotABM{3}{lowtheta}{Exposed and unconfined}{teal}
+\tikzsetnextfilename{plotPathIU}
+\plotABM{5}{lowtheta}{Infectious and unconfined}{teal}
+\tikzsetnextfilename{plotPathRU}
+\plotABM{7}{lowtheta}{Removed and unconfined}{teal}
+\tikzsetnextfilename{plotPathSD}
+\plotABM{2}{lowtheta}{Susceptible and isolated}{teal}
+\tikzsetnextfilename{plotPathED}
+\plotABM{4}{lowtheta}{Exposed and isolated}{teal}
+\tikzsetnextfilename{plotPathID}
+\plotABM{6}{lowtheta}{Infectious and isolated}{teal}
+\tikzsetnextfilename{plotPathRD}
+\plotABM{8}{lowtheta}{Removed and isolated}{teal}
 
 \clearpage
 \tikzsetnextfilename{plotDetSU}

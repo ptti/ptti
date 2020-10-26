@@ -7,3 +7,6 @@ clean:
 	rm -f plots-figure*
 	rm -f *.aux *.auxlock *.log
 	rm -f *.pdf
+	rm -f *.dep
+	rm -f *.dpth
+	rm -f *.md5
