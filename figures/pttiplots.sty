@@ -186,8 +186,8 @@
       cycle list name=exotic, no markers,
       xmin=0, ymin=0, xmax=180, ylabel={Susceptible and unconfined}
       ]
-      \addplot+[red, very thick]   table[x index=0, y index=9] {#1-0.tsv};\addlegendentry{\small Susceptible and traceable}
-      \addplot+[orange, very thick] table[x index=0, y index=1] {#1-0.tsv};
+      \addplot+[red, very thick]   table[x index=0, y index=9] {#1-ode.tsv};\addlegendentry{\small Susceptible and traceable}
+      \addplot+[orange, very thick] table[x index=0, y index=1] {#1-ode.tsv};
       \addplot+[teal, name path=avg]     table[x index=0, y index=1] {#1-abm-avg.tsv};
       \addplot+[forget plot, teal, name path=std]     table[x index=0, y index=1] {#1-abm-std.tsv};
       \addplot+[forget plot, teal, name path=nstd]    table[x index=0, y index=1] {#1-abm-nstd.tsv};
@@ -207,8 +207,8 @@
       cycle list name=exotic, no markers,
       xmin=0, ymin=0, xmax=60,
       ]
-      \addplot+[orange, very thick] table[x index=0, y index=1] {#1-0.tsv};%\addlegendentry{\small Susceptible and unconfined}
-      \addplot+[red, very thick]   table[x index=0, y index=9] {#1-0.tsv};%\addlegendentry{\small Susceptible and traceable}
+      \addplot+[orange, very thick] table[x index=0, y index=1] {#1-ode.tsv};%\addlegendentry{\small Susceptible and unconfined}
+      \addplot+[red, very thick]   table[x index=0, y index=9] {#1-ode.tsv};%\addlegendentry{\small Susceptible and traceable}
       \addplot+[teal, name path=avg]     table[x index=0, y index=1] {#1-abm-avg.tsv};
       \addplot+[forget plot, teal, name path=std]     table[x index=0, y index=1] {#1-abm-std.tsv};
       \addplot+[forget plot, teal, name path=nstd]    table[x index=0, y index=1] {#1-abm-nstd.tsv};
