@@ -33,7 +33,7 @@
     \begin{axis}[
       width=\textwidth, height=0.4\textwidth,
       xmin=0, xmax=300, ymin=0, ymax=3,
-      xlabel={$t$}, ylabel={$Re(t)$},
+      xlabel={$t$}, ylabel={$R_e(t)$},
       cycle list name=exotic, no markers,
       ]
       \addplot+ table[x index=0, y index=1] {testing-r.tsv};
@@ -63,7 +63,7 @@
       axis y line*=left,
       yticklabels={$\infty$, $14$, $7$, $3\frac{1}{2}$, $2\frac{1}{2}$, $2$},
       view={0}{90},no markers,colorbar=true,colormap/hot,
-      colorbar style={title={$R(30)$}},
+      colorbar style={title={$R_e(30)$}},
       ]
       \addplot3+[surf,shader=flat] table[x index=1, y index=0, z index=2] {c-testing.tsv};
       \addplot[red] coordinates {(4.33,0) (20,0.5171)};
@@ -83,7 +83,7 @@
       axis y line*=left,
       yticklabels={$\infty$, $14$, $7$, $3\frac{1}{2}$, $2\frac{1}{2}$, $2$},
       view={0}{90},no markers,colorbar=true,colormap/hot,
-      colorbar style={title={$R(30)$}},
+      colorbar style={title={$R_e(30)$}},
       ]
       \addplot3+[surf,shader=flat] table[x index=1, y index=0, z index=2] {testing-tracing.tsv};
 %      \addplot[red] coordinates {(4.33,0) (19.48,0.5)};
@@ -121,7 +121,7 @@
     \begin{axis}[
       width=\textwidth, height=0.4\textwidth,
       xmin=0, xmax=300, ymin=0, ymax=3,
-      xlabel={$t$}, ylabel={$Re(t)$},
+      xlabel={$t$}, ylabel={$R_e(t)$},
       cycle list name=exotic, no markers,
       ]
       \addplot+ table[x index=0, y index=1] {tracing-r.tsv};
