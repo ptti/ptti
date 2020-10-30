@@ -458,8 +458,10 @@ else:
     st.write("Total Tracer Budget: " + f"{round_sigfigs(econ['Tracing']['Tracing_Total_Costs']/1000000000,2):,}" + " billion GBP")
     st.write("Maximum Tracers Needed: " + f"{round_sigfigs(econ['Tracing']['Max_Tracers']/1000,2,True)}" + " thousand")
 st.write("Total Testing Budget: " + f"{round_sigfigs(econ['Testing']['Testing_Total_Costs']/1000000000,3) :,}" + " billion GBP")
-if econ['Testing']['Max_Laboratories']*10*2*9*2*96 > 1000000:
-    st.write("Maximum Daily Tests: " + f"{int(round_sigfigs(econ['Testing']['Max_Laboratories']*10*2*9*2*96,2,True)/1000000) :,}" + " million")
+if econ['Testing']['Max_Laboratories']*10*2*9*2*96 > 10000000:
+    st.write("Maximum Daily Tests: " + f"{round_sigfigs(econ['Testing']['Max_Laboratories']*10*2*9*2*96,2)/1000000 :,}" + " million")
+elif econ['Testing']['Max_Laboratories']*10*2*9*2*96 > 1000000:
+    st.write("Maximum Daily Tests: " + f"{round_sigfigs(econ['Testing']['Max_Laboratories']*10*2*9*2*96,3)/1000000 :,}" + " million")
 else:
     st.write(
         "Maximum Daily Tests: " + f"{int(round_sigfigs(econ['Testing']['Max_Laboratories'] * 10 * 2 * 9 * 2 * 96, 2) / 1000) :,}" + " thousand")
