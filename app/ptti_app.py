@@ -82,9 +82,10 @@ cfg_relax = os.path.join("..", "examples", "structured", "ptti-relax.yaml")
 cfg_reopen = os.path.join("..", "examples", "structured", "ptti-reopen.yaml")
 cfg_flu = os.path.join("..", "examples", "structured", "ptti-fluseason.yaml")
 # Add flu season to TTI...
-cfg_tti = os.path.join("..", "examples", "structured", "ptti-tti.yaml")
-cfg_uti = os.path.join("..", "examples", "structured", "ptti-uti.yaml")
-cfg_combo_tti = os.path.join("..", "examples", "structured", "ptti-combo-tti.yaml")
+cfg_ti = os.path.join("..", "examples", "structured", "ptti-all_ti.yaml")
+#cfg_tti = os.path.join("..", "examples", "structured", "ptti-tti.yaml")
+#cfg_uti = os.path.join("..", "examples", "structured", "ptti-uti.yaml")
+#cfg_combo_tti = os.path.join("..", "examples", "structured", "ptti-combo-tti.yaml")
 #Removed Triggered shutdowns
 cfg_drug = os.path.join("..", "examples", "structured", "ptti-drug.yaml") # To Do: 50% effective, available @Date X.
 
@@ -99,15 +100,34 @@ elif Relax == 'Full Reopening':
 end_date = st.sidebar.date_input("Shutdown End Date",
                                      value=(start+timedelta(days=258)), min_value=start+timedelta(days=90), max_value=start+timedelta(days=cfg['meta']['tmax']))
 
-TTI = st.sidebar.radio("TTI (Starting June 2020, fully in place by December 2020)", ['No TTI','Universal TTI','Targeted TTI','Combined TTI'], index=0)
+if 'Changed' not in locals():
+    Changed=False
+if 'Universal' not in locals():
+    Universal = False
+if 'Targeted' not in locals():
+    Targeted = False
+
+TTI_Values = ['No TTI','Universal TTI','Targeted TTI','Combined TTI']
+TTI = st.sidebar.radio("TTI (Starting June 2020, fully in place by December 2020)", TTI_Values, index=1*Universal+2*Targeted)
+
+intervention_list.append(cfg_ti) # Change to just use the toggles / percentages.
 if TTI == 'Targeted TTI':
-    intervention_list.append(cfg_flu)
-    intervention_list.append(cfg_tti)
+    Universal = False
+    Targeted = True
+    #intervention_list.append(cfg_flu)
+    #intervention_list.append(cfg_tti)   
 elif TTI == 'Universal TTI':
-    intervention_list.append(cfg_uti)
+    Universal = True
+    Targeted = False
+    #intervention_list.append(cfg_uti)
 elif TTI == 'Combined TTI':
-    intervention_list.append(cfg_flu)
-    intervention_list.append(cfg_combo_tti)
+    Universal = True
+    Targeted = True
+    #intervention_list.append(cfg_flu)
+    #intervention_list.append(cfg_combo_tti)
+elif TTI=='No TTI':
+    Universal = False
+    Targeted = False
 
 UTI_End = st.sidebar.radio("Universal Testing after January 2021", ["End", "Continue"], index=1)
 
@@ -124,9 +144,29 @@ TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", valu
 TTI_chi = round(-1*log(1-TTI_chi_trans),2)
 TTI_eta = st.sidebar.slider("Trace Success (eta = Percentage of contacts traced)", value=0.47, min_value=0.0,
                             max_value=1.0)
-TTI_tscale = st.sidebar.slider("Targeted testing scaling factor", value=0.8, min_value=0.0, max_value=1.0)
-TTI_uscale = st.sidebar.slider("Universal testing scaling factor", value=1.0, min_value=0.0, max_value=1.0)
+TTI_tscale = st.sidebar.slider("Targeted testing scaling factor", value=0.8*Targeted, min_value=0.0, max_value=1.0)
+TTI_uscale = st.sidebar.slider("Universal testing scaling factor", value=1.0*Universal, min_value=0.0, max_value=1.0)
 
+Changed = False
+
+if TTI_tscale != 0.8*Targeted:
+    if TTI_uscale > 0:
+        Universal = True
+    else:
+        Universal = False
+    if TTI_tscale > 0:
+        Targeted = True
+    else:
+        Targeted = False
+    Changed=True
+elif TTI_uscale != 1.0*Universal:
+    if TTI_uscale > 0:
+        Universal = True
+    else:
+        Universal = False
+    Changed=True
+else:
+    Changed=False
 #drug = st.sidebar.checkbox("Treatment Becomes Available (Not implemented)")
 #if drug == True:
 #    intervention_list.append(cfg_drug)
@@ -149,7 +189,7 @@ log_y = st.sidebar.checkbox("Log-scale y-axis")
 
 Scenario_Title = (Relax + (("with delay of " + str(round((end_date - (start+timedelta(days=258))).days/7,1)) + " Weeks\n")
                    if end_date > start+timedelta(days=258) else "") + \
-                  " with " + TTI + " and " + Mask_Compliance + " Mask EC" + \
+                  " with " + ("Custom TTI" if(Changed) else TTI) + " and " + Mask_Compliance + " Mask EC" + \
                   ("" if ((TTI_chi==0.8) & (TTI_eta==0.47)) else "\n with modified parameters"))
 
 

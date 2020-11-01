@@ -106,7 +106,6 @@ interventions:
                         #    symptomatic Covid and coldflu because they are indistinguishable)
       eta: 0.47
       testedBase: coldflu/duration*tested
-      # theta_U: uscale * 50000/N
       thetaI: symptomatic/duration*tested
       theta: testedBase + (1-testedBase)*thetaI + theta_U
 
@@ -118,7 +117,6 @@ interventions:
       tested: tscale * 0.5
       eta: 0.44  #  trace 50% of the eta contacts who will be traced in one day with teams of tracers
       testedBase: coldflu*tested/duration
-      # theta_U: uscale * 100000/N
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI + theta_U
       chi: 0.5  
@@ -130,7 +128,6 @@ interventions:
       tested: tscale * 0.37
       eta: 0.50
       testedBase: coldflu*tested/duration
-      # theta_U: uscale * 100000/N
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI + theta_U
 
@@ -141,7 +138,6 @@ interventions:
       eta: 0.50
       tested: tscale * 0.37    
       testedBase: coldflu*tested/duration
-      # theta_U: uscale * 100000/N
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI + theta_U
       
@@ -153,7 +149,6 @@ interventions:
       tested: tscale * 0.37
       eta: 0.50
       testedBase: coldflu*tested/duration
-      # theta_U: uscale * 100000/N
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI + theta_U
 
