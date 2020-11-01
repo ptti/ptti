@@ -1,0 +1,54 @@
+interventions:
+  ## Scale up testing, and contact tracing further
+  - time: 307
+    name: "Targeted Testing"
+    parameters:
+            ## Targetted Testing
+      tested: tscale * 0.81       # proportion of symptomatic who are tested (this is the same for
+                        #    symptomatic Covid and coldflu because they are indistinguishable)
+      testedBase: coldflu*tested/duration
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI
+            ## Tracing - as above  
+
+## Scale up testing, and contact tracing further
+  - time: 312
+    name: "Targeted Testing"
+    parameters:
+      c: c0 * 0.45
+      tested: tscale * 0.37
+      eta: 0.50
+      testedBase: coldflu*tested/duration
+      theta_U: uscale * 1000000/N   # 1,000,000 people tested per day in the UK
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI + theta_U
+
+## Scale up testing, and contact tracing further from December
+  - time: 342
+    name: "Targeted Testing"
+    parameters:
+            ## Targetted Testing
+      c: c0 * 0.45
+      tested: tscale * 0.60
+      eta: 0.50
+      testedBase: coldflu*tested/duration
+      theta_U: uscale * 3000000/N   # 3,000,000 people tested per day in the UK
+      thetaI: symptomatic*tested/duration
+      theta: testedBase + (1-testedBase)*thetaI + theta_U
+
+  - time: 372
+    name: "Targeted Testing"
+    parameters:
+            ## Targetted Testing
+      c: c0 * 0.45
+      tested: tscale * 0.60
+      eta: 0.50
+      testedBase: coldflu*tested/duration
+      theta_U: uscale * 10000000/N   # 10,000,000 people tested per day in the UK
+      thetaI: symptomatic*tested/duration
+
+  - time: 409
+    name: "End Universal Testing"
+    parameters:
+      theta_U: 0   # 10,000,000 people tested per day in the UK
+      theta: testedBase + (1-testedBase)*thetaI + theta_U
