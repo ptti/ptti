@@ -1,0 +1,178 @@
+initial:
+  IU: 1
+  N: 67886011
+interventions:
+- parameters:
+    beta: 0.038796995504427265
+    c: 7.699999999999999
+    ifr: 0.006171399006415477
+  time: 49.00053118446039
+- parameters:
+    beta: 0.07618016409911615
+    ifr: 0.0035811067673213754
+  time: 75.00053118446039
+- parameters:
+    beta: 0.02478693095028879
+    c: 2.8600000000000003
+    ifr: 0.007155918455721423
+  time: 89.00053118446039
+- parameters:
+    beta: 0.017136827616125137
+    ifr: 0.007586267835351979
+  time: 136.00053118446039
+- parameters:
+    beta: 0.008809652806577545
+    c: 3.74
+    chi: 0.3694259399233013
+    eta: 0.4890874288427456
+    ifr: 0.00789785984949477
+    tested: 0.17600000000000002
+  time: 152.00053118446039
+- parameters:
+    beta: 0.05208753639481015
+    c: 4.07
+    eta: 0.49072080614430913
+    ifr: 0.007467062792849921
+    tested: 0.2
+    testedBase: 0.00028571428571428574
+    theta: 0.01626722825633227
+    thetaI: 0.02
+  time: 199.00053118446039
+- parameters:
+    c: 3.41
+    chi: 0.31675243348190596
+    eta: 0.5754830158314619
+    tested: 0.4
+    testedBase: 0.0005714285714285715
+    theta: 0.04205902743247564
+    thetaI: 0.039999999999999994
+  time: 226.00053118446039
+- parameters:
+    beta: 0.04319333643960768
+    c: 4.95
+    eta: 0.5677423288815602
+    ifr: 0.00686724975012187
+    tested: 0.296
+    testedBase: 0.00042285714285714284
+    theta: 0.030692674395956424
+    thetaI: 0.029599999999999994
+  time: 242.00053118446039
+- parameters:
+    beta: 0.04886549697966741
+    c: 4.95
+    eta: 0.49359006168123454
+    ifr: 0.008348043859198268
+    tested: 0.296
+    testedBase: 0.00042285714285714284
+    theta: 0.023253603784551033
+    thetaI: 0.029599999999999994
+  time: 272.0005311844604
+- name: 15October
+  parameters:
+    beta: 0.045481971167989715
+    c: 4.95
+    eta: 0.5225110758196907
+    ifr: 0.006706189461364361
+    tested: 0.296
+    testedBase: 0.00042285714285714284
+    theta: 0.0253115169350671
+    thetaI: 0.029599999999999994
+  time: 287.0005311844604
+meta:
+  date: false
+  model: !!python/name:ptti.seirct_ode.SEIRCTODEMem ''
+  output: fitting
+  platform: macosx-10.9-x86_64
+  plots:
+  - name: susceptibles
+    timeseries:
+    - columns:
+      - SU
+      title: Unconfined
+    - columns:
+      - SD
+      title: Isolated
+    title: Susceptible Individuals
+  - name: exposed
+    timeseries:
+    - columns:
+      - EU
+      title: Unconfined
+    - columns:
+      - ED
+      title: Isolated
+    title: Exposed Individuals
+  - name: infections
+    timeseries:
+    - columns:
+      - IU
+      title: Unconfined
+    - columns:
+      - ID
+      title: Isolated
+    title: Infectious Individuals
+  - name: removed
+    timeseries:
+    - columns:
+      - RU
+      - RD
+      title: Removed / Recovered
+    title: Cumulative Infections
+  - name: reproduction
+    timeseries:
+    - columns:
+      - -1
+      title: Reproduction Number
+    title: Reproduction Number
+  - name: deaths
+    timeseries:
+    - columns:
+      - M
+      title: Deaths
+    title: Deaths
+  python: "3.7.6 (default, Jan  8 2020, 13:42:34) \n[Clang 4.0.1 (tags/RELEASE_401/final)]"
+  revision: e2e570e32b11d7faf89244fc066db1435f0bafc6
+  rseries: true
+  samples: 1
+  seed: 0
+  software: ptti 0.1
+  start: 2020/01/01
+  steps: 297
+  t0: 0.0005311844603892737
+  title: Starting values for fitting
+  tmax: !!python/object/apply:numpy.core.multiarray.scalar
+  - !!python/object/apply:numpy.dtype
+    args:
+    - i8
+    - 0
+    - 1
+    state: !!python/tuple
+    - 3
+    - <
+    - null
+    - null
+    - null
+    - -1
+    - -1
+    - 0
+  - !!binary |
+    KAEAAAAAAAA=
+parameters:
+  alpha: 0.21059265748214306
+  beta: 0.050775000792167124
+  c: 11
+  c0: 12.228034612654213
+  chi: 6.267947301471564e-05
+  coldflu: 0.011889053044919141
+  duration: 8.792942713579425
+  eta: 0.00023508583890100845
+  gamma: 0.10880779950609859
+  ifr: 0.006659731173392594
+  kappa: 0.07633647773914568
+  symptomatic: 0.9059256661272252
+  tested: 0.8
+  testedBase: 0.0
+  theta: 0.0001495267489874493
+  theta_U: 0.00012405231704120778
+  tscale: 0.8592996043220555
+  uscale: 1.051803889697176
