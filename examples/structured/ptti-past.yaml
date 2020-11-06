@@ -117,8 +117,8 @@ interventions:
         ifr: 0.007240284849772509
         tested: 0.2975469697110704
         testedBase: coldflu/duration*tested
-        theta: testedBase + (1-testedBase)*thetaI + theta_U
         thetaI: symptomatic/duration*tested
+        theta: testedBase + (1-testedBase)*thetaI + theta_U
 
   ## 31st July
   - time: 226
