@@ -118,7 +118,7 @@ interventions:
         testedBase: coldflu/duration*tested
         theta: testedBase + (1-testedBase)*thetaI + theta_U
         thetaI: symptomatic/duration*tested
-      c: c0 * 0.37 # CoMix report week 15 (1-8th July): UK contacts per day is 4.05
+
   ## 31st July
   - time: 226
     name: "August"
@@ -130,6 +130,7 @@ interventions:
       tested: tscale_fixed * 0.5
       eta: 0.44  #  trace 50% of the eta contacts who will be traced in one day with teams of tracers
       chi: 0.5  
+
   - time: 242
     name: "September"
     parameters:
