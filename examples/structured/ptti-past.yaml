@@ -56,6 +56,7 @@ parameters:
 
   ## scaling for targeted and universal testing
   tscale: 0.8
+  tscale_fixed:0.8 # This can't be changed in the interface. 
   uscale: 1.0
 
   ## default testing rate (proportion of symptomatics)
@@ -70,63 +71,73 @@ parameters:
 ## Exogenous interventions. The time is given in
 ## simulation days.
 interventions:
-  ## After three months, start of restrictions on 16th March. 
-  ## Reduce contacts by 30%.
-  - time: 89    # 16th March 2020 (assume seeding on 18th December 2019)
+  - time: 48
     name: "Past"
     parameters:
-      c: c0 * 0.7 
-  ## After one more week, Lockdown, on 23rd March.
-  ## Reduce contacts to ~3 per day (~70% reduction).
+        beta: 0.03849689271026241
+        c: 9.663279748154999
+        ifr: 0.007096894653551129
 
-  - time: 96    # 23rd March 2020 (assume seeding on 18th December 2019)
+  - time: 75
+    name: "Past"
+        beta: 0.051266109078412
+        ifr: 0.006891385143585851
+
+  - time: 89 
     name: "Past"
     parameters:
-      c: c0 * 0.26 # Lockdown, Jarvis et al 2020: "We found a 74% reduction in the average daily number of contacts
-                  # observed per participant (from 10.8 to 2.8). We round these to 11 and 3
+        beta: 0.050154594993111534
+        c: 1.8791424908692589
+        ifr: 0.00944330103384839
 
-  ## 9th June, contacts per day only slightly increased according to CoMix data:
-  - time: 174
-    name: "June - Start Initial TTI"
-    parameters: 
-      c: c0 * 0.34 # CoMix Weekly report 11 (LSHTM) shows contacts only increased from
-                  # ~3 under lockdown to 3.8 week of 5th-12th June
-      tested: tscale * 0.22       # ramp up testing to 18%
-            ## Tracing
-      chi: 0.50  #  trace 50% of the eta contacts who will be traced in one day with teams of tracers
-                #
-      eta: 0.42 # 42% of contacts for each case successfully traced by contact tracers,
+  - time: 136
+    name: "Past"
+    parameters:
+        beta: 0.03652757856247421
+        ifr: 0.0067174044475541705
+
+  - time: 152  # Start testing
+    name: "Past"
+    parameters:
+        beta: 0.02058470296591927
+        c: 2.4646968846129376
+        chi: 0.5
+        eta: 0.42
+        ifr: 0.006960151150257436
+        tested: 0.18144202213884242
 
   ## On 4th July, pubs and entertainment venues open with new 1m distancing rule
   - time: 199
     name: "Past"
     parameters:
+        beta: 0.043538528781473296
+        c: 4.718496886032501
+        eta: 0.47
+        ifr: 0.007240284849772509
+        tested: 0.2975469697110704
+        testedBase: coldflu/duration*tested
+        theta: testedBase + (1-testedBase)*thetaI + theta_U
+        thetaI: symptomatic/duration*tested
       c: c0 * 0.37 # CoMix report week 15 (1-8th July): UK contacts per day is 4.05
-      tested: tscale * 0.25       # proportion of symptomatic who are tested (this is the same for
-                        #    symptomatic Covid and coldflu because they are indistinguishable)
-      eta: 0.47
-      testedBase: coldflu/duration*tested
-      thetaI: symptomatic/duration*tested
-      theta: testedBase + (1-testedBase)*thetaI + theta_U
-
   ## 31st July
   - time: 226
     name: "August"
     parameters:
-      c: c0 * 0.31 # Week 18 report suggets 3.37 contacts per day 
-      tested: tscale * 0.5
-      eta: 0.44  #  trace 50% of the eta contacts who will be traced in one day with teams of tracers
+      c: 4.025899114317745
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI + theta_U
+      tested: tscale_fixed * 0.5
+      eta: 0.44  #  trace 50% of the eta contacts who will be traced in one day with teams of tracers
       chi: 0.5  
-
   - time: 242
     name: "September"
     parameters:
-      c: c0 * 0.45 # week 23 panel group F of the report is 3.86
-      tested: tscale * 0.37
-      eta: 0.50
+      beta: 0.04558579801863469
+      c: 5.938901554175569
+      eta: 0.5
+      ifr: 0.0059410686698366175
+      tested: 0.018339697010270523
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI + theta_U
@@ -134,24 +145,27 @@ interventions:
   - time: 272 #1st Oct
     name: "October"
     parameters:
-      c: c0 * 0.45
+      beta: 0.04284616160082297
+      c: 5.239993853538161
+      eta: 0.5
+      ifr: 0.006737751304383827
+      tested: 0.3460738219780226
       eta: 0.50
-      tested: tscale * 0.37    
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI + theta_U
-      
       
   - time: 287 #15th Oct
     name: "15October"
     parameters:
-      c: c0 * 0.45
-      tested: tscale * 0.37
+      beta: 0.04146653919561795
+      c: 4.50914892968145
+      ifr: 0.007066695480960346
+      tested: 0.362795964469514
       eta: 0.50
       testedBase: coldflu*tested/duration
       thetaI: symptomatic*tested/duration
       theta: testedBase + (1-testedBase)*thetaI + theta_U
-
 
 ## Lockdown trigger - needs to be higher than current cases to go on
   - condition: x[IU] + x[ID] - 410000
