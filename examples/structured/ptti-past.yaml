@@ -80,6 +80,7 @@ interventions:
 
   - time: 75
     name: "Past"
+    parameters:
         beta: 0.051266109078412
         ifr: 0.006891385143585851
 
