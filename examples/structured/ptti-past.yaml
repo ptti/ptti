@@ -56,7 +56,7 @@ parameters:
 
   ## scaling for targeted and universal testing
   tscale: 0.8
-  tscale_fixed:0.8 # This can't be changed in the interface. 
+  tscale_fixed: 0.8 # This can't be changed in the interface. 
   uscale: 1.0
 
   ## default testing rate (proportion of symptomatics)
