@@ -119,7 +119,7 @@ interventions:
         testedBase: coldflu/duration*tested
         theta: testedBase + (1-testedBase)*thetaI + theta_U
         thetaI: symptomatic/duration*tested
-      c: c0 * 0.37 # CoMix report week 15 (1-8th July): UK contacts per day is 4.05
+
   ## 31st July
   - time: 226
     name: "August"
