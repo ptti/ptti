@@ -17,27 +17,32 @@ initial:
 parameters:
   ## beta is the infectiousness of the disease, the
   ## probability of infecting a contact.
-  beta: 0.0435
+  #beta: 0.0435
+  beta: 0.05591219691991816
   ## c0 is contacts per day at baseline, pre-pandemic
   c0: 11   # baseline pre-pandemic (ref Polymod, UK only, & BBC Pandemic)
   c: c0
-  ifr: 0.0068
+  #ifr: 0.0068
+  ifr: 0.005942748830058281
 
   ## alpha is the rate at which exposed individuals
   ## (infected but not infectious) become infectious. 
   ## 5 day incubation period
-  alpha: 0.2
+  #alpha: 0.2
+  alpha: 0.20535008297131468
 
   ## gamma is the rate at which individuals either 
   ## recover, or are taken into hospital and assumed
   ## to be isolated. One week.
-  gamma: 0.1429
+  #gamma: 0.1429
+  gamma: 0.1433400129855706
 
   ## kappa is the rate at which individuals leave
   ## isolation. This is one week according to UK policy.
   ## The WHO thinks it should be 0.0714 (14 days).
   ## We agree with WHO and think isolation should last for 14 symptom free days
-  kappa: 0.0714
+  #kappa: 0.0714
+  kappa: 0.07748365344154168
 
   ## testedBase is the background rate of testing
   testedBase: 0.0
@@ -62,7 +67,7 @@ parameters:
   ## default testing rate (proportion of symptomatics)
   tested: tscale
   ## 50% of SARS-Cov-2 infected (IU) have symptoms
-  symptomatic: 0.5 
+  symptomatic: 0.7
   ## average duration of symptomatic illness(coldflu or Covid combined)
   duration: 7
   #Background rate for early days of epidemic.
@@ -71,103 +76,163 @@ parameters:
 ## Exogenous interventions. The time is given in
 ## simulation days.
 interventions:
-  - time: 48
-    name: "Past"
+  - time: 1
+    name: "18Dec2019"
     parameters:
-        beta: 0.03849689271026241
-        c: 9.663279748154999
-        ifr: 0.007096894653551129
+        beta: 0.06019605048417816
+        c: 11
+        ifr: 0.006029583953980714
 
-  - time: 75
-    name: "Past"
+  - time: 31
+    name: "20Jan2020"
     parameters:
-        beta: 0.051266109078412
-        ifr: 0.006891385143585851
+        beta: 0.04811676208585855
+        c: 11
+        ifr: 0.004125759743820293
+  - time: 70
+    name: "1stMarch2020"
+    parameters:
+        beta: 0.02519179521773979
+        c: 11
+        ifr: 0.006501281737958
 
-  - time: 89 
-    name: "Past"
+  - time: 101
+    name: "1stApril2020"
     parameters:
-        beta: 0.050154594993111534
-        c: 1.8791424908692589
-        ifr: 0.00944330103384839
+        beta: 0.029461949585347046
+        c: 2.8
+        ifr: 0.007702898638210923
 
-  - time: 136
-    name: "Past"
+  - time: 161
+    name: "2ndJune2020"
     parameters:
-        beta: 0.03652757856247421
-        ifr: 0.0067174044475541705
+        beta: 0.01885019333814162
+        c: 3.29
+        chi: 0.5151522787392553
+        eta: 0.35403493421206544
+        ifr: 0.008429627538820081
+        tested: 0.21066861415204136
 
-  - time: 152  # Start testing
-    name: "Past"
+  - time: 176  
+    name: "17June2020"
     parameters:
-        beta: 0.02058470296591927
-        c: 2.4646968846129376
-        chi: 0.5
-        eta: 0.42
-        ifr: 0.006960151150257436
-        tested: 0.18144202213884242
+        beta: 0.05452970977368012
+        c: 3.78
+        eta: 1.001795898561742
+        ifr: 0.003453989559612597
+        tested: 0.2206136861169206
+        testedBase: 0.00030096952955274855
+        theta: 0.02087789167950012
+        thetaI: 0.019612438589263738
+  - time: 190
+    name: "1July2020"
+    parameters:
+      c: 3.82
+      chi: 0.4761642632654083
+      eta: 0.3304997580088066
+      tested: 0.38734135815122495
+      testedBase: 0.0005991802953102906
+      theta: 0.040968738813714003
+      thetaI: 0.03812475837889823
 
-  ## On 4th July, pubs and entertainment venues open with new 1m distancing rule
-  - time: 199
-    name: "Past"
+  - time: 204
+    name: "15July2020"
     parameters:
-        beta: 0.043538528781473296
-        c: 4.718496886032501
-        eta: 0.47
-        ifr: 0.007240284849772509
-        tested: 0.2975469697110704
-        testedBase: coldflu/duration*tested
-        thetaI: symptomatic/duration*tested
-        theta: testedBase + (1-testedBase)*thetaI + theta_U
+      c: 4.05
+      chi: 0.34358847980719937
+      eta: 0.48178311833346477
+      tested: 0.3993611473773652
+      testedBase: 0.0006536089140570595
+      theta: 0.043966998287256816
+      thetaI: 0.047855149277280254
 
-  ## 31st July
-  - time: 226
-    name: "August"
+  - time: 220 
+    name: "3August2020"
     parameters:
-      c: 4.025899114317745
-      testedBase: coldflu*tested/duration
-      thetaI: symptomatic*tested/duration
-      theta: testedBase + (1-testedBase)*thetaI + theta_U
-      tested: tscale_fixed * 0.5
-      eta: 0.44  #  trace 50% of the eta contacts who will be traced in one day with teams of tracers
-      chi: 0.5  
-
-  - time: 242
-    name: "September"
-    parameters:
-      beta: 0.04558579801863469
-      c: 5.938901554175569
-      eta: 0.5
-      ifr: 0.0059410686698366175
-      tested: 0.018339697010270523
-      testedBase: coldflu*tested/duration
-      thetaI: symptomatic*tested/duration
-      theta: testedBase + (1-testedBase)*thetaI + theta_U
-
-  - time: 272 #1st Oct
-    name: "October"
-    parameters:
-      beta: 0.04284616160082297
-      c: 5.239993853538161
-      eta: 0.5
-      ifr: 0.006737751304383827
-      tested: 0.3460738219780226
-      eta: 0.50
-      testedBase: coldflu*tested/duration
-      thetaI: symptomatic*tested/duration
-      theta: testedBase + (1-testedBase)*thetaI + theta_U
+      c: 3.96
+      chi: 0.449884886434052
+      eta: 0.37335634139025675
+      tested: 0.49932406740370383
+      testedBase: 0.000556253440770518
+      theta: 0.016049470707928795
+      thetaI: 0.04151719999776432
       
-  - time: 287 #15th Oct
-    name: "15October"
+  - time: 238
+    name: "21August2020"
     parameters:
-      beta: 0.04146653919561795
-      c: 4.50914892968145
-      ifr: 0.007066695480960346
-      tested: 0.362795964469514
-      eta: 0.50
-      testedBase: coldflu*tested/duration
-      thetaI: symptomatic*tested/duration
-      theta: testedBase + (1-testedBase)*thetaI + theta_U
+      c: 4.58
+      chi: 0.5101687394312728
+      eta: 0.4642926767207265
+      tested: 0.4349320008149081
+      testedBase: 0.0005439248478075961
+      theta: 0.03783906940428104
+      thetaI: 0.049223910616788165
+  - time: 247
+    name: "1September2020"
+    parameters:
+      beta: 0.05275824349628122
+      c: 4.95
+      eta: 0.4455598111192493
+      ifr: 0.002580598021541895
+      tested: 0.2597209862887402
+      testedBase: 0.00046791221110771347
+      theta: 0.028311389969628654
+      thetaI: 0.028188292621785807
+  - time: 277
+    name: "1October2020"
+    parameters:
+      beta: 0.04868688185838785
+      c: 4.95
+      eta: 0.5236599645266325
+      ifr: 0.00805552203577538
+      tested: 0.32645123245740537
+      testedBase: 0.00046352651805921783
+      theta: 0.03257760674867975
+      thetaI: 0.02995741928527644
+  - time: 307
+    name: "1November"
+    parameters:
+      beta: 0.04868688185838785
+      c: 4.95
+      eta: 0.5236599645266325
+      ifr: 0.00805552203577538
+      tested: 0.32645123245740537
+      testedBase: 0.00046352651805921783
+      theta: 0.03257760674867975
+      thetaI: 0.02995741928527644
+  - time: 338
+    name: "2ndDecember2020"
+    parameters:
+      beta: 0.04868688185838785
+      c: 4.95
+      eta: 0.5236599645266325
+      ifr: 0.00805552203577538
+      tested: 0.32645123245740537
+      testedBase: 0.00046352651805921783
+      theta: 0.03257760674867975
+      thetaI: 0.02995741928527644
+  - time: 368
+    name: "2ndJanuary2020"
+    parameters:
+      beta: 0.04868688185838785
+      c: 4.95
+      eta: 0.5236599645266325
+      ifr: 0.00805552203577538
+      tested: 0.32645123245740537
+      testedBase: 0.00046352651805921783
+      theta: 0.03257760674867975
+      thetaI: 0.02995741928527644
+  - time: 398
+    name: "2ndFebruary2020"
+    parameters:
+      beta: 0.04868688185838785
+      c: 4.95
+      eta: 0.5236599645266325
+      ifr: 0.00805552203577538
+      tested: 0.32645123245740537
+      testedBase: 0.00046352651805921783
+      theta: 0.03257760674867975
+      thetaI: 0.02995741928527644
 
 ## Lockdown trigger - needs to be higher than current cases to go on
   - condition: x[IU] + x[ID] - 410000
