@@ -193,7 +193,8 @@ interventions:
     name: "1November"
     parameters:
       beta: 0.04868688185838785
-      c: 4.95
+      #c: 2.8 ###during second lockdown
+      c: 4.95 ###without 2nd lockdown
       eta: 0.5236599645266325
       ifr: 0.00805552203577538
       tested: 0.32645123245740537
