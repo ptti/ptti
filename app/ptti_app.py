@@ -467,7 +467,7 @@ if len(To_Graph)>0:
         ax_e.set_ylabel('Daily Cost (£)')
         ax_e.legend(loc='upper right')
 
-    st.pyplot()
+    st.pyplot(fig)
 
 
 #Debug:
