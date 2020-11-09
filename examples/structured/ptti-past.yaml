@@ -193,40 +193,18 @@ interventions:
     name: "1November2020"
     parameters:
       beta: 0.043481112787442606
-      c: 4.95
+      c: 4.95 
       eta: 0.5433527119376114
       ifr: 0.006926617847749432
       tested: 0.3284883405239594
       testedBase: 0.0004469089085765483
       theta: 0.03393329846867736
       thetaI: 0.038216233776284206     
-  - time: 338
-    name: "1stDecember2020"
+  - time: 322
+    name: "15November2020"
     parameters:
       beta: 0.043481112787442606
-      c: 4.95
-      eta: 0.5433527119376114
-      ifr: 0.006926617847749432
-      tested: 0.3284883405239594
-      testedBase: 0.0004469089085765483
-      theta: 0.03393329846867736
-      thetaI: 0.038216233776284206
-  - time: 368
-    name: "2ndJanuary2021"
-    parameters:
-      beta: 0.043481112787442606
-      c: 4.95
-      eta: 0.5433527119376114
-      ifr: 0.006926617847749432
-      tested: 0.3284883405239594
-      testedBase: 0.0004469089085765483
-      theta: 0.03393329846867736
-      thetaI: 0.038216233776284206
-  - time: 398
-    name: "2ndFebruary2021"
-    parameters:
-      beta: 0.043481112787442606
-      c: 4.95
+      c: 3.5 # assuming a value in between the 2.8 (first lockdown) and 4 (after relaxing the first lockdown)
       eta: 0.5433527119376114
       ifr: 0.006926617847749432
       tested: 0.3284883405239594
