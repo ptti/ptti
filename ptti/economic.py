@@ -80,6 +80,7 @@ def calcEconOutputs(time, contacts, infected, recovered, tested, traced, isolate
     # Tracing
     bw = int(econ_inputs['Trace']['Tracer_Contract_Length'])
     # Split by blocks
+    traced = [number - econ_inputs['Trace']['Duplicated_Contacts'] for number in traced]
     tracing_blocks = []
     for i0 in range(0, days, bw):
         tblock = traced[i0:i0+bw]

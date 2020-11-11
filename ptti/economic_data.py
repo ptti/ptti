@@ -18,6 +18,7 @@ econ_inputs['Trace'] = dict()
 econ_inputs['Trace']['Time_to_Trace_Contact'] = 37.8 / 30.0  
     # 1.26 hours to trace each contact: 37.8 hours to trace 30 contacts (see Table B of PTTI draft report
 
+econ_inputs['Trace']['Duplicated_Contacts'] = 2 # The daily contacts should be the unique contacts, so we remove repeat contacts
 
 # Hire_Interval = 90 # Now Unused
 
