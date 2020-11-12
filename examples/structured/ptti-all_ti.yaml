@@ -1,18 +1,6 @@
 interventions:
-  ## Scale up testing, and contact tracing further
-  - time: 307
-    name: "Targeted Testing"
-    parameters:
-            ## Targetted Testing
-      tested: tscale * 0.81       # proportion of symptomatic who are tested (this is the same for
-                        #    symptomatic Covid and coldflu because they are indistinguishable)
-      testedBase: coldflu*tested/duration
-      thetaI: symptomatic*tested/duration
-      theta: testedBase + (1-testedBase)*thetaI
-            ## Tracing - as above  
-
 ## Scale up testing, and contact tracing further
-  - time: 312
+  - time: 330
     name: "Targeted Testing"
     parameters:
       c: c0 * 0.45
