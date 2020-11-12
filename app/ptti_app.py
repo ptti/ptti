@@ -91,14 +91,7 @@ cfg_drug = os.path.join("..", "examples", "structured", "ptti-drug.yaml") # To D
 
 intervention_list = []
 
-Relax = st.sidebar.radio("How Shutdown is Ended", ['Phased Relaxation','Full Reopening'], index=0)
-if Relax == 'Phased Relaxation':
-    intervention_list.append(cfg_relax)
-elif Relax == 'Full Reopening':
-    intervention_list.append(cfg_reopen)
-
-end_date = st.sidebar.date_input("Shutdown End Date",
-                                     value=(start+timedelta(days=258)), min_value=start+timedelta(days=90), max_value=start+timedelta(days=cfg['meta']['tmax']))
+Lockdowns = st.sidebar.radio("How Shutdown are Reimposed", ['Soft Lockdowns','Hard Lockdowns'], index=0)
 
 if 'Changed' not in locals():
     Changed=False
@@ -131,12 +124,10 @@ elif TTI=='No TTI':
 
 UTI_End = st.sidebar.radio("Universal Testing after January 2021", ["End", "Continue"], index=1)
 
-
 intervention_list.append(cfg_mask) # We have masks no matter what. The question is what level they are used.
 Mask_Compliance='Moderate'
 
 Mask_Compliance = st.sidebar.radio("Mask Effective Compliance (EC)", ['Lower','Moderate','Very High'], index=1)
-
 
 st.sidebar.text("For test and trace system starting Oct. 1")
 TTI_chi_trans = st.sidebar.slider("Percentage of traces complete on day 1", value=0.55, min_value=0.0,
@@ -187,11 +178,8 @@ log_y = st.sidebar.checkbox("Log-scale y-axis")
 #dance = False
 #dance = st.sidebar.checkbox("Dance!")
 
-Scenario_Title = (Relax + (("with delay of " + str(round((end_date - (start+timedelta(days=258))).days/7,1)) + " Weeks\n")
-                   if end_date > start+timedelta(days=258) else "") + \
-                  " with " + ("Custom TTI" if(Changed) else TTI) + " and " + Mask_Compliance + " Mask EC" + \
-                  ("" if ((TTI_chi==0.8) & (TTI_eta==0.47)) else "\n with modified parameters"))
-
+Scenario_Title = "Reimpose " + Lockdowns + " with " + ("Custom TTI" if(Changed) else TTI) + " and " + Mask_Compliance + " Mask EC" + \
+                  ("" if ((TTI_chi==0.8) & (TTI_eta==0.47)) else "\n with modified parameters")
 
 #cfg2 = config_load(filename=os.path.join("..", "examples", "scenarios", "ptti-2_Universal_PTTI.yaml"))
 
@@ -205,9 +193,12 @@ defaults.update(cfg["initial"])
 defaults.update(cfg["parameters"])
 
 for i in cfg['interventions']:
-    if "Relax Lockdown" in i['name']:
-        i['time'] = (end_date - start).days + i['delay'] # This applies to reopening AND relaxation.
-        # (There is no "remained locked down" option now.)
+    if i['name'] == "Lockdown Trigger":
+        if Lockdowns == 'Soft Lockdowns':
+            i['parameters']['c'] = 5
+        elif Lockdowns == 'Hard Lockdowns':
+            i['parameters']['c'] = 2.8
+
 
 # Mask_Compliance = 'Moderate'
 for i in cfg['interventions']:
@@ -254,9 +245,9 @@ cfg['interventions'].sort(key=lambda k: ("time" not in k, k.get("time", 100000))
 
 # st.write([i for i in cfg['interventions'] if "time" in i.keys()])
 
-for i in cfg['interventions']:
-    if i['name'] == "Relax Lockdown":
-        i['time'] = (end_date - start).days + i['delay']
+# for i in cfg['interventions']:
+#     if i['name'] == "Lockdown Trigger":
+#         i['after'] = (end_date - start).days
 
 if TTI in ('Targeted TTI', 'Combined TTI'):
     for i in cfg['interventions']:
@@ -283,7 +274,7 @@ Graph_Economics = st.sidebar.checkbox("Graph Economics", value=True)
 
 # To_Graph = ["Exposed", "Infected", "Recovered"]
 To_Graph = st.sidebar.multiselect("Outcomes To Plot", ["Susceptible", "Exposed", "Infectious", "Recovered", "Isolated", "Dead", "Death Data"],
-                                  default=["Infectious", "Isolated", "Dead", "Death Data"])
+                                  default=["Infectious", "Isolated", "Dead"])
 
 Graph_Columns = {
   "Susceptible": ["SU", "SD"],
@@ -346,11 +337,12 @@ if len(To_Graph)>0:
     #last_case = cases[-1,0]
     #caseplot = np.pad(cases[:,1], (first_case - 1, len(df_plot_results) - last_case), mode="edge")
     #df_plot_results["Case Data"] = caseplot
-    deaths = dgu("coronavirus-deaths_latest.csv")
-    first_death = deaths[0,0]
-    last_death  = deaths[-1,0]
-    deathplot = np.pad(deaths[:,1], (first_death-1, len(df_plot_results) - last_death), mode="edge")
-    df_plot_results["Death Data"] = deathplot
+    if "Death Data" in To_Graph:
+        deaths = dgu("coronavirus-deaths_latest.csv")
+        first_death = deaths[0,0]
+        last_death  = deaths[-1,0]
+        deathplot = np.pad(deaths[:,1], (first_death-1, len(df_plot_results) - last_death), mode="edge")
+        df_plot_results["Death Data"] = deathplot
 
     ax.plot(df_plot_results)
     ax.set_xlim([0, graph_ending])

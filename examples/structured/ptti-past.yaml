@@ -158,7 +158,7 @@ interventions:
       thetaI: 0.04151719999776432
       
   - time: 238
-    name: "21August2020"
+    name: "15August2020"
     parameters:
       c: 4.58
       chi: 0.5101687394312728
@@ -168,7 +168,7 @@ interventions:
       theta: 0.03783906940428104
       thetaI: 0.049223910616788165
   - time: 247
-    name: "1September2020"
+    name: "EndAugust2020"
     parameters:
       beta: 0.05275824349628122
       c: 4.95
@@ -179,7 +179,7 @@ interventions:
       theta: 0.028311389969628654
       thetaI: 0.028188292621785807
   - time: 277
-    name: "1October2020"
+    name: "EndSeptember2020"
     parameters:
       beta: 0.04868688185838785
       c: 4.95
@@ -190,7 +190,7 @@ interventions:
       theta: 0.03257760674867975
       thetaI: 0.02995741928527644
   - time: 307
-    name: "1November2020"
+    name: "EndOctober2020"
     parameters:
       beta: 0.043481112787442606
       c: 4.95 
@@ -200,8 +200,8 @@ interventions:
       testedBase: 0.0004469089085765483
       theta: 0.03393329846867736
       thetaI: 0.038216233776284206     
-  - time: 322
-    name: "15November2020"
+  - time: 332
+    name: "MidNovember2020"
     parameters:
       beta: 0.043481112787442606
       c: 3.5 # assuming a value in between the 2.8 (first lockdown) and 4 (after relaxing the first lockdown)
@@ -458,7 +458,7 @@ interventions:
 ## Lockdown triggers - start from 31st July
 ## Release lockdown when below 10k cases
   - condition: x[IU] + x[ID] - 10000
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: -1.0
     parameters:
@@ -466,7 +466,7 @@ interventions:
       locked: False
 ## Release lockdown when even lower
   - condition: x[IU] + x[ID] - 9000
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: -1.0
     parameters:
@@ -474,7 +474,7 @@ interventions:
       locked: False
 ## Release lockdown when even lower
   - condition: x[IU] + x[ID] - 8000
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: -1.0
     parameters:
@@ -482,7 +482,7 @@ interventions:
       locked: False
 ## Release lockdown when even lower
   - condition: x[IU] + x[ID] - 7000
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: -1.0
     parameters:
@@ -490,7 +490,7 @@ interventions:
       locked: False
 ## Release lockdown when even lower
   - condition: x[IU] + x[ID] - 6000
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: -1.0
     parameters:
@@ -498,7 +498,7 @@ interventions:
       locked: False
 ## Release lockdown when even lower
   - condition: x[IU] + x[ID] - 5000
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: -1.0
     parameters:
@@ -506,7 +506,7 @@ interventions:
       locked: False
 ## Release lockdown when even lower
   - condition: x[IU] + x[ID] - 4000
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: -1.0
     parameters:
@@ -514,7 +514,7 @@ interventions:
       locked: False
 ## Release lockdown when even lower
   - condition: x[IU] + x[ID] - 3000
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: -1.0
     parameters:
@@ -522,7 +522,7 @@ interventions:
       locked: False
 ## Release lockdown when even lower
   - condition: x[IU] + x[ID] - 2500
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: -1.0
     parameters:
@@ -530,7 +530,7 @@ interventions:
       locked: False
 ## Release lockdown when even lower
   - condition: x[IU] + x[ID] - 2000
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: -1.0
     parameters:
@@ -539,7 +539,7 @@ interventions:
 
 ## Lockdown trigger on 40k cases
   - condition: x[IU] + x[ID] - 40000
-    name: "Lockdown Trigger"
+    name: "Lockdown Release"
     after: 379
     direction: 1.0
     parameters:
