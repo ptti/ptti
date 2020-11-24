@@ -164,7 +164,7 @@ else:
 
 st.sidebar.text("Display Options")
 fixed_y = st.sidebar.checkbox("Fixed maximum y-axis")
-fixed_y_val = st.sidebar.slider("Y-Max (millions)", value=1, min_value=1, max_value=10, step=0.5)
+fixed_y_val = st.sidebar.slider("Y-Max (millions)", value=1.0, min_value=1.0, max_value=10.0, step=0.5)
 log_y = st.sidebar.checkbox("Log-scale y-axis")
 
 
