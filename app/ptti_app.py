@@ -179,8 +179,10 @@ log_y = st.sidebar.checkbox("Log-scale y-axis")
 #dance = False
 #dance = st.sidebar.checkbox("Dance!")
 
-Scenario_Title = "Reimpose " + Lockdowns + " with " + ("Custom TTI" if(Changed) else TTI) + " and " + Mask_Compliance + " Mask EC" + \
-                  ("" if ((TTI_chi==0.8) & (TTI_eta==0.47)) else "\n with modified parameters")
+Scenario_Title_default = "Reimpose " + Lockdowns + " with " + ("Custom TTI" if(Changed) else TTI) + " and " + Mask_Compliance + " Mask EC" + \
+    ("" if ((TTI_chi==0.8) & (TTI_eta==0.47)) else "\n with modified parameters")
+
+Scenario_Title = st.text_input("Plot Title", Scenario_Title_default)
 
 #cfg2 = config_load(filename=os.path.join("..", "examples", "scenarios", "ptti-2_Universal_PTTI.yaml"))
 
