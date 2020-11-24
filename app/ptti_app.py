@@ -164,6 +164,7 @@ else:
 
 st.sidebar.text("Display Options")
 fixed_y = st.sidebar.checkbox("Fixed maximum y-axis")
+fixed_y_val = st.sidebar.slider("Y-Max (millions)", value=1, min_value=1, max_value=10, step=0.5)
 log_y = st.sidebar.checkbox("Log-scale y-axis")
 
 
@@ -355,7 +356,7 @@ if len(To_Graph)>0:
     elif Graph_Interventions:
         miny = ax.get_ylim()[0]-300000
     if fixed_y:
-        maxy = 3000000 # 3m.
+        maxy = fixed_y_val * 1000000 # in millions
         ax.set_ylim(miny, maxy)
     maxy = ax.get_ylim()[1]
     # st.write(str(maxy))
