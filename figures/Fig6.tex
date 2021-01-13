@@ -1,0 +1,14 @@
+\documentclass{standalone}
+\usepackage{pttiplots}
+\begin{document}
+\begin{tabular}{rrrr}
+  \plotABM{1}{normalabm}{Susceptible and unconfined}{teal} &
+  \plotABM{3}{normalabm}{Exposed and unconfined}{teal} &
+  \plotABM{5}{normalabm}{Infectious and unconfined}{teal} &
+  \plotABM{7}{normalabm}{Removed and unconfined}{teal}\\
+  \plotABM{2}{normalabm}{Susceptible and isolated}{teal} &
+  \plotABM{4}{normalabm}{Exposed and isolated}{teal} &
+  \plotABM{6}{normalabm}{Infectious and isolated}{teal} &
+  \plotABM{8}{normalabm}{Removed and isolated}{teal}
+\end{tabular}
+\end{document}
