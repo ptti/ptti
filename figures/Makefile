@@ -14,6 +14,8 @@ clean:
 	rm -f *.tsv *.t *.traj
 	rm -f plots-figure*
 	rm -f *.aux *.auxlock *.log
+	rm -f *.synctex.gz
+	rm -f *.eps
 	rm -f *.pdf
 	rm -f *.dep
 	rm -f *.dpth

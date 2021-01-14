@@ -25,6 +25,7 @@
       \addplot+ table[x index=0, y index=11] {testing-theta.tsv};\addlegendentry{$\theta = 0.50$}
       \addplot+ table[x index=0, y index=12] {testing-theta.tsv};\addlegendentry{$\theta = 0.55$}
     \end{axis}
+    \node at (11,4.3) { \textbf{(A)} };
   \end{tikzpicture}
 }
 
@@ -50,6 +51,7 @@
       \addplot+ table[x index=0, y index=12] {testing-r.tsv};
       \addplot[red,thick] coordinates {(0,1) (300,1)};
     \end{axis}
+    \node at (11,3.1) { \textbf{(B)} };
   \end{tikzpicture}
 }
 
@@ -113,6 +115,7 @@
       \addplot+ table[x index=0, y index=10] {tracing-theta.tsv};\addlegendentry{$\eta = 0.90$}
       \addplot+ table[x index=0, y index=11] {tracing-theta.tsv};\addlegendentry{$\eta = 1.00$}
     \end{axis}
+    \node at (11,4.3) { \textbf{(A)} };
   \end{tikzpicture}
 }
 
@@ -137,10 +140,11 @@
       \addplot+ table[x index=0, y index=11] {tracing-r.tsv};
       \addplot[red,thick] coordinates {(0,1) (300,1)};
     \end{axis}
+    \node at (11,3.1) { \textbf{(B)} };    
   \end{tikzpicture}
 }
 
-\newcommand{\plotABM}[4]{%
+\newcommand{\plotABM}[5]{%
   \begin{tikzpicture}
     \begin{axis}[
       cycle list name=exotic, no markers,
@@ -157,10 +161,11 @@
       \addplot[forget plot, #4!10, draw=none]       fill between[of=std and stdstd];
       \addplot[forget plot, #4!10, draw=none]       fill between[of=nstd and nstdstd];
     \end{axis}
+    \node at (-1,0) { \textbf{ (#5) } };    
   \end{tikzpicture}
 }
 
-\newcommand{\plotABMshort}[4]{%
+\newcommand{\plotABMshort}[5]{%
   \begin{tikzpicture}
     \begin{axis}[
       cycle list name=exotic, no markers,
@@ -177,14 +182,15 @@
       \addplot[forget plot, #4!10, draw=none]       fill between[of=std and stdstd];
       \addplot[forget plot, #4!10, draw=none]       fill between[of=nstd and nstdstd];
     \end{axis}
+    \node at (-1,0) { \textbf{ (#5) } };    
   \end{tikzpicture}
 }
 
-\newcommand{\plotLowTheta}[1]{%
+\newcommand{\plotLowTheta}[2]{%
   \begin{tikzpicture}
     \begin{axis}[
       cycle list name=exotic, no markers,
-      xmin=0, ymin=0, xmax=180, ylabel={Susceptible and unconfined}
+      xmin=0, ymin=0, xmax=600, ylabel={Susceptible and unconfined}
       ]
       \addplot+[red, very thick]   table[x index=0, y index=9] {#1-ode.tsv};\addlegendentry{\small Susceptible and traceable}
       \addplot+[orange, very thick] table[x index=0, y index=1] {#1-ode.tsv};
@@ -198,6 +204,7 @@
       \addplot[forget plot, teal!10, draw=none]       fill between[of=std and stdstd];
       \addplot[forget plot, teal!10, draw=none]       fill between[of=nstd and nstdstd];
     \end{axis}
+    \node at (-1,0) { \textbf{ (#2) } };
   \end{tikzpicture}
 }
 
